@@ -287,6 +287,39 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
               ),
             ),
 
+            // 注意書き
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF3E0), // 薄いオレンジ色
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFFFB74D)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: const Color(0xFFFF6F00),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '手動で入力した場合、Mapにピンは表示されません',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: const Color(0xFFFF6F00),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             // ボタン
             Padding(
               padding: const EdgeInsets.only(
