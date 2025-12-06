@@ -5,40 +5,59 @@ import '../providers/home_provider.dart';
 import '../widgets/custom_search_bar.dart';
 import '../widgets/tag_chip.dart';
 import '../widgets/person_card.dart';
+import 'add_person_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
+  int _selectedIndex = 0;
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.fastOutSlowIn,
+    );
+
+    final slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1), // 下から開始
+      end: Offset.zero,
+    ).animate(fadeAnimation);
+
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(32),
-                bottomRight: Radius.circular(32),
-              ),
-            ),
-            child: SafeArea(
-              bottom: false,
-              child: Column(
-                children: [_buildTopBar(context), _buildHeroSection(context)],
-              ),
-            ),
-          ),
-          Expanded(child: _buildRecentSection(context)),
-        ],
+      body: SlideTransition(
+        position: slideAnimation,
+        child: FadeTransition(
+          opacity: fadeAnimation,
+          child: _getSelectedContent(),
+        ),
       ),
       bottomNavigationBar: DefaultTextStyle(
         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         child: ConvexAppBar(
+          key: ValueKey(_selectedIndex),
           items: const [
             TabItem(icon: Icons.home_outlined, title: 'Home'),
             TabItem(icon: Icons.calendar_today_outlined, title: 'Calendar'),
@@ -46,7 +65,7 @@ class HomeView extends StatelessWidget {
             TabItem(icon: Icons.map_outlined, title: 'Map'),
             TabItem(icon: Icons.person_outline, title: 'MyPage'),
           ],
-          initialActiveIndex: 0,
+          initialActiveIndex: _selectedIndex,
           backgroundColor: Colors.white,
           color: const Color(0xFFB0B0B0),
           activeColor: const Color(0xFF4D6FFF),
@@ -54,8 +73,83 @@ class HomeView extends StatelessWidget {
           height: 60,
           top: -25,
           curveSize: 90,
-          onTap: (int i) {},
+          onTap: (int i) {
+            if (_selectedIndex == i) return;
+            _animationController.reverse().then((_) {
+              if (!mounted) return;
+              setState(() {
+                _selectedIndex = i;
+              });
+              _animationController.forward();
+            });
+          },
         ),
+      ),
+    );
+  }
+
+  Widget _getSelectedContent() {
+    switch (_selectedIndex) {
+      case 0:
+        return _buildHomeContent();
+      case 1:
+        return _buildPlaceholder('Calendar');
+      case 2:
+        return _buildAddPersonContent();
+      case 3:
+        return _buildPlaceholder('Map');
+      case 4:
+        return _buildPlaceholder('MyPage');
+      default:
+        return _buildHomeContent();
+    }
+  }
+
+  Widget _buildHomeContent() {
+    return Column(
+      key: const ValueKey('home'),
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
+            ),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(32),
+              bottomRight: Radius.circular(32),
+            ),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [_buildTopBar(context), _buildHeroSection(context)],
+            ),
+          ),
+        ),
+        Expanded(child: _buildRecentSection(context)),
+      ],
+    );
+  }
+
+  Widget _buildAddPersonContent() {
+    return AddPersonView(
+      key: const ValueKey('add'),
+      onSave: () {
+        setState(() {
+          _selectedIndex = 0; // Home画面に戻る
+        });
+      },
+    );
+  }
+
+  Widget _buildPlaceholder(String title) {
+    return Center(
+      key: ValueKey(title),
+      child: Text(
+        '$title画面',
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     );
   }
