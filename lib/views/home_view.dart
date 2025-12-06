@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import '../providers/home_provider.dart';
+import '../providers/add_person_provider.dart';
 import '../widgets/custom_search_bar.dart';
 import '../widgets/tag_chip.dart';
 import '../widgets/meeting_record_card.dart';
@@ -11,6 +12,7 @@ import 'add_person_view.dart';
 import 'calendar_view.dart';
 import 'map_view.dart';
 import 'search_results_view.dart';
+import 'all_records_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -93,7 +95,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
                 // Homeタブに切り替わった時だけデータを再読み込みしてタグを更新
                 if (i == 0) {
-                  final provider = Provider.of<HomeProvider>(context, listen: false);
+                  final provider = Provider.of<HomeProvider>(
+                    context,
+                    listen: false,
+                  );
                   provider.loadData();
                 }
               });
@@ -271,14 +276,16 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                 runSpacing: 8,
                 children: [
                   // 固定タグ（1行目）
-                  ...provider.suggestedTags.take(3).map(
-                    (tag) => TagChip(
-                      label: tag,
-                      onTap: () {
-                        provider.updateSearchQuery(tag);
-                      },
-                    ),
-                  ),
+                  ...provider.suggestedTags
+                      .take(3)
+                      .map(
+                        (tag) => TagChip(
+                          label: tag,
+                          onTap: () {
+                            provider.updateSearchQuery(tag);
+                          },
+                        ),
+                      ),
                   // 動的タグ（2行目）
                   ...provider.randomTags.map(
                     (tag) => TagChip(
@@ -346,7 +353,46 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        _animationController.reverse().then((_) {
+                          if (!mounted) return;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AllRecordsView(
+                                onPersonTap: (person) {
+                                  if (person == null) return;
+
+                                  // 編集完了後にAllRecordsViewに戻るためのフラグ付きでAddPersonViewに遷移
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChangeNotifierProvider(
+                                        create: (_) => AddPersonProvider(person: person),
+                                        child: AddPersonView(
+                                          person: person,
+                                          onSave: () {
+                                            // データを再読み込み
+                                            final provider = Provider.of<HomeProvider>(
+                                              context,
+                                              listen: false,
+                                            );
+                                            provider.loadData();
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ).then((_) {
+                            if (!mounted) return;
+                            _animationController.forward();
+                          });
+                        });
+                      },
                       child: const Text(
                         'すべて見る',
                         style: TextStyle(
