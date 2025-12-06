@@ -1,0 +1,244 @@
+import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:provider/provider.dart';
+import '../models/meeting_record.dart';
+import '../providers/home_provider.dart';
+
+class CalendarView extends StatefulWidget {
+  const CalendarView({super.key});
+
+  @override
+  State<CalendarView> createState() => _CalendarViewState();
+}
+
+class _CalendarViewState extends State<CalendarView> {
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = _focusedDay;
+  }
+
+  List<MeetingRecord> _getEventsForDay(DateTime day, List<MeetingRecord> records) {
+    return records.where((record) {
+      return isSameDay(record.meetingDate, day);
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFFF5F5F7),
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildCalendar(),
+                    _buildEventList(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'カレンダー',
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'いつ会ったかを振り返る',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCalendar() {
+    return Consumer<HomeProvider>(
+      builder: (context, provider, child) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: TableCalendar(
+            firstDay: DateTime.utc(2020, 1, 1),
+            lastDay: DateTime.utc(2030, 12, 31),
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            eventLoader: (day) => _getEventsForDay(day, provider.recentMeetingRecords),
+            locale: 'ja_JP',
+            headerStyle: const HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: false,
+              leftChevronIcon: Icon(Icons.chevron_left, color: Colors.black87),
+              rightChevronIcon: Icon(Icons.chevron_right, color: Colors.black87),
+              titleTextStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            calendarStyle: CalendarStyle(
+              todayDecoration: BoxDecoration(
+                color: const Color(0xFF4D6FFF).withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              todayTextStyle: const TextStyle(
+                color: Color(0xFF4D6FFF),
+                fontWeight: FontWeight.bold,
+              ),
+              selectedDecoration: const BoxDecoration(
+                color: Color(0xFF4D6FFF),
+                shape: BoxShape.circle,
+              ),
+              selectedTextStyle: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              markerDecoration: const BoxDecoration(
+                color: Color(0xFF4D6FFF),
+                shape: BoxShape.circle,
+              ),
+              markersMaxCount: 1,
+            ),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+            },
+            onPageChanged: (focusedDay) {
+              _focusedDay = focusedDay;
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildEventList() {
+    return Consumer<HomeProvider>(
+      builder: (context, provider, child) {
+        final events = _getEventsForDay(_selectedDay!, provider.recentMeetingRecords);
+
+        if (events.isEmpty) {
+          return const SizedBox();
+        }
+
+        final weekdayNames = ['月', '火', '水', '木', '金', '土', '日'];
+        final weekday = weekdayNames[_selectedDay!.weekday - 1];
+
+        return Container(
+          margin: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${_selectedDay!.year}年${_selectedDay!.month}月${_selectedDay!.day}日 ($weekday)',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...events.map((record) => _buildEventCard(record, provider)),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildEventCard(MeetingRecord record, HomeProvider provider) {
+    final person = provider.getPersonForRecord(record);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 60,
+            decoration: BoxDecoration(
+              color: const Color(0xFF4D6FFF),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  person?.name ?? '名前未登録',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                if (record.location != null && record.location!.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    record.location!,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+                if (record.notes != null && record.notes!.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    record.notes!,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[500],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -3,9 +3,7 @@ class Person {
   final String? name;
   final String? company;
   final String? position;
-  final String? location;
   final List<String> tags;
-  final DateTime registeredDate;
   final String avatarColor;
   final int additionalInfoCount;
   final String? photoPath;
@@ -15,9 +13,7 @@ class Person {
     this.name,
     this.company,
     this.position,
-    this.location,
     this.tags = const [],
-    required this.registeredDate,
     required this.avatarColor,
     this.additionalInfoCount = 0,
     this.photoPath,
@@ -40,19 +36,13 @@ class Person {
     return '';
   }
 
-  String get formattedDate {
-    return '${registeredDate.year}.${registeredDate.month.toString().padLeft(2, '0')}.${registeredDate.day.toString().padLeft(2, '0')}';
-  }
-
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'company': company,
       'position': position,
-      'location': location,
       'tags': tags,
-      'registeredDate': registeredDate.toIso8601String(),
       'avatarColor': avatarColor,
       'additionalInfoCount': additionalInfoCount,
       'photoPath': photoPath,
@@ -65,9 +55,7 @@ class Person {
       name: json['name'] as String?,
       company: json['company'] as String?,
       position: json['position'] as String?,
-      location: json['location'] as String?,
       tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
-      registeredDate: DateTime.parse(json['registeredDate'] as String),
       avatarColor: json['avatarColor'] as String,
       additionalInfoCount: json['additionalInfoCount'] as int? ?? 0,
       photoPath: json['photoPath'] as String?,

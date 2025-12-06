@@ -135,7 +135,8 @@ class _AddPersonViewState extends State<AddPersonView> {
           ),
           GestureDetector(
             onTap: () async {
-              final success = await _provider.save();
+              final provider = Provider.of<AddPersonProvider>(context, listen: false);
+              final success = await provider.save();
               if (success) {
                 widget.onSave?.call();
               }
@@ -155,87 +156,87 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildAvatarPreview() {
-    return Consumer<AddPersonProvider>(
-      builder: (context, provider, child) {
-        final name = provider.name;
-        final initial = name.isEmpty ? '？' : name[0];
-        final hasPhoto = provider.selectedImage != null;
+    final name = _nameController.text.trim();
+    final initial = name.isEmpty ? '？' : name[0];
+    final hasPhoto = _selectedImage != null;
 
-        return Center(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                height: 130,
-                width: 130,
-                decoration: BoxDecoration(
-                  color: hasPhoto
-                      ? Colors.transparent
-                      : _parseColor(
-                          provider.avatarColors[provider.selectedColorIndex],
-                        ).withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(24),
-                  border: hasPhoto
-                      ? Border.all(
-                          color: _parseColor(provider.avatarColors[provider.selectedColorIndex]),
-                          width: 4,
-                        )
-                      : null,
-                ),
-                child: hasPhoto
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.file(provider.selectedImage!, fit: BoxFit.cover),
-                      )
-                    : Center(
-                        child: Text(
-                          initial,
-                          style: TextStyle(
-                            color: _parseColor(provider.avatarColors[provider.selectedColorIndex]),
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-              ),
-              // カメラボタン（写真がない時）
-              if (!hasPhoto)
-                Positioned(
-                  bottom: -10,
-                  right: -10,
-                  child: GestureDetector(
-                    onTap: _handleAddPhoto,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.grey[600],
-                        size: 20,
+    return Center(
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            height: 130,
+            width: 130,
+            decoration: BoxDecoration(
+              color: hasPhoto
+                  ? Colors.transparent
+                  : _parseColor(
+                      _avatarColors[_selectedColorIndex],
+                    ).withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(24),
+              border: hasPhoto
+                  ? Border.all(
+                      color: _parseColor(_avatarColors[_selectedColorIndex]),
+                      width: 4,
+                    )
+                  : null,
+            ),
+            child: hasPhoto
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.file(_selectedImage!, fit: BoxFit.cover),
+                  )
+                : Center(
+                    child: Text(
+                      initial,
+                      style: TextStyle(
+                        color: _parseColor(_avatarColors[_selectedColorIndex]),
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+          ),
+          // カメラボタン（写真がない時）
+          if (!hasPhoto)
+            Positioned(
+              bottom: -10,
+              right: -10,
+              child: GestureDetector(
+                onTap: _handleAddPhoto,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.grey[600],
+                    size: 20,
+                  ),
                 ),
-              // 削除ボタン（写真がある時）
-              if (hasPhoto)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: GestureDetector(
-                    onTap: () {
-                      provider.removeImage();
-                    },
+              ),
+            ),
+          // 削除ボタン（写真がある時）
+          if (hasPhoto)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                },
                 child: Container(
                   width: 32,
                   height: 32,
@@ -247,62 +248,58 @@ class _AddPersonViewState extends State<AddPersonView> {
                 ),
               ),
             ),
-            ],
-          ),
-        );
-      },
+        ],
+      ),
     );
   }
 
   Widget _buildColorPicker() {
-    return Consumer<AddPersonProvider>(
-      builder: (context, provider, child) {
-        return Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(provider.avatarColors.length, (index) {
-              final isSelected = index == provider.selectedColorIndex;
-              return GestureDetector(
-                onTap: () {
-                  provider.selectColor(index);
-                },
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: isSelected ? 48 : 40,
-                    height: isSelected ? 48 : 40,
-                    decoration: BoxDecoration(
-                      color: _parseColor(provider.avatarColors[index]),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isSelected ? Colors.white : Colors.transparent,
-                        width: 3,
-                      ),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: _parseColor(
-                                  provider.avatarColors[index],
-                                ).withValues(alpha: 0.5),
-                                blurRadius: 8,
-                                spreadRadius: 2,
-                              ),
-                            ]
-                          : null,
-                    ),
-                    child: isSelected
-                        ? const Icon(Icons.check, color: Colors.white, size: 24)
-                        : null,
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(_avatarColors.length, (index) {
+          final isSelected = index == _selectedColorIndex;
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedColorIndex = index;
+              });
+            },
+            child: Container(
+              width: 48,
+              height: 48,
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              alignment: Alignment.center,
+              child: Container(
+                width: isSelected ? 48 : 40,
+                height: isSelected ? 48 : 40,
+                decoration: BoxDecoration(
+                  color: _parseColor(_avatarColors[index]),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected ? Colors.white : Colors.transparent,
+                    width: 3,
                   ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: _parseColor(
+                              _avatarColors[index],
+                            ).withValues(alpha: 0.5),
+                            blurRadius: 8,
+                            spreadRadius: 2,
+                          ),
+                        ]
+                      : null,
                 ),
-              );
-            }),
-          ),
-        );
-      },
+                child: isSelected
+                    ? const Icon(Icons.check, color: Colors.white, size: 24)
+                    : null,
+              ),
+            ),
+          );
+        }),
+      ),
     );
   }
 
@@ -417,7 +414,7 @@ class _AddPersonViewState extends State<AddPersonView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '特徴・タグ',
+          'つながり情報',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -442,65 +439,61 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildMeetingRecordsSection() {
-    return Consumer<AddPersonProvider>(
-      builder: (context, provider, child) {
-        return Column(
-          children: [
-            // 各会合記録のカード
-            ...provider.meetingRecords.asMap().entries.map((entry) {
-              final index = entry.key;
-              final record = entry.value;
-              final isNew = index == provider.newlyAddedIndex;
+    return Column(
+      children: [
+        // 各会合記録のカード
+        ..._meetingRecords.asMap().entries.map((entry) {
+          final index = entry.key;
+          final record = entry.value;
+          final isNew = index == _newlyAddedIndex;
 
-              return TweenAnimationBuilder<double>(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutCubic,
-                tween: Tween<double>(begin: isNew ? 0.0 : 1.0, end: 1.0),
-                builder: (context, value, child) {
-                  return Opacity(
-                    opacity: value,
-                    child: Transform.translate(
-                      offset: Offset(0, (1 - value) * 20),
-                      child: child,
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _buildMeetingRecordCard(record, index),
+          return TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutCubic,
+            tween: Tween<double>(begin: isNew ? 0.0 : 1.0, end: 1.0),
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(0, (1 - value) * 20),
+                  child: child,
                 ),
               );
-            }),
-            // 会合記録追加ボタン
-            GestureDetector(
-              onTap: () => provider.addMeetingRecord(),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFF4D6FFF), width: 2),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.add, color: Color(0xFF4D6FFF)),
-                    const SizedBox(width: 8),
-                    const Text(
-                      '別の日を追加',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF4D6FFF),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _buildMeetingRecordCard(record, index),
             ),
-          ],
-        );
-      },
+          );
+        }),
+        // 会合記録追加ボタン
+        GestureDetector(
+          onTap: _addMeetingRecord,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFF4D6FFF), width: 2),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.add, color: Color(0xFF4D6FFF)),
+                const SizedBox(width: 8),
+                const Text(
+                  '別の日を追加',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF4D6FFF),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -531,12 +524,12 @@ class _AddPersonViewState extends State<AddPersonView> {
       child: Column(
         children: [
           // ヘッダー（削除ボタン）
-          if (_provider.meetingRecords.length > 1)
+          if (_meetingRecords.length > 1)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 GestureDetector(
-                  onTap: () => _provider.removeMeetingRecord(index),
+                  onTap: () => _removeMeetingRecord(index),
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     child: Icon(Icons.close, size: 20, color: Colors.grey[600]),
@@ -646,75 +639,71 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildTagsCard() {
-    return Consumer<AddPersonProvider>(
-      builder: (context, provider, child) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF3E5F5),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.local_offer,
-                      color: Color(0xFF9C27B0),
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextField(
-                      controller: _tagInputController,
-                      decoration: InputDecoration(
-                        hintText: '特徴タグ（スペース区切り）',
-                        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
-                        border: InputBorder.none,
-                      ),
-                      onChanged: _handleTagInputWrapper,
-                    ),
-                  ),
-                ],
+              Container(
+                width: 48,
+                height: 48,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF3E5F5),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.local_offer,
+                  color: Color(0xFF9C27B0),
+                  size: 24,
+                ),
               ),
-              if (provider.tags.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: provider.tags.map((tag) => _buildTag(tag)).toList(),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  controller: _tagInputController,
+                  decoration: InputDecoration(
+                    hintText: '特徴タグ（スペース区切り）',
+                    hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: _handleTagInput,
                 ),
-              ],
-              if (provider.suggestedTags.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: provider.suggestedTags
-                      .where((tag) => !provider.tags.contains(tag))
-                      .map((tag) => _buildSuggestedTag(tag))
-                      .toList(),
-                ),
-              ],
+              ),
             ],
           ),
-        );
-      },
+          if (_tags.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _tags.map((tag) => _buildTag(tag)).toList(),
+            ),
+          ],
+          if (_suggestedTags.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _suggestedTags
+                  .where((tag) => !_tags.contains(tag))
+                  .map((tag) => _buildSuggestedTag(tag))
+                  .toList(),
+            ),
+          ],
+        ],
+      ),
     );
   }
 
   Widget _buildTag(String label) {
     return GestureDetector(
-      onTap: () => _provider.removeTag(label),
+      onTap: () => _removeTag(label),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
@@ -738,7 +727,7 @@ class _AddPersonViewState extends State<AddPersonView> {
 
   Widget _buildSuggestedTag(String label) {
     return GestureDetector(
-      onTap: () => _provider.addSuggestedTag(label),
+      onTap: () => _addSuggestedTag(label),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
@@ -761,12 +750,6 @@ class _AddPersonViewState extends State<AddPersonView> {
     }
   }
 
-  void _handleTagInputWrapper(String input) {
-    final shouldClear = _provider.handleTagInput(input);
-    if (shouldClear) {
-      _tagInputController.clear();
-    }
-  }
 
   void _selectDateForRecord(int index) async {
     final currentDate = _provider.meetingRecords[index].date;

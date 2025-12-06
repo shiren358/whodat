@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "127690374624",
+    "project_id": "whodat-bf465",
+    "storage_bucket": "whodat-bf465.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127690374624:android:33448e358527c94d1dbf85",
+        "android_client_info": {
+          "package_name": "com.tomople.whodat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK4RXQUdibQAlYgFsxik7l5nc6LjFpS7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

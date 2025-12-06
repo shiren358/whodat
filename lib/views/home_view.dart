@@ -4,8 +4,11 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import '../providers/home_provider.dart';
 import '../widgets/custom_search_bar.dart';
 import '../widgets/tag_chip.dart';
-import '../widgets/person_card.dart';
+import '../widgets/meeting_record_card.dart';
+import '../models/person.dart';
 import 'add_person_view.dart';
+import 'calendar_view.dart';
+import 'map_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -18,6 +21,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _animationController;
   final GlobalKey<ConvexAppBarState> _tabKey = GlobalKey<ConvexAppBarState>();
+  Person? _personToEdit; // 編集対象のPerson
 
   @override
   void initState() {
@@ -79,6 +83,10 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
             _animationController.reverse().then((_) {
               if (!mounted) return;
               setState(() {
+                if (i == 2) {
+                  // Addタブの場合、編集対象をクリア
+                  _personToEdit = null;
+                }
                 _selectedIndex = i;
               });
               _animationController.forward();
@@ -94,11 +102,11 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
       case 0:
         return _buildHomeContent();
       case 1:
-        return _buildPlaceholder('Calendar');
+        return const CalendarView(key: ValueKey('calendar'));
       case 2:
         return _buildAddPersonContent();
       case 3:
-        return _buildPlaceholder('Map');
+        return const MapView(key: ValueKey('map'));
       case 4:
         return _buildPlaceholder('MyPage');
       default:
@@ -136,13 +144,21 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
   Widget _buildAddPersonContent() {
     return AddPersonView(
-      key: const ValueKey('add'),
+      key: ValueKey(_personToEdit?.id ?? 'add'),
+      person: _personToEdit,
       onSave: () {
         // データを再読み込み
         final provider = Provider.of<HomeProvider>(context, listen: false);
-        provider.loadPersons();
-        setState(() {
-          _selectedIndex = 0; // Home画面に戻る
+        provider.loadData();
+
+        // アニメーション付きでHome画面に戻る
+        _animationController.reverse().then((_) {
+          if (!mounted) return;
+          setState(() {
+            _personToEdit = null; // 編集対象をクリア
+            _selectedIndex = 0; // Home画面に戻る
+          });
+          _animationController.forward();
         });
       },
     );
@@ -259,7 +275,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      '最近の記録',
+                      '最近会った人',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -283,10 +299,26 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  itemCount: provider.recentPersons.length,
+                  itemCount: provider.latestMeetingRecordsByPerson.length,
                   itemBuilder: (context, index) {
-                    final person = provider.recentPersons[index];
-                    return PersonCard(person: person, onTap: () {});
+                    final record = provider.latestMeetingRecordsByPerson[index];
+                    final person = provider.getPersonForRecord(record);
+                    return MeetingRecordCard(
+                      record: record,
+                      person: person,
+                      onTap: () {
+                        // TODO: Update to support editing meeting records
+                        // when AddPersonView is refactored to support 3 modes
+                        _animationController.reverse().then((_) {
+                          if (!mounted) return;
+                          setState(() {
+                            _personToEdit = person;
+                            _selectedIndex = 2; // Add画面に移動
+                          });
+                          _animationController.forward();
+                        });
+                      },
+                    );
                   },
                 ),
               ),

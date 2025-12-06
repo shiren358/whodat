@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/person.dart';
 
@@ -36,42 +37,61 @@ class PersonCard extends StatelessWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: _parseColor(person.avatarColor).withValues(alpha: 0.2),
+                color: person.photoPath != null
+                    ? Colors.transparent
+                    : _parseColor(person.avatarColor).withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(16),
+                border: person.photoPath != null
+                    ? Border.all(
+                        color: _parseColor(person.avatarColor),
+                        width: 2,
+                      )
+                    : null,
               ),
-              child: Center(
-                child: Text(
-                  person.initials,
-                  style: TextStyle(
-                    color: _parseColor(person.avatarColor),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              child: person.photoPath != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(14),
+                      child: Image.file(
+                        File(person.photoPath!),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          // 画像読み込みエラー時はイニシャルを表示
+                          return Center(
+                            child: Text(
+                              person.initials,
+                              style: TextStyle(
+                                color: _parseColor(person.avatarColor),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  : Center(
+                      child: Text(
+                        person.initials,
+                        style: TextStyle(
+                          color: _parseColor(person.avatarColor),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          person.name ?? '名前未登録',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        person.formattedDate,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[400]),
-                      ),
-                    ],
+                  Text(
+                    person.name ?? '名前未登録',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
                   if (person.displayCompanyPosition.isNotEmpty) ...[
                     const SizedBox(height: 4),
