@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
 import '../models/meeting_record.dart';
+import '../models/person.dart';
 import '../providers/home_provider.dart';
+import 'add_person_view.dart';
 
 class CalendarView extends StatefulWidget {
   const CalendarView({super.key});
@@ -11,17 +13,34 @@ class CalendarView extends StatefulWidget {
   State<CalendarView> createState() => _CalendarViewState();
 }
 
-class _CalendarViewState extends State<CalendarView> {
+class _CalendarViewState extends State<CalendarView>
+    with TickerProviderStateMixin {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  Person? _personToEdit; // 編集対象のPerson
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _animationController.forward();
   }
 
-  List<MeetingRecord> _getEventsForDay(DateTime day, List<MeetingRecord> records) {
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  List<MeetingRecord> _getEventsForDay(
+    DateTime day,
+    List<MeetingRecord> records,
+  ) {
     return records.where((record) {
       return isSameDay(record.meetingDate, day);
     }).toList();
@@ -29,6 +48,36 @@ class _CalendarViewState extends State<CalendarView> {
 
   @override
   Widget build(BuildContext context) {
+    final fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.fastOutSlowIn,
+    );
+
+    final slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1), // 下から開始
+      end: Offset.zero,
+    ).animate(fadeAnimation);
+
+    return Scaffold(
+      body: SlideTransition(
+        position: slideAnimation,
+        child: FadeTransition(
+          opacity: fadeAnimation,
+          child: _getSelectedContent(),
+        ),
+      ),
+    );
+  }
+
+  Widget _getSelectedContent() {
+    if (_personToEdit != null) {
+      return _buildAddPersonContent();
+    } else {
+      return _buildCalendarContent();
+    }
+  }
+
+  Widget _buildCalendarContent() {
     return Container(
       color: const Color(0xFFF5F5F7),
       child: SafeArea(
@@ -38,17 +87,43 @@ class _CalendarViewState extends State<CalendarView> {
             _buildHeader(),
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildCalendar(),
-                    _buildEventList(),
-                  ],
-                ),
+                child: Column(children: [_buildCalendar(), _buildEventList()]),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAddPersonContent() {
+    return AddPersonView(
+      key: ValueKey(_personToEdit?.id ?? 'add'),
+      person: _personToEdit,
+      onSave: () {
+        // データを再読み込み
+        final provider = Provider.of<HomeProvider>(context, listen: false);
+        provider.loadData();
+
+        // アニメーション付きでCalendar画面に戻る
+        _animationController.reverse().then((_) {
+          if (!mounted) return;
+          setState(() {
+            _personToEdit = null; // 編集対象をクリア
+          });
+          _animationController.forward();
+        });
+      },
+      onCancel: () {
+        // アニメーション付きでCalendar画面に戻る（保存時と同じ処理）
+        _animationController.reverse().then((_) {
+          if (!mounted) return;
+          setState(() {
+            _personToEdit = null; // 編集対象をクリア
+          });
+          _animationController.forward();
+        });
+      },
     );
   }
 
@@ -69,10 +144,7 @@ class _CalendarViewState extends State<CalendarView> {
           const SizedBox(height: 4),
           Text(
             'いつ会ったかを振り返る',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
         ],
       ),
@@ -94,13 +166,17 @@ class _CalendarViewState extends State<CalendarView> {
             lastDay: DateTime.utc(2030, 12, 31),
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            eventLoader: (day) => _getEventsForDay(day, provider.recentMeetingRecords),
+            eventLoader: (day) =>
+                _getEventsForDay(day, provider.recentMeetingRecords),
             locale: 'ja_JP',
             headerStyle: const HeaderStyle(
               formatButtonVisible: false,
               titleCentered: false,
               leftChevronIcon: Icon(Icons.chevron_left, color: Colors.black87),
-              rightChevronIcon: Icon(Icons.chevron_right, color: Colors.black87),
+              rightChevronIcon: Icon(
+                Icons.chevron_right,
+                color: Colors.black87,
+              ),
               titleTextStyle: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -148,7 +224,10 @@ class _CalendarViewState extends State<CalendarView> {
   Widget _buildEventList() {
     return Consumer<HomeProvider>(
       builder: (context, provider, child) {
-        final events = _getEventsForDay(_selectedDay!, provider.recentMeetingRecords);
+        final events = _getEventsForDay(
+          _selectedDay!,
+          provider.recentMeetingRecords,
+        );
 
         if (events.isEmpty) {
           return const SizedBox();
@@ -182,63 +261,77 @@ class _CalendarViewState extends State<CalendarView> {
   Widget _buildEventCard(MeetingRecord record, HomeProvider provider) {
     final person = provider.getPersonForRecord(record);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 60,
-            decoration: BoxDecoration(
-              color: const Color(0xFF4D6FFF),
-              borderRadius: BorderRadius.circular(2),
+    return GestureDetector(
+      onTap: () {
+        // アニメーション付きで編集画面に移動
+        _animationController.reverse().then((_) {
+          if (!mounted) return;
+          setState(() {
+            _personToEdit = person;
+          });
+          _animationController.forward();
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 4,
+              height: 60,
+              decoration: BoxDecoration(
+                color: person?.avatarColor != null
+                    ? _parseColor(person!.avatarColor)
+                    : const Color(0xFF4D6FFF),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  person?.name ?? '名前未登録',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                if (record.location != null && record.location!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    record.location!,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
+                    person?.name ?? '名前未登録',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
                   ),
-                ],
-                if (record.notes != null && record.notes!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    record.notes!,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[500],
+                  if (record.location != null &&
+                      record.location!.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      record.location!,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  ],
+                  if (record.notes != null && record.notes!.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      record.notes!,
+                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  Color _parseColor(String hexColor) {
+    final hex = hexColor.replaceAll('#', '');
+    return Color(int.parse('FF$hex', radix: 16));
   }
 }
