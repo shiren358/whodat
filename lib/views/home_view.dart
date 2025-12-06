@@ -17,6 +17,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _animationController;
+  final GlobalKey<ConvexAppBarState> _tabKey = GlobalKey<ConvexAppBarState>();
 
   @override
   void initState() {
@@ -57,7 +58,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
       bottomNavigationBar: DefaultTextStyle(
         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         child: ConvexAppBar(
-          key: ValueKey(_selectedIndex),
+          key: _tabKey,
           items: const [
             TabItem(icon: Icons.home_outlined, title: 'Home'),
             TabItem(icon: Icons.calendar_today_outlined, title: 'Calendar'),
