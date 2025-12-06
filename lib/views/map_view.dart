@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../providers/home_provider.dart';
+import '../providers/add_person_provider.dart';
 import '../models/meeting_record.dart';
 import '../models/person.dart';
 import 'add_person_view.dart';
@@ -43,12 +45,30 @@ class _MapViewState extends State<MapView> {
 
     final markers = <Marker>{};
 
+    // デバッグログ
+    if (kDebugMode) {
+      print('ロードする総記録数: ${records.length}');
+    }
+
     for (final record in records) {
+      // デバッグログ
+      if (kDebugMode) {
+        print(
+          '記録: ${record.location}, lat: ${record.latitude}, lng: ${record.longitude}',
+        );
+      }
+
       // 緯度経度が設定されている記録のみマーカーを作成
       if (record.latitude != null && record.longitude != null) {
         final person = provider.getPersonForRecord(record);
         if (person != null) {
-          markers.add(_createMarker(record, person));
+          final marker = _createMarker(record, person);
+          markers.add(marker);
+
+          // デバッグログ
+          if (kDebugMode) {
+            print('マーカー追加: ${person.name} at ${record.location}');
+          }
         }
       }
     }
@@ -57,6 +77,11 @@ class _MapViewState extends State<MapView> {
       _markers.clear();
       _markers.addAll(markers);
     });
+
+    // デバッグログ
+    if (kDebugMode) {
+      print('作成したマーカー数: ${markers.length}');
+    }
   }
 
   Marker _createMarker(MeetingRecord record, Person person) {
@@ -66,11 +91,11 @@ class _MapViewState extends State<MapView> {
       infoWindow: InfoWindow(
         title: person.name ?? '名前未登録',
         snippet: record.location ?? '',
+        onTap: () => _navigateToEditScreen(person),
       ),
-      onTap: () => _onMarkerTapped(person),
-      icon: BitmapDescriptor.defaultMarkerWithHue(
-        _getMarkerHue(person),
-      ),
+      // ピン自体のタップでは何もしない
+      onTap: null,
+      icon: BitmapDescriptor.defaultMarkerWithHue(_getMarkerHue(person)),
     );
   }
 
@@ -88,20 +113,26 @@ class _MapViewState extends State<MapView> {
     return colorMap[person.avatarColor] ?? BitmapDescriptor.hueRed;
   }
 
-  void _onMarkerTapped(Person person) {
+  void _navigateToEditScreen(Person person) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddPersonView(
-          person: person,
-          onSave: () {
-            Navigator.pop(context);
-            // データを再読み込み
-            final provider = Provider.of<HomeProvider>(context, listen: false);
-            provider.loadData().then((_) {
-              _loadMarkers();
-            });
-          },
+        builder: (context) => ChangeNotifierProvider(
+          create: (_) => AddPersonProvider(person: person),
+          child: AddPersonView(
+            person: person,
+            onSave: () {
+              Navigator.pop(context);
+              // データを再読み込み
+              final provider = Provider.of<HomeProvider>(
+                context,
+                listen: false,
+              );
+              provider.loadData().then((_) {
+                _loadMarkers();
+              });
+            },
+          ),
         ),
       ),
     );
@@ -116,9 +147,7 @@ class _MapViewState extends State<MapView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            Expanded(
-              child: _buildMap(),
-            ),
+            Expanded(child: _buildMap()),
           ],
         ),
       ),
@@ -142,10 +171,7 @@ class _MapViewState extends State<MapView> {
           const SizedBox(height: 4),
           Text(
             'どこで会ったかを確認する',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
         ],
       ),

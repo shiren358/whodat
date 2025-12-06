@@ -1,19 +1,24 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../models/person.dart';
 import '../models/meeting_record.dart';
 import '../providers/add_person_provider.dart';
+import '../widgets/location_input_widget.dart';
+import '../services/location_service.dart';
 
 class AddPersonView extends StatefulWidget {
   final VoidCallback? onSave;
+  final VoidCallback? onCancel; // キャンセル時のコールバック
   final Person? person; // 編集時の既存Person
   final MeetingRecord? meetingRecord; // 編集時の既存MeetingRecord
 
   const AddPersonView({
     super.key,
     this.onSave,
+    this.onCancel,
     this.person,
     this.meetingRecord,
   });
@@ -34,10 +39,18 @@ class _AddPersonViewState extends State<AddPersonView> {
 
   // Provider
   late AddPersonProvider _provider;
+  bool _controllersInitialized = false;
 
   @override
   void initState() {
     super.initState();
+
+    // デバッグログ
+    if (kDebugMode) {
+      print(
+        'AddPersonView: 初期化 - person=${widget.person?.name ?? 'null'}, personId=${widget.person?.id ?? 'null'}',
+      );
+    }
 
     // Provider作成（3つのモードに対応）
     _provider = AddPersonProvider(
@@ -45,10 +58,32 @@ class _AddPersonViewState extends State<AddPersonView> {
       meetingRecord: widget.meetingRecord,
     );
 
+    // デバッグログ
+    if (kDebugMode) {
+      print(
+        'AddPersonView: Provider作成完了 - isEditingPerson=${_provider.isEditingPerson}',
+      );
+    }
+  }
+
+  void _initializeControllers() {
+    if (_controllersInitialized) return; // 二重初期化防止
+
     // Controllerの初期化（Provider の状態から）
     _nameController.text = _provider.name;
     _companyController.text = _provider.company;
     _positionController.text = _provider.position;
+
+    // デバッグログ
+    if (kDebugMode) {
+      print('AddPersonView: Controller初期化');
+      print('  Controller - name: "${_nameController.text}"');
+      print('  Controller - company: "${_companyController.text}"');
+      print('  Controller - position: "${_positionController.text}"');
+      print('  Provider - name: "${_provider.name}"');
+      print('  Provider - company: "${_provider.company}"');
+      print('  Provider - position: "${_provider.position}"');
+    }
 
     // Controller -> Provider 同期（双方向バインディング）
     _nameController.addListener(() {
@@ -60,8 +95,9 @@ class _AddPersonViewState extends State<AddPersonView> {
     _positionController.addListener(() {
       _provider.updatePosition(_positionController.text);
     });
-  }
 
+    _controllersInitialized = true;
+  }
 
   @override
   void dispose() {
@@ -77,7 +113,32 @@ class _AddPersonViewState extends State<AddPersonView> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: _provider,
-      child: _buildScaffold(),
+      child: FutureBuilder<void>(
+        future: _provider.initializationFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // 初期化中はローディングを表示
+            return const Scaffold(
+              backgroundColor: Color(0xFFF8FAFC),
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (snapshot.hasError) {
+            // エラー時はエラーメッセージを表示
+            return Scaffold(
+              backgroundColor: const Color(0xFFF8FAFC),
+              body: Center(child: Text('エラーが発生しました: ${snapshot.error}')),
+            );
+          }
+
+          // 初期化完了後にControllerを初期化してUIを構築
+          if (!_controllersInitialized) {
+            _initializeControllers();
+          }
+          return _buildScaffold();
+        },
+      ),
     );
   }
 
@@ -124,7 +185,27 @@ class _AddPersonViewState extends State<AddPersonView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(width: 48),
+          // 編集モードの場合のみキャンセルボタンを表示
+          widget.person != null
+              ? GestureDetector(
+                  onTap: () {
+                    // onCancelコールバックがあれば呼び出し、なければ単純にpop
+                    if (widget.onCancel != null) {
+                      widget.onCancel!();
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text(
+                    'キャンセル',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF666666),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              : const SizedBox(width: 48),
           const Text(
             '記憶を記録',
             style: TextStyle(
@@ -155,87 +236,92 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildAvatarPreview() {
-    return Consumer<AddPersonProvider>(
-      builder: (context, provider, child) {
-        final name = provider.name;
-        final initial = name.isEmpty ? '？' : name[0];
-        final hasPhoto = provider.selectedImage != null;
+    final name = _provider.name;
+    final initial = name.isEmpty ? '？' : name[0];
+    final hasPhoto = _provider.selectedImage != null;
 
-        return Center(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                height: 130,
-                width: 130,
-                decoration: BoxDecoration(
-                  color: hasPhoto
-                      ? Colors.transparent
-                      : _parseColor(
-                          provider.avatarColors[provider.selectedColorIndex],
-                        ).withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(24),
-                  border: hasPhoto
-                      ? Border.all(
-                          color: _parseColor(provider.avatarColors[provider.selectedColorIndex]),
-                          width: 4,
-                        )
-                      : null,
-                ),
-                child: hasPhoto
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.file(provider.selectedImage!, fit: BoxFit.cover),
-                      )
-                    : Center(
-                        child: Text(
-                          initial,
-                          style: TextStyle(
-                            color: _parseColor(provider.avatarColors[provider.selectedColorIndex]),
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                          ),
+    return Center(
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            height: 130,
+            width: 130,
+            decoration: BoxDecoration(
+              color: hasPhoto
+                  ? Colors.transparent
+                  : _parseColor(
+                      _provider.avatarColors[_provider.selectedColorIndex],
+                    ).withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(24),
+              border: hasPhoto
+                  ? Border.all(
+                      color: _parseColor(
+                        _provider.avatarColors[_provider.selectedColorIndex],
+                      ),
+                      width: 4,
+                    )
+                  : null,
+            ),
+            child: hasPhoto
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.file(
+                      _provider.selectedImage!,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      initial,
+                      style: TextStyle(
+                        color: _parseColor(
+                          _provider.avatarColors[_provider.selectedColorIndex],
                         ),
-                      ),
-              ),
-              // カメラボタン（写真がない時）
-              if (!hasPhoto)
-                Positioned(
-                  bottom: -10,
-                  right: -10,
-                  child: GestureDetector(
-                    onTap: _handleAddPhoto,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.grey[600],
-                        size: 20,
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+          ),
+          // カメラボタン（写真がない時）
+          if (!hasPhoto)
+            Positioned(
+              bottom: -10,
+              right: -10,
+              child: GestureDetector(
+                onTap: _handleAddPhoto,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.grey[600],
+                    size: 20,
+                  ),
                 ),
-              // 削除ボタン（写真がある時）
-              if (hasPhoto)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: GestureDetector(
-                    onTap: () {
-                      provider.removeImage();
-                    },
+              ),
+            ),
+          // 削除ボタン（写真がある時）
+          if (hasPhoto)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: GestureDetector(
+                onTap: () {
+                  _provider.removeImage();
+                },
                 child: Container(
                   width: 32,
                   height: 32,
@@ -247,10 +333,8 @@ class _AddPersonViewState extends State<AddPersonView> {
                 ),
               ),
             ),
-            ],
-          ),
-        );
-      },
+        ],
+      ),
     );
   }
 
@@ -442,65 +526,61 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildMeetingRecordsSection() {
-    return Consumer<AddPersonProvider>(
-      builder: (context, provider, child) {
-        return Column(
-          children: [
-            // 各会合記録のカード
-            ...provider.meetingRecords.asMap().entries.map((entry) {
-              final index = entry.key;
-              final record = entry.value;
-              final isNew = index == provider.newlyAddedIndex;
+    return Column(
+      children: [
+        // 各会合記録のカード
+        ..._provider.meetingRecords.asMap().entries.map((entry) {
+          final index = entry.key;
+          final record = entry.value;
+          final isNew = index == _provider.newlyAddedIndex;
 
-              return TweenAnimationBuilder<double>(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutCubic,
-                tween: Tween<double>(begin: isNew ? 0.0 : 1.0, end: 1.0),
-                builder: (context, value, child) {
-                  return Opacity(
-                    opacity: value,
-                    child: Transform.translate(
-                      offset: Offset(0, (1 - value) * 20),
-                      child: child,
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _buildMeetingRecordCard(record, index),
+          return TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOutCubic,
+            tween: Tween<double>(begin: isNew ? 0.0 : 1.0, end: 1.0),
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(0, (1 - value) * 20),
+                  child: child,
                 ),
               );
-            }),
-            // 会合記録追加ボタン
-            GestureDetector(
-              onTap: () => provider.addMeetingRecord(),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFF4D6FFF), width: 2),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.add, color: Color(0xFF4D6FFF)),
-                    const SizedBox(width: 8),
-                    const Text(
-                      '別の日を追加',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF4D6FFF),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _buildMeetingRecordCard(record, index),
             ),
-          ],
-        );
-      },
+          );
+        }),
+        // 会合記録追加ボタン
+        GestureDetector(
+          onTap: () => _provider.addMeetingRecord(),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFF4D6FFF), width: 2),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.add, color: Color(0xFF4D6FFF)),
+                const SizedBox(width: 8),
+                const Text(
+                  '別の日を追加',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF4D6FFF),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -574,35 +654,35 @@ class _AddPersonViewState extends State<AddPersonView> {
           ),
           const SizedBox(height: 16),
           // 場所入力
-          Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFF9E6),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.location_on,
-                  color: Color(0xFFFFC107),
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  controller: record.locationController,
-                  decoration: InputDecoration(
-                    hintText: '場所',
-                    hintStyle: TextStyle(color: Colors.grey[600], fontSize: 16),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
-            ],
+          LocationInputWidget(
+            controller: record.locationController,
+            hintText: '場所',
+            latitude: record.latitude,
+            longitude: record.longitude,
+            locationType: record.locationType,
+            onLocationChanged:
+                (
+                  String location,
+                  double? latitude,
+                  double? longitude,
+                  LocationType type,
+                ) {
+                  // デバッグログ
+                  if (kDebugMode) {
+                    print(
+                      '位置情報更新: recordId=${record.id}, location=$location, lat=$latitude, lng=$longitude, type=$type',
+                    );
+                  }
+
+                  // recordのIDで直接更新
+                  _provider.updateMeetingLocationById(
+                    record.id,
+                    location,
+                    latitude,
+                    longitude,
+                    type,
+                  );
+                },
           ),
           const SizedBox(height: 16),
           // メモ入力
@@ -678,7 +758,10 @@ class _AddPersonViewState extends State<AddPersonView> {
                       controller: _tagInputController,
                       decoration: InputDecoration(
                         hintText: '特徴タグ（スペース区切り）',
-                        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+                        hintStyle: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 16,
+                        ),
                         border: InputBorder.none,
                       ),
                       onChanged: _handleTagInputWrapper,
@@ -811,7 +894,6 @@ class _AddPersonViewState extends State<AddPersonView> {
       _provider.updateMeetingDate(index, picked);
     }
   }
-
 }
 
 class DashedBorder extends StatelessWidget {

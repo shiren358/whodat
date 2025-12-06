@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
@@ -161,6 +162,17 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           _animationController.forward();
         });
       },
+      onCancel: () {
+        // アニメーション付きでHome画面に戻る（保存時と同じ処理）
+        _animationController.reverse().then((_) {
+          if (!mounted) return;
+          setState(() {
+            _personToEdit = null; // 編集対象をクリア
+            _selectedIndex = 0; // Home画面に戻る
+          });
+          _animationController.forward();
+        });
+      },
     );
   }
 
@@ -314,6 +326,11 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                           setState(() {
                             _personToEdit = person;
                             _selectedIndex = 2; // Add画面に移動
+
+                            // デバッグログ
+                            if (kDebugMode) {
+                              print('HomeView: カードタップ - person=${person?.name ?? 'null'}, personId=${person?.id ?? 'null'}');
+                            }
                           });
                           _animationController.forward();
                         });

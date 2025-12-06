@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/person.dart';
 import '../models/meeting_record.dart';
 import '../services/person_storage.dart';
 import '../services/meeting_record_storage.dart';
+import '../services/location_service.dart';
 
 /// 会った記録の入力データを管理するクラス
 class MeetingRecordInput {
@@ -11,15 +13,21 @@ class MeetingRecordInput {
   DateTime? date;
   TextEditingController locationController;
   TextEditingController notesController;
+  double? latitude;
+  double? longitude;
+  LocationType? locationType;
 
   MeetingRecordInput({
     String? id,
     this.date,
     String? location,
     String? notes,
-  })  : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-        locationController = TextEditingController(text: location ?? ''),
-        notesController = TextEditingController(text: notes ?? '');
+    this.latitude,
+    this.longitude,
+    this.locationType,
+  }) : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+       locationController = TextEditingController(text: location ?? ''),
+       notesController = TextEditingController(text: notes ?? '');
 
   void dispose() {
     locationController.dispose();
@@ -70,7 +78,8 @@ class AddPersonProvider with ChangeNotifier {
   File? get selectedImage => _selectedImage;
   List<String> get tags => List.unmodifiable(_tags);
   List<String> get suggestedTags => List.unmodifiable(_suggestedTags);
-  List<MeetingRecordInput> get meetingRecords => List.unmodifiable(_meetingRecords);
+  List<MeetingRecordInput> get meetingRecords =>
+      List.unmodifiable(_meetingRecords);
   int get selectedColorIndex => _selectedColorIndex;
   int? get newlyAddedIndex => _newlyAddedIndex;
   List<String> get avatarColors => List.unmodifiable(_avatarColors);
@@ -79,20 +88,40 @@ class AddPersonProvider with ChangeNotifier {
 
   // ===== コンストラクタと初期化 =====
 
-  AddPersonProvider({
-    Person? person,
-    MeetingRecord? meetingRecord,
-  }) {
+  AddPersonProvider({Person? person, MeetingRecord? meetingRecord}) {
     _initializeMode(person, meetingRecord);
   }
 
+  // 初期化完了を待つFuture
+  Future<void> get initializationFuture => _initializationFuture;
+
+  late Future<void> _initializationFuture;
+
   // ===== 初期化メソッド =====
 
-  Future<void> _initializeMode(Person? person, MeetingRecord? meetingRecord) async {
+  Future<void> _initializeMode(
+    Person? person,
+    MeetingRecord? meetingRecord,
+  ) async {
+    _initializationFuture = _performInitialization(person, meetingRecord);
+  }
+
+  Future<void> _performInitialization(
+    Person? person,
+    MeetingRecord? meetingRecord,
+  ) async {
     _existingPerson = person;
     _existingMeetingRecord = meetingRecord;
     _isEditingPerson = person != null;
     _isEditingRecord = meetingRecord != null;
+
+    // デバッグログ
+    if (kDebugMode) {
+      print('AddPersonProvider: _initializeMode');
+      print('  _isEditingPerson: $_isEditingPerson');
+      print('  _isEditingRecord: $_isEditingRecord');
+      print('  person.name: ${person?.name}');
+    }
 
     // 提案タグを読み込み
     await _loadSuggestedTags();
@@ -105,6 +134,14 @@ class AddPersonProvider with ChangeNotifier {
       _initializeSingleMeetingRecord(meetingRecord);
     } else {
       _meetingRecords.add(MeetingRecordInput());
+    }
+
+    // デバッグログ
+    if (kDebugMode) {
+      print('  meetingRecords数: ${_meetingRecords.length}');
+      print('  name: $_name');
+      print('  company: $_company');
+      print('  position: $_position');
     }
 
     notifyListeners();
@@ -133,6 +170,9 @@ class AddPersonProvider with ChangeNotifier {
         date: record.meetingDate,
         location: record.location,
         notes: record.notes,
+        latitude: record.latitude,
+        longitude: record.longitude,
+        locationType: LocationType.manual, // 既存データは手動入力として扱う
       ),
     );
   }
@@ -177,6 +217,9 @@ class AddPersonProvider with ChangeNotifier {
           date: record.meetingDate,
           location: record.location,
           notes: record.notes,
+          latitude: record.latitude,
+          longitude: record.longitude,
+          locationType: LocationType.manual, // 既存データは手動入力として扱う
         ),
       );
     }
@@ -249,8 +292,15 @@ class AddPersonProvider with ChangeNotifier {
   // ===== 会った記録管理メソッド =====
 
   void addMeetingRecord() {
-    _meetingRecords.add(MeetingRecordInput());
+    final newRecord = MeetingRecordInput();
+    _meetingRecords.add(newRecord);
     _newlyAddedIndex = _meetingRecords.length - 1;
+
+    // デバッグログ
+    if (kDebugMode) {
+      print('addMeetingRecord: 新規レコードID=${newRecord.id}, 総数=${_meetingRecords.length}');
+    }
+
     notifyListeners();
 
     // アニメーション完了後にリセット
@@ -270,6 +320,115 @@ class AddPersonProvider with ChangeNotifier {
 
   void updateMeetingDate(int index, DateTime? date) {
     _meetingRecords[index].date = date;
+    notifyListeners();
+  }
+
+  void updateMeetingLocation(
+    int index,
+    double? lat,
+    double? lng,
+    String? locationName,
+    LocationType? locationType,
+  ) {
+    _meetingRecords[index].latitude = lat;
+    _meetingRecords[index].longitude = lng;
+    _meetingRecords[index].locationType = locationType;
+    if (locationName != null) {
+      _meetingRecords[index].locationController.text = locationName;
+    }
+    notifyListeners();
+  }
+
+  void updateMeetingLocationWithCoordinates(
+    int index,
+    String locationName,
+    double? latitude,
+    double? longitude,
+    LocationType locationType,
+  ) {
+    // デバッグログ
+    if (kDebugMode) {
+      print('Provider: updateMeetingLocationWithCoordinates');
+      print('  index: $index');
+      print('  locationName: $locationName');
+      print('  latitude: $latitude');
+      print('  longitude: $longitude');
+      print('  locationType: $locationType');
+      print('  更新前のlat: ${_meetingRecords[index].latitude}');
+      print('  更新前のlng: ${_meetingRecords[index].longitude}');
+    }
+
+    _meetingRecords[index].latitude = latitude;
+    _meetingRecords[index].longitude = longitude;
+    _meetingRecords[index].locationType = locationType;
+    _meetingRecords[index].locationController.text = locationName;
+
+    // デバッグログ
+    if (kDebugMode) {
+      print('  更新後のlat: ${_meetingRecords[index].latitude}');
+      print('  更新後のlng: ${_meetingRecords[index].longitude}');
+    }
+
+    notifyListeners();
+  }
+
+  // recordのIDで直接更新するメソッド
+  void updateMeetingLocationById(
+    String recordId,
+    String locationName,
+    double? latitude,
+    double? longitude,
+    LocationType locationType,
+  ) {
+    // デバッグログ：現在のレコード一覧を表示
+    if (kDebugMode) {
+      print('Provider: 現在のレコード一覧 (${_meetingRecords.length}件):');
+      for (int i = 0; i < _meetingRecords.length; i++) {
+        print('  [$i] ID: ${_meetingRecords[i].id}, 場所: ${_meetingRecords[i].locationController.text}');
+      }
+      print('Provider: 検索対象ID: $recordId');
+    }
+
+    final index = _meetingRecords.indexWhere((record) => record.id == recordId);
+
+    if (index != -1) {
+      // デバッグログ
+      if (kDebugMode) {
+        print('Provider: updateMeetingLocationById');
+        print('  recordId: $recordId');
+        print('  index: $index');
+        print('  locationName: $locationName');
+        print('  latitude: $latitude');
+        print('  longitude: $longitude');
+        print('  locationType: $locationType');
+        print('  更新前のlat: ${_meetingRecords[index].latitude}');
+        print('  更新前のlng: ${_meetingRecords[index].longitude}');
+      }
+
+      _meetingRecords[index].latitude = latitude;
+      _meetingRecords[index].longitude = longitude;
+      _meetingRecords[index].locationType = locationType;
+      _meetingRecords[index].locationController.text = locationName;
+
+      // デバッグログ
+      if (kDebugMode) {
+        print('  更新後のlat: ${_meetingRecords[index].latitude}');
+        print('  更新後のlng: ${_meetingRecords[index].longitude}');
+      }
+
+      notifyListeners();
+    } else {
+      if (kDebugMode) {
+        print('Provider: recordId $recordId が見つかりません');
+      }
+    }
+  }
+
+  void clearMeetingLocation(int index) {
+    _meetingRecords[index].latitude = null;
+    _meetingRecords[index].longitude = null;
+    _meetingRecords[index].locationType = null;
+    _meetingRecords[index].locationController.clear();
     notifyListeners();
   }
 
@@ -308,16 +467,23 @@ class AddPersonProvider with ChangeNotifier {
           notes: recordInput.notesController.text.trim().isEmpty
               ? null
               : recordInput.notesController.text.trim(),
+          latitude: recordInput.latitude,
+          longitude: recordInput.longitude,
         );
+
+        // デバッグログ
+        if (kDebugMode) {
+          print('保存するMeetingRecord: ${meetingRecord.toJson()}');
+          print('LocationType: ${recordInput.locationType}');
+        }
 
         // 既存のMeetingRecordを編集している場合
         if (_isEditingRecord && recordInput.id == _existingMeetingRecord!.id) {
           await MeetingRecordStorage.updateMeetingRecord(meetingRecord);
         } else {
           // 新規作成の場合（既存のIDがあっても新規として保存）
-          final existingRecord = await MeetingRecordStorage.getMeetingRecordById(
-            recordInput.id,
-          );
+          final existingRecord =
+              await MeetingRecordStorage.getMeetingRecordById(recordInput.id);
           if (existingRecord != null) {
             await MeetingRecordStorage.updateMeetingRecord(meetingRecord);
           } else {
