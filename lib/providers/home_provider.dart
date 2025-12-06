@@ -96,6 +96,11 @@ class HomeProvider with ChangeNotifier {
       final person = _personsMap[record.personId];
       if (person == null) return false;
 
+      // 日付関連の検索（タグ検索の前に行う）
+      if (_isDateSearch(query)) {
+        return _matchesDateSearch(record, query);
+      }
+
       // 名前で検索
       if (person.name?.toLowerCase().contains(lowercaseQuery) == true) {
         return true;
@@ -111,9 +116,10 @@ class HomeProvider with ChangeNotifier {
         return true;
       }
 
-      // タグで検索
+      // タグで検索（日付関連は除外）
       if (person.tags.any(
-        (tag) => tag.toLowerCase().contains(lowercaseQuery),
+        (tag) => tag.toLowerCase().contains(lowercaseQuery) &&
+                 !_isDateSearch(tag),
       )) {
         return true;
       }
@@ -193,5 +199,42 @@ class HomeProvider with ChangeNotifier {
         if (b.meetingDate == null) return -1;
         return b.meetingDate!.compareTo(a.meetingDate!);
       });
+  }
+
+  bool _isDateSearch(String query) {
+    final dateKeywords = ['先週会った', '今日', '今月'];
+    return dateKeywords.contains(query);
+  }
+
+  bool _matchesDateSearch(MeetingRecord record, String query) {
+    if (record.meetingDate == null) return false;
+
+    final now = DateTime.now();
+    final meetingDate = record.meetingDate!;
+    final today = DateTime(now.year, now.month, now.day);
+    final meetingDateOnly = DateTime(meetingDate.year, meetingDate.month, meetingDate.day);
+
+    switch (query) {
+      case '先週会った':
+        // 先週（月曜日から日曜日まで）
+        final startOfLastWeek = today.subtract(Duration(days: today.weekday + 6));
+        final endOfLastWeek = startOfLastWeek.add(const Duration(days: 6));
+        return !meetingDateOnly.isBefore(startOfLastWeek) &&
+               !meetingDateOnly.isAfter(endOfLastWeek);
+
+      case '今日':
+        // 今日
+        return meetingDateOnly.year == today.year &&
+               meetingDateOnly.month == today.month &&
+               meetingDateOnly.day == today.day;
+
+      case '今月':
+        // 今月
+        return meetingDateOnly.year == today.year &&
+               meetingDateOnly.month == today.month;
+
+      default:
+        return false;
+    }
   }
 }
