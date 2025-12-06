@@ -10,6 +10,7 @@ import '../models/person.dart';
 import 'add_person_view.dart';
 import 'calendar_view.dart';
 import 'map_view.dart';
+import 'search_results_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -89,6 +90,12 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                   _personToEdit = null;
                 }
                 _selectedIndex = i;
+
+                // Homeタブに切り替わった時だけデータを再読み込みしてタグを更新
+                if (i == 0) {
+                  final provider = Provider.of<HomeProvider>(context, listen: false);
+                  provider.loadData();
+                }
               });
               _animationController.forward();
             });
@@ -262,9 +269,26 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: provider.suggestedTags
-                    .map((tag) => TagChip(label: tag))
-                    .toList(),
+                children: [
+                  // 固定タグ（1行目）
+                  ...provider.suggestedTags.take(3).map(
+                    (tag) => TagChip(
+                      label: tag,
+                      onTap: () {
+                        provider.updateSearchQuery(tag);
+                      },
+                    ),
+                  ),
+                  // 動的タグ（2行目）
+                  ...provider.randomTags.map(
+                    (tag) => TagChip(
+                      label: tag,
+                      onTap: () {
+                        provider.updateSearchQuery(tag);
+                      },
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
             ],
@@ -277,6 +301,33 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   Widget _buildRecentSection(BuildContext context) {
     return Consumer<HomeProvider>(
       builder: (context, provider, child) {
+        // 検索クエリがある場合は検索結果を表示
+        if (provider.hasSearchQuery) {
+          return SearchResultsView(
+            onPersonTap: (person) {
+              if (person == null) return;
+
+              // HomeViewのカードタップと同じ処理を実行
+              _animationController.reverse().then((_) {
+                if (!mounted) return;
+                setState(() {
+                  _personToEdit = person;
+                  _selectedIndex = 2; // Add画面に移動
+
+                  // デバッグログ
+                  if (kDebugMode) {
+                    print(
+                      'SearchResultsView: カードタップ - person=${person.name}, personId=${person.id}',
+                    );
+                  }
+                });
+                _animationController.forward();
+              });
+            },
+          );
+        }
+
+        // 通常の「最近会った人」を表示
         return Container(
           decoration: const BoxDecoration(color: Color(0xFFF5F5F7)),
           child: Column(
@@ -329,7 +380,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
                             // デバッグログ
                             if (kDebugMode) {
-                              print('HomeView: カードタップ - person=${person?.name ?? 'null'}, personId=${person?.id ?? 'null'}');
+                              print(
+                                'HomeView: カードタップ - person=${person?.name ?? 'null'}, personId=${person?.id ?? 'null'}',
+                              );
                             }
                           });
                           _animationController.forward();

@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
+
 import '../models/person.dart';
 import '../models/meeting_record.dart';
 import '../services/person_storage.dart';
@@ -871,7 +873,7 @@ class DummyDataGenerator {
   }
 
   static Future<void> generateDummyData() async {
-    print('Generating 100 dummy records...');
+    debugPrint('Generating 100 dummy records...');
 
     final List<Person> persons = [];
     final List<MeetingRecord> meetingRecords = [];
@@ -896,27 +898,27 @@ class DummyDataGenerator {
         meetingRecords.add(meetingRecord);
       }
 
-      print(
+      debugPrint(
         'Generated person ${i + 1}/100: ${person.name} @ ${person.company}',
       );
     }
 
     // Save all persons to storage
-    print('\nSaving persons to storage...');
+    debugPrint('\nSaving persons to storage...');
     for (final person in persons) {
       await PersonStorage.savePerson(person);
     }
 
     // Save all meeting records to storage
-    print('Saving meeting records to storage...');
+    debugPrint('Saving meeting records to storage...');
     for (final record in meetingRecords) {
       await MeetingRecordStorage.saveMeetingRecord(record);
     }
 
-    print('\n✅ Successfully generated and saved:');
-    print('  • ${persons.length} persons');
-    print('  • ${meetingRecords.length} meeting records');
-    print('\nData generation completed!');
+    debugPrint('\n✅ Successfully generated and saved:');
+    debugPrint('  • ${persons.length} persons');
+    debugPrint('  • ${meetingRecords.length} meeting records');
+    debugPrint('\nData generation completed!');
 
     // Clear used combinations for next generation
     _usedNameCompanyCombinations.clear();
@@ -925,7 +927,7 @@ class DummyDataGenerator {
 
   // Method to clear all existing data (for testing purposes)
   static Future<void> clearAllData() async {
-    print('Clearing all existing data...');
+    debugPrint('Clearing all existing data...');
 
     final persons = await PersonStorage.getAllPersons();
     final meetingRecords = await MeetingRecordStorage.getAllMeetingRecords();
@@ -938,7 +940,7 @@ class DummyDataGenerator {
       await MeetingRecordStorage.deleteMeetingRecord(record.id);
     }
 
-    print(
+    debugPrint(
       'Cleared ${persons.length} persons and ${meetingRecords.length} meeting records',
     );
   }

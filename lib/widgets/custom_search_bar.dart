@@ -1,14 +1,42 @@
 import 'package:flutter/material.dart';
 
-class CustomSearchBar extends StatelessWidget {
+class CustomSearchBar extends StatefulWidget {
   final String hintText;
   final ValueChanged<String>? onChanged;
 
   const CustomSearchBar({
     super.key,
-    this.hintText = '特徴、場所、日付で検索...',
+    this.hintText = '名前、会社、場所、タグで検索...',
     this.onChanged,
   });
+
+  @override
+  State<CustomSearchBar> createState() => _CustomSearchBarState();
+}
+
+class _CustomSearchBarState extends State<CustomSearchBar> {
+  late TextEditingController _controller;
+  bool _hasText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _controller.addListener(() {
+      final hasText = _controller.text.isNotEmpty;
+      if (hasText != _hasText) {
+        setState(() {
+          _hasText = hasText;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +63,16 @@ class CustomSearchBar extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: TextField(
-              onChanged: onChanged,
+              controller: _controller,
+              onChanged: (value) {
+                widget.onChanged?.call(value);
+              },
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
               ),
               decoration: InputDecoration(
-                hintText: hintText,
+                hintText: widget.hintText,
                 hintStyle: TextStyle(
                   color: Colors.grey[400],
                   fontSize: 16,
@@ -53,11 +84,24 @@ class CustomSearchBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Icon(
-            Icons.mic_none,
-            color: Colors.grey[400],
-            size: 24,
-          ),
+          if (_hasText)
+            GestureDetector(
+              onTap: () {
+                _controller.clear();
+                widget.onChanged?.call('');
+              },
+              child: Icon(
+                Icons.clear,
+                color: Colors.grey[400],
+                size: 24,
+              ),
+            )
+          else
+            Icon(
+              Icons.mic_none,
+              color: Colors.grey[400],
+              size: 24,
+            ),
         ],
       ),
     );
