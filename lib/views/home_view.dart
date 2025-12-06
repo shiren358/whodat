@@ -138,6 +138,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     return AddPersonView(
       key: const ValueKey('add'),
       onSave: () {
+        // データを再読み込み
+        final provider = Provider.of<HomeProvider>(context, listen: false);
+        provider.loadPersons();
         setState(() {
           _selectedIndex = 0; // Home画面に戻る
         });

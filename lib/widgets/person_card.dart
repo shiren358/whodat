@@ -5,11 +5,7 @@ class PersonCard extends StatelessWidget {
   final Person person;
   final VoidCallback? onTap;
 
-  const PersonCard({
-    super.key,
-    required this.person,
-    this.onTap,
-  });
+  const PersonCard({super.key, required this.person, this.onTap});
 
   Color _parseColor(String hexColor) {
     final hex = hexColor.replaceAll('#', '');
@@ -63,7 +59,7 @@ class PersonCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          person.name,
+                          person.name ?? '名前未登録',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -73,10 +69,7 @@ class PersonCard extends StatelessWidget {
                       ),
                       Text(
                         person.formattedDate,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[400],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[400]),
                       ),
                     ],
                   ),
@@ -84,10 +77,7 @@ class PersonCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       person.displayCompanyPosition,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     ),
                   ],
                   const SizedBox(height: 8),

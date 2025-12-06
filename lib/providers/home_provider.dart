@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../models/person.dart';
+import '../services/person_storage.dart';
 
 class HomeProvider with ChangeNotifier {
   String _searchQuery = '';
@@ -11,7 +12,7 @@ class HomeProvider with ChangeNotifier {
   List<Person> get recentPersons => _recentPersons;
 
   HomeProvider() {
-    _loadMockData();
+    loadPersons();
   }
 
   void updateSearchQuery(String query) {
@@ -19,39 +20,10 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void _loadMockData() {
-    _recentPersons = [
-      Person(
-        id: '1',
-        name: '佐藤 健太',
-        company: 'TechFlow Inc.',
-        position: 'マーケティング部長',
-        tags: ['メガネ', 'ゴルフ'],
-        registeredDate: DateTime(2024, 10, 15),
-        avatarColor: '#6B9FFF',
-        additionalInfoCount: 1,
-      ),
-      Person(
-        id: '2',
-        name: '名前忘れた… (田…',
-        company: 'フリーランス',
-        position: 'デザイナー',
-        tags: ['金髪', 'MacBook'],
-        registeredDate: DateTime(2024, 11, 2),
-        avatarColor: '#D4B3FF',
-        additionalInfoCount: 1,
-      ),
-      Person(
-        id: '3',
-        name: '鈴木 さくら',
-        company: 'StartUp Hub',
-        position: '広報',
-        tags: ['ショートカット', '犬好き'],
-        registeredDate: DateTime(2024, 9, 20),
-        avatarColor: '#FFB3D9',
-        additionalInfoCount: 1,
-      ),
-    ];
+  Future<void> loadPersons() async {
+    _recentPersons = await PersonStorage.getAllPersons();
+    // 登録日の新しい順にソート
+    _recentPersons.sort((a, b) => b.registeredDate.compareTo(a.registeredDate));
     notifyListeners();
   }
 }

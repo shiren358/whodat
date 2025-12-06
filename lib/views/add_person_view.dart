@@ -1,4 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import '../models/person.dart';
+import '../services/person_storage.dart';
 
 class AddPersonView extends StatefulWidget {
   final VoidCallback? onSave;
@@ -14,8 +18,29 @@ class _AddPersonViewState extends State<AddPersonView> {
   final _companyController = TextEditingController();
   final _positionController = TextEditingController();
   final _locationController = TextEditingController();
-  final _tagsController = TextEditingController();
+  final _tagInputController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
+  File? _selectedImage;
+  final List<String> _tags = [];
+  final ImagePicker _picker = ImagePicker();
+
+  final List<String> _avatarColors = [
+    '#4D6FFF',
+    '#9B72FF',
+    '#FF6B9D',
+    '#FF6F00',
+    '#00D4AA',
+    '#607D8B',
+  ];
+  int _selectedColorIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.addListener(() {
+      setState(() {}); // アバタープレビューを更新
+    });
+  }
 
   @override
   void dispose() {
@@ -23,7 +48,7 @@ class _AddPersonViewState extends State<AddPersonView> {
     _companyController.dispose();
     _positionController.dispose();
     _locationController.dispose();
-    _tagsController.dispose();
+    _tagInputController.dispose();
     super.dispose();
   }
 
@@ -43,13 +68,16 @@ class _AddPersonViewState extends State<AddPersonView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildPhotoSection(),
+                      _buildAvatarPreview(),
+                      const SizedBox(height: 16),
+                      _buildColorPicker(),
                       const SizedBox(height: 24),
                       _buildNameSection(),
                       const SizedBox(height: 24),
                       _buildCompanySection(),
                       const SizedBox(height: 32),
                       _buildConnectionInfo(),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
@@ -68,7 +96,7 @@ class _AddPersonViewState extends State<AddPersonView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(width: 48), // 左側のスペース確保
+          const SizedBox(width: 48),
           const Text(
             '記憶を記録',
             style: TextStyle(
@@ -93,43 +121,157 @@ class _AddPersonViewState extends State<AddPersonView> {
     );
   }
 
-  Widget _buildPhotoSection() {
-    return GestureDetector(
-      onTap: _handleAddPhoto,
-      child: Center(
-        child: Container(
-          height: 130,
-          width: 130,
-          decoration: BoxDecoration(
-            color: Color(0xFFF2F5F9),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: DashedBorder(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.camera_alt_outlined,
-                    size: 32,
-                    color: Colors.blueGrey[300],
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    '写真を追加',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blueGrey[600],
-                      fontWeight: FontWeight.w500,
+  Widget _buildAvatarPreview() {
+    final name = _nameController.text.trim();
+    final initial = name.isEmpty ? '？' : name[0];
+    final hasPhoto = _selectedImage != null;
+
+    return Center(
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            height: 130,
+            width: 130,
+            decoration: BoxDecoration(
+              color: hasPhoto
+                  ? Colors.transparent
+                  : _parseColor(
+                      _avatarColors[_selectedColorIndex],
+                    ).withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(24),
+              border: hasPhoto
+                  ? Border.all(
+                      color: _parseColor(_avatarColors[_selectedColorIndex]),
+                      width: 4,
+                    )
+                  : null,
+            ),
+            child: hasPhoto
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.file(_selectedImage!, fit: BoxFit.cover),
+                  )
+                : Center(
+                    child: Text(
+                      initial,
+                      style: TextStyle(
+                        color: _parseColor(_avatarColors[_selectedColorIndex]),
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ],
+          ),
+          // カメラボタン（写真がない時）
+          if (!hasPhoto)
+            Positioned(
+              bottom: -10,
+              right: -10,
+              child: GestureDetector(
+                onTap: _handleAddPhoto,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.grey[600],
+                    size: 20,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          // 削除ボタン（写真がある時）
+          if (hasPhoto)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedImage = null;
+                  });
+                },
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[700]?.withValues(alpha: 0.7),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.close, color: Colors.white, size: 20),
+                ),
+              ),
+            ),
+        ],
       ),
     );
+  }
+
+  Widget _buildColorPicker() {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(_avatarColors.length, (index) {
+          final isSelected = index == _selectedColorIndex;
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedColorIndex = index;
+              });
+            },
+            child: Container(
+              width: 48,
+              height: 48,
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              alignment: Alignment.center,
+              child: Container(
+                width: isSelected ? 48 : 40,
+                height: isSelected ? 48 : 40,
+                decoration: BoxDecoration(
+                  color: _parseColor(_avatarColors[index]),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isSelected ? Colors.white : Colors.transparent,
+                    width: 3,
+                  ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: _parseColor(
+                              _avatarColors[index],
+                            ).withValues(alpha: 0.5),
+                            blurRadius: 8,
+                            spreadRadius: 2,
+                          ),
+                        ]
+                      : null,
+                ),
+                child: isSelected
+                    ? const Icon(Icons.check, color: Colors.white, size: 24)
+                    : null,
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Color _parseColor(String hexColor) {
+    final hex = hexColor.replaceAll('#', '');
+    return Color(int.parse('FF$hex', radix: 16));
   }
 
   Widget _buildNameSection() {
@@ -365,40 +507,69 @@ class _AddPersonViewState extends State<AddPersonView> {
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: Text(
-                  '特徴タグ（スペース区切り）',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                child: TextField(
+                  controller: _tagInputController,
+                  decoration: InputDecoration(
+                    hintText: '特徴タグを入力',
+                    hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+                    border: InputBorder.none,
+                    suffixIcon: IconButton(
+                      icon: const Icon(
+                        Icons.add_circle,
+                        color: Color(0xFF9C27B0),
+                      ),
+                      onPressed: () => _addTag(_tagInputController.text),
+                    ),
+                  ),
+                  onSubmitted: _addTag,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [_buildTag('メガネ'), _buildTag('髭'), _buildTag('スーツ')],
-          ),
+          if (_tags.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _tags.map((tag) => _buildTag(tag)).toList(),
+            ),
+          ],
         ],
       ),
     );
   }
 
   Widget _buildTag(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(fontSize: 14, color: Colors.black87),
+    return GestureDetector(
+      onTap: () => _removeTag(label),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF8FAFC),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
+            ),
+            const SizedBox(width: 4),
+            const Icon(Icons.close, size: 16, color: Colors.black54),
+          ],
+        ),
       ),
     );
   }
 
-  void _handleAddPhoto() {
-    // TODO: 写真を追加する処理
+  void _handleAddPhoto() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+    }
   }
 
   void _selectDate() async {
@@ -415,8 +586,43 @@ class _AddPersonViewState extends State<AddPersonView> {
     }
   }
 
-  void _handleSave() {
-    // TODO: 保存処理
+  void _addTag(String tag) {
+    if (tag.trim().isNotEmpty && !_tags.contains(tag.trim())) {
+      setState(() {
+        _tags.add(tag.trim());
+        _tagInputController.clear();
+      });
+    }
+  }
+
+  void _removeTag(String tag) {
+    setState(() {
+      _tags.remove(tag);
+    });
+  }
+
+  void _handleSave() async {
+    final person = Person(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: _nameController.text.trim().isEmpty
+          ? null
+          : _nameController.text.trim(),
+      company: _companyController.text.trim().isEmpty
+          ? null
+          : _companyController.text.trim(),
+      position: _positionController.text.trim().isEmpty
+          ? null
+          : _positionController.text.trim(),
+      location: _locationController.text.trim().isEmpty
+          ? null
+          : _locationController.text.trim(),
+      tags: _tags,
+      registeredDate: _selectedDate,
+      avatarColor: _avatarColors[_selectedColorIndex],
+      photoPath: _selectedImage?.path,
+    );
+
+    await PersonStorage.savePerson(person);
     widget.onSave?.call();
   }
 }
