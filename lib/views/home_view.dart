@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import '../providers/home_provider.dart';
 import '../widgets/custom_search_bar.dart';
 import '../widgets/tag_chip.dart';
@@ -35,7 +36,27 @@ class HomeView extends StatelessWidget {
           Expanded(child: _buildRecentSection(context)),
         ],
       ),
-      bottomNavigationBar: _buildBottomNavigation(context),
+      bottomNavigationBar: DefaultTextStyle(
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+        child: ConvexAppBar(
+          items: const [
+            TabItem(icon: Icons.home_outlined, title: 'Home'),
+            TabItem(icon: Icons.calendar_today_outlined, title: 'Calendar'),
+            TabItem(icon: Icons.add, title: 'Add'),
+            TabItem(icon: Icons.map_outlined, title: 'Map'),
+            TabItem(icon: Icons.person_outline, title: 'MyPage'),
+          ],
+          initialActiveIndex: 0,
+          backgroundColor: Colors.white,
+          color: const Color(0xFFB0B0B0),
+          activeColor: const Color(0xFF4D6FFF),
+          style: TabStyle.reactCircle,
+          height: 60,
+          top: -25,
+          curveSize: 90,
+          onTap: (int i) {},
+        ),
+      ),
     );
   }
 
@@ -175,63 +196,6 @@ class HomeView extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildBottomNavigation(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(icon: Icons.search, label: '検索', isActive: true),
-              _buildNavItem(
-                icon: Icons.person_outline,
-                label: 'マイページ',
-                isActive: false,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem({
-    required IconData icon,
-    required String label,
-    required bool isActive,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: isActive ? const Color(0xFF4D6FFF) : Colors.grey[400],
-          size: 28,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: isActive ? const Color(0xFF4D6FFF) : Colors.grey[400],
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
-      ],
     );
   }
 }
