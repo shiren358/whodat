@@ -384,7 +384,7 @@ class _AddPersonViewState extends State<AddPersonView> {
         return Center(
           child: Wrap(
             alignment: WrapAlignment.center,
-            spacing: 16.0,
+            spacing: 8.0,  // 16.0から8.0に減らして間隔を縮小
             runSpacing: 8.0,
             children: List.generate(provider.avatarColors.length, (index) {
               final isSelected = index == provider.selectedColorIndex;
@@ -393,18 +393,18 @@ class _AddPersonViewState extends State<AddPersonView> {
                   provider.selectColor(index);
                 },
                 child: Container(
-                  width: 48,
-                  height: 48,
+                  width: 42,  // 48から42にサイズを縮小
+                  height: 42,
                   alignment: Alignment.center,
                   child: Container(
-                    width: isSelected ? 48 : 40,
-                    height: isSelected ? 48 : 40,
+                    width: isSelected ? 42 : 36,  // サイズを縮小
+                    height: isSelected ? 42 : 36,
                     decoration: BoxDecoration(
                       color: _parseColor(provider.avatarColors[index]),
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: isSelected ? Colors.white : Colors.transparent,
-                        width: 3,
+                        width: 2,  // 3から2に減らす
                       ),
                       boxShadow: isSelected
                           ? [
@@ -412,14 +412,14 @@ class _AddPersonViewState extends State<AddPersonView> {
                                 color: _parseColor(
                                   provider.avatarColors[index],
                                 ).withValues(alpha: 0.5),
-                                blurRadius: 8,
-                                spreadRadius: 2,
+                                blurRadius: 6,  // 8から6に減らす
+                                spreadRadius: 1,  // 2から1に減らす
                               ),
                             ]
                           : null,
                     ),
                     child: isSelected
-                        ? const Icon(Icons.check, color: Colors.white, size: 24)
+                        ? const Icon(Icons.check, color: Colors.white, size: 20)  // 24から20に縮小
                         : null,
                   ),
                 ),
