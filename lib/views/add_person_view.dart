@@ -239,13 +239,10 @@ class _AddPersonViewState extends State<AddPersonView> {
                       Navigator.pop(context);
                     }
                   },
-                  child: const Text(
-                    'キャンセル',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF666666),
-                      fontWeight: FontWeight.w600,
-                    ),
+                  child: const Icon(
+                    Icons.close,
+                    color: Color(0xFF666666),
+                    size: 24,
                   ),
                 )
               : const SizedBox(width: 48),

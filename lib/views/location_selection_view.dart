@@ -6,7 +6,13 @@ class LocationSelectionView extends StatefulWidget {
   final String initialLocation;
   final double? initialLatitude;
   final double? initialLongitude;
-  final Function(String location, double? latitude, double? longitude, LocationType type) onLocationSelected;
+  final Function(
+    String location,
+    double? latitude,
+    double? longitude,
+    LocationType type,
+  )
+  onLocationSelected;
 
   const LocationSelectionView({
     super.key,
@@ -118,10 +124,7 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                 ),
                 child: const Text(
                   'キャンセル',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF666666),
-                  ),
+                  style: TextStyle(fontSize: 16, color: Color(0xFF666666)),
                 ),
               ),
             ),
@@ -156,11 +159,7 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24,
-              ),
+              child: Icon(icon, color: color, size: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -178,19 +177,12 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
           ],
         ),
       ),
@@ -379,10 +371,7 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                       ),
                       child: const Text(
                         '決定',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),
