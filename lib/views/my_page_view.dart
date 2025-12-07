@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import
 import '../providers/my_page_provider.dart';
 import 'tag_settings_view.dart';
+import 'feedback_screen.dart';
 
 class MyPageView extends StatefulWidget {
   const MyPageView({super.key});
@@ -14,6 +15,7 @@ class MyPageView extends StatefulWidget {
 class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
   late AnimationController _animationController;
   bool _showingTagSettings = false;
+  bool _showingFeedback = false;
 
   @override
   void initState() {
@@ -49,6 +51,26 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
       if (!mounted) return;
       setState(() {
         _showingTagSettings = false;
+      });
+      _animationController.forward();
+    });
+  }
+
+  void _showFeedback() {
+    _animationController.reverse().then((_) {
+      if (!mounted) return;
+      setState(() {
+        _showingFeedback = true;
+      });
+      _animationController.forward();
+    });
+  }
+
+  void _hideFeedback() {
+    _animationController.reverse().then((_) {
+      if (!mounted) return;
+      setState(() {
+        _showingFeedback = false;
       });
       _animationController.forward();
     });
@@ -92,6 +114,9 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
   Widget _getSelectedContent() {
     if (_showingTagSettings) {
       return TagSettingsView(onClose: _hideTagSettings);
+    }
+    if (_showingFeedback) {
+      return FeedbackScreen(onClose: _hideFeedback);
     }
 
     return Consumer<MyPageProvider>(
@@ -270,6 +295,15 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                   onTap: () {
                     _showTagSettings();
                   },
+                  icon: Icons.local_offer,
+                ),
+                _buildMenuItem(
+                  context,
+                  title: 'フィードバック',
+                  onTap: () {
+                    _showFeedback();
+                  },
+                  icon: Icons.feedback,
                 ),
                 // _buildMenuItem(
                 //   context,
@@ -280,12 +314,14 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                 //       const SnackBar(content: Text('データのエクスポートは開発中です')),
                 //     );
                 //   },
+                //   icon: Icons.download,
                 // ),
                 _buildMenuItem(
                   context,
                   title: 'プライバシーポリシー',
                   onTap: () =>
                       _launchURL('https://tomople.com/privacy-policy/'),
+                  icon: Icons.privacy_tip,
                 ),
                 _buildMenuItem(
                   context,
@@ -293,6 +329,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                   onTap: () => _launchURL(
                     'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
                   ),
+                  icon: Icons.description,
                 ),
                 const SizedBox(height: 32), // スペースを追加
                 Center(
@@ -314,6 +351,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
     BuildContext context, {
     required String title,
     required VoidCallback onTap,
+    IconData? icon,
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -327,8 +365,17 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                Icon(Icons.chevron_right, color: Colors.grey[400]),
-                const SizedBox(width: 16),
+                if (icon != null) ...[
+                  Icon(
+                    icon,
+                    color: const Color(0xFF4D6FFF),
+                    size: 24,
+                  ),
+                  const SizedBox(width: 16),
+                ] else ...[
+                  Icon(Icons.chevron_right, color: Colors.grey[400]),
+                  const SizedBox(width: 16),
+                ],
                 Expanded(
                   child: Text(
                     title,
@@ -339,6 +386,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
+                Icon(Icons.chevron_right, color: Colors.grey[400]),
               ],
             ),
           ),
