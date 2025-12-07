@@ -591,143 +591,155 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildMeetingRecordCard(MeetingRecordInput record, int index) {
-    final String dateText;
-    final Color dateColor;
+    return Consumer<AddPersonProvider>(
+      builder: (context, provider, child) {
+        final currentRecord = provider.meetingRecords[index];
+        final String dateText;
+        final Color dateColor;
 
-    if (record.date == null) {
-      dateText = 'いつ会った？（タップして設定）';
-      dateColor = Colors.grey.shade600;
-    } else {
-      final now = DateTime.now();
-      final isToday =
-          record.date!.year == now.year &&
-          record.date!.month == now.month &&
-          record.date!.day == now.day;
-      dateText =
-          '${record.date!.year}.${record.date!.month.toString().padLeft(2, '0')}.${record.date!.day.toString().padLeft(2, '0')}${isToday ? ' (今日)' : ''}';
-      dateColor = Colors.black87;
-    }
+        if (currentRecord.date == null) {
+          dateText = 'いつ会った？（タップして設定）';
+          dateColor = Colors.grey.shade600;
+        } else {
+          final now = DateTime.now();
+          final isToday =
+              currentRecord.date!.year == now.year &&
+              currentRecord.date!.month == now.month &&
+              currentRecord.date!.day == now.day;
+          dateText =
+              '${currentRecord.date!.year}.${currentRecord.date!.month.toString().padLeft(2, '0')}.${currentRecord.date!.day.toString().padLeft(2, '0')}${isToday ? ' (今日)' : ''}';
+          dateColor = Colors.black87;
+        }
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          // ヘッダー（削除ボタン）
-          if (_provider.meetingRecords.length > 1)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  onTap: () => _provider.removeMeetingRecord(index),
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    child: Icon(Icons.close, size: 20, color: Colors.grey[600]),
-                  ),
-                ),
-              ],
-            ),
-          // 日付選択
-          GestureDetector(
-            onTap: () => _selectDateForRecord(index),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE8F5E9),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.calendar_today,
-                    color: Color(0xFF4CAF50),
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    dateText,
-                    style: TextStyle(fontSize: 16, color: dateColor),
-                  ),
-                ),
-              ],
-            ),
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
           ),
-          const SizedBox(height: 16),
-          // 場所入力
-          LocationInputWidget(
-            controller: record.locationController,
-            hintText: '場所',
-            latitude: record.latitude,
-            longitude: record.longitude,
-            locationType: record.locationType,
-            onLocationChanged:
-                (
-                  String location,
-                  double? latitude,
-                  double? longitude,
-                  LocationType type,
-                ) {
-                  // デバッグログ
-                  if (kDebugMode) {
-                    print(
-                      '位置情報更新: recordId=${record.id}, location=$location, lat=$latitude, lng=$longitude, type=$type',
-                    );
-                  }
-
-                  // recordのIDで直接更新
-                  _provider.updateMeetingLocationById(
-                    record.id,
-                    location,
-                    latitude,
-                    longitude,
-                    type,
-                  );
-                },
-          ),
-          const SizedBox(height: 16),
-          // メモ入力
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE3F2FD),
-                  shape: BoxShape.circle,
+              // ヘッダー（削除ボタン）
+              if (_provider.meetingRecords.length > 1)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () => _provider.removeMeetingRecord(index),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        child: Icon(
+                          Icons.close,
+                          size: 20,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.edit_note,
-                  color: Color(0xFF2196F3),
-                  size: 24,
+              // 日付選択
+              GestureDetector(
+                onTap: () => _selectDateForRecord(index),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE8F5E9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.calendar_today,
+                        color: Color(0xFF4CAF50),
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        dateText,
+                        style: TextStyle(fontSize: 16, color: dateColor),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  controller: record.notesController,
-                  decoration: InputDecoration(
-                    hintText: 'メモ（会話内容など）',
-                    hintStyle: TextStyle(color: Colors.grey[600], fontSize: 16),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
+              const SizedBox(height: 16),
+              // 場所入力
+              LocationInputWidget(
+                controller: currentRecord.locationController,
+                hintText: '場所',
+                latitude: currentRecord.latitude,
+                longitude: currentRecord.longitude,
+                locationType: currentRecord.locationType,
+                onLocationChanged:
+                    (
+                      String location,
+                      double? latitude,
+                      double? longitude,
+                      LocationType type,
+                    ) {
+                      // デバッグログ
+                      if (kDebugMode) {
+                        print(
+                          '位置情報更新: recordId=${currentRecord.id}, location=$location, lat=$latitude, lng=$longitude, type=$type',
+                        );
+                      }
+
+                      // recordのIDで直接更新
+                      _provider.updateMeetingLocationById(
+                        currentRecord.id,
+                        location,
+                        latitude,
+                        longitude,
+                        type,
+                      );
+                    },
+              ),
+              const SizedBox(height: 16),
+              // メモ入力
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFE3F2FD),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.edit_note,
+                      color: Color(0xFF2196F3),
+                      size: 24,
+                    ),
                   ),
-                  style: const TextStyle(fontSize: 16),
-                  maxLines: null,
-                  minLines: 1,
-                  keyboardType: TextInputType.multiline,
-                ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextField(
+                      controller: record.notesController,
+                      decoration: InputDecoration(
+                        hintText: 'メモ（会話内容など）',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 16,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      style: const TextStyle(fontSize: 16),
+                      maxLines: null,
+                      minLines: 1,
+                      keyboardType: TextInputType.multiline,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -939,10 +951,7 @@ class _AddPersonViewState extends State<AddPersonView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'キャンセル',
-              style: TextStyle(color: Colors.grey),
-            ),
+            child: const Text('キャンセル', style: TextStyle(color: Colors.grey)),
           ),
           TextButton(
             onPressed: () async {
@@ -955,10 +964,7 @@ class _AddPersonViewState extends State<AddPersonView> {
                 }
               }
             },
-            child: const Text(
-              '削除',
-              style: TextStyle(color: Colors.red),
-            ),
+            child: const Text('削除', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
