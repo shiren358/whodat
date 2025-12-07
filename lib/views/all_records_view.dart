@@ -32,7 +32,7 @@ class AllRecordsView extends StatelessWidget {
                 child: SafeArea(child: _buildHeader(context)),
               ),
               Expanded(
-                child: provider.latestMeetingRecordsByPerson.isEmpty
+                child: provider.allLatestMeetingRecordsByPerson.isEmpty
                     ? _buildEmptyState(context)
                     : _buildRecordsList(context, provider),
               ),
@@ -119,9 +119,9 @@ class AllRecordsView extends StatelessWidget {
   Widget _buildRecordsList(BuildContext context, HomeProvider provider) {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      itemCount: provider.latestMeetingRecordsByPerson.length,
+      itemCount: provider.allLatestMeetingRecordsByPerson.length,
       itemBuilder: (context, index) {
-        final record = provider.latestMeetingRecordsByPerson[index];
+        final record = provider.allLatestMeetingRecordsByPerson[index];
         final person = provider.getPersonForRecord(record);
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),

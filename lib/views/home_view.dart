@@ -189,7 +189,6 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     );
   }
 
-  
   Widget _buildTopBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -359,21 +358,25 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ChangeNotifierProvider(
-                                        create: (_) => AddPersonProvider(person: person),
-                                        child: AddPersonView(
-                                          person: person,
-                                          onSave: () {
-                                            // データを再読み込み
-                                            final provider = Provider.of<HomeProvider>(
-                                              context,
-                                              listen: false,
-                                            );
-                                            provider.loadData();
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ),
+                                      builder: (context) =>
+                                          ChangeNotifierProvider(
+                                            create: (_) => AddPersonProvider(
+                                              person: person,
+                                            ),
+                                            child: AddPersonView(
+                                              person: person,
+                                              onSave: () {
+                                                // データを再読み込み
+                                                final provider =
+                                                    Provider.of<HomeProvider>(
+                                                      context,
+                                                      listen: false,
+                                                    );
+                                                provider.loadData();
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ),
                                     ),
                                   );
                                 },
