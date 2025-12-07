@@ -1,14 +1,13 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user_profile.dart';
 
 class UserProfileStorage {
   static const String _key = 'user_profile';
+  static const _storage = FlutterSecureStorage();
 
   static Future<UserProfile?> getUserProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString(_key);
-
+    final jsonString = await _storage.read(key: _key);
     if (jsonString == null) return null;
 
     final json = jsonDecode(jsonString);
@@ -16,12 +15,11 @@ class UserProfileStorage {
   }
 
   static Future<void> saveUserProfile(UserProfile profile) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key, jsonEncode(profile.toJson()));
+    await _storage.write(key: _key, value: jsonEncode(profile.toJson()));
   }
 
   static Future<void> deleteUserProfile() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_key);
+    await _storage.delete(key: _key);
   }
 }
+

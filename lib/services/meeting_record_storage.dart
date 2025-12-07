@@ -1,23 +1,24 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/meeting_record.dart';
 
 class MeetingRecordStorage {
   static const String _key = 'meeting_records';
+  static const _storage = FlutterSecureStorage();
+
+  static Future<void> _saveRecords(List<MeetingRecord> records) async {
+    final jsonList = records.map((r) => r.toJson()).toList();
+    await _storage.write(key: _key, value: jsonEncode(jsonList));
+  }
 
   static Future<void> saveMeetingRecord(MeetingRecord record) async {
-    final prefs = await SharedPreferences.getInstance();
     final records = await getAllMeetingRecords();
     records.add(record);
-
-    final jsonList = records.map((r) => r.toJson()).toList();
-    await prefs.setString(_key, jsonEncode(jsonList));
+    await _saveRecords(records);
   }
 
   static Future<List<MeetingRecord>> getAllMeetingRecords() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString(_key);
-
+    final jsonString = await _storage.read(key: _key);
     if (jsonString == null) return [];
 
     final List<dynamic> jsonList = jsonDecode(jsonString);
@@ -40,32 +41,24 @@ class MeetingRecordStorage {
   }
 
   static Future<void> updateMeetingRecord(MeetingRecord record) async {
-    final prefs = await SharedPreferences.getInstance();
     final records = await getAllMeetingRecords();
-
     final index = records.indexWhere((r) => r.id == record.id);
     if (index != -1) {
       records[index] = record;
-      final jsonList = records.map((r) => r.toJson()).toList();
-      await prefs.setString(_key, jsonEncode(jsonList));
+      await _saveRecords(records);
     }
   }
 
   static Future<void> deleteMeetingRecord(String id) async {
-    final prefs = await SharedPreferences.getInstance();
     final records = await getAllMeetingRecords();
-
     records.removeWhere((r) => r.id == id);
-    final jsonList = records.map((r) => r.toJson()).toList();
-    await prefs.setString(_key, jsonEncode(jsonList));
+    await _saveRecords(records);
   }
 
   static Future<void> deleteMeetingRecordsByPersonId(String personId) async {
-    final prefs = await SharedPreferences.getInstance();
     final records = await getAllMeetingRecords();
-
     records.removeWhere((r) => r.personId == personId);
-    final jsonList = records.map((r) => r.toJson()).toList();
-    await prefs.setString(_key, jsonEncode(jsonList));
+    await _saveRecords(records);
   }
 }
+
