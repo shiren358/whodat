@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'speech_recognition_view.dart'; // Will be created next
 
 class CustomSearchBar extends StatefulWidget {
   final String hintText;
@@ -29,6 +30,10 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           _hasText = hasText;
         });
       }
+      // Notify parent widget of text changes
+      if (widget.onChanged != null) {
+        widget.onChanged!(_controller.text);
+      }
     });
   }
 
@@ -36,6 +41,19 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _showSpeechRecognitionSheet() async {
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const SpeechRecognitionView(),
+    );
+
+    if (result != null) {
+      _controller.text = result;
+    }
   }
 
   @override
@@ -47,7 +65,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -55,28 +73,15 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.search,
-            color: Colors.grey[400],
-            size: 24,
-          ),
+          Icon(Icons.search, color: Colors.grey[400], size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: TextField(
               controller: _controller,
-              onChanged: (value) {
-                widget.onChanged?.call(value);
-              },
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-              ),
+              style: const TextStyle(fontSize: 16, color: Colors.black87),
               decoration: InputDecoration(
                 hintText: widget.hintText,
-                hintStyle: TextStyle(
-                  color: Colors.grey[400],
-                  fontSize: 16,
-                ),
+                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.zero,
@@ -88,19 +93,17 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             GestureDetector(
               onTap: () {
                 _controller.clear();
-                widget.onChanged?.call('');
               },
+              child: Icon(Icons.clear, color: Colors.grey[400], size: 24),
+            )
+          else
+            GestureDetector(
+              onTap: _showSpeechRecognitionSheet,
               child: Icon(
-                Icons.clear,
+                Icons.mic_none,
                 color: Colors.grey[400],
                 size: 24,
               ),
-            )
-          else
-            Icon(
-              Icons.mic_none,
-              color: Colors.grey[400],
-              size: 24,
             ),
         ],
       ),
