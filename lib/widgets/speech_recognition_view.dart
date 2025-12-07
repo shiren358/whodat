@@ -14,6 +14,7 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
   bool _speechEnabled = false;
   String _lastWords = '';
   String _status = '認識を開始するにはマイクボタンをタップ';
+  bool _isNavigating = false; // 追加: ナビゲーション中フラグ
 
   @override
   void initState() {
@@ -59,7 +60,8 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
     });
 
     // Automatically close and return result when speech is final
-    if (result.finalResult) {
+    if (result.finalResult && !_isNavigating) {
+      _isNavigating = true;
       Navigator.pop(context, _lastWords);
     }
   }
@@ -118,7 +120,8 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
                 } else {
                   _stopListening();
                   // Pop with the result we have so far
-                  if (_lastWords.isNotEmpty) {
+                  if (_lastWords.isNotEmpty && !_isNavigating) {
+                    _isNavigating = true;
                     Navigator.pop(context, _lastWords);
                   }
                 }
@@ -155,11 +158,14 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
             const SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                _stopListening();
-                Navigator.pop(
-                  context,
-                  _lastWords.isNotEmpty ? _lastWords : null,
-                );
+                if (!_isNavigating) {
+                  _isNavigating = true;
+                  _stopListening();
+                  Navigator.pop(
+                    context,
+                    _lastWords.isNotEmpty ? _lastWords : null,
+                  );
+                }
               },
               child: const Text(
                 '完了',
