@@ -89,6 +89,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                   ),
                 ),
                 style: const TextStyle(fontSize: 16),
+                textAlignVertical: TextAlignVertical.center,
                 onChanged: widget.onChanged,
                 readOnly: true, // タップでモーダルを開くので読み取り専用
               ),
