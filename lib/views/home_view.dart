@@ -13,6 +13,7 @@ import 'calendar_view.dart';
 import 'map_view.dart';
 import 'search_results_view.dart';
 import 'all_records_view.dart';
+import 'my_page_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -121,7 +122,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
       case 3:
         return const MapView(key: ValueKey('map'));
       case 4:
-        return _buildPlaceholder('MyPage');
+        return const MyPageView(key: ValueKey('my_page'));
       default:
         return _buildHomeContent();
     }
@@ -188,16 +189,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildPlaceholder(String title) {
-    return Center(
-      key: ValueKey(title),
-      child: Text(
-        '$title画面',
-        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
+  
   Widget _buildTopBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),

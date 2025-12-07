@@ -15,29 +15,17 @@ class AllRecordsView extends StatelessWidget {
       builder: (context, provider, child) {
         return Scaffold(
           backgroundColor: const Color(0xFFF5F5F7),
-          body: Column(
-            children: [
-              // ヘッダー（SafeAreaを含む）
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(32),
-                    bottomRight: Radius.circular(32),
-                  ),
+          body: SafeArea(
+            child: Column(
+              children: [
+                _buildHeader(context),
+                Expanded(
+                  child: provider.latestMeetingRecordsByPerson.isEmpty
+                      ? _buildEmptyState(context)
+                      : _buildRecordsList(context, provider),
                 ),
-                child: SafeArea(bottom: false, child: _buildHeader(context)),
-              ),
-              Expanded(
-                child: provider.latestMeetingRecordsByPerson.isEmpty
-                    ? _buildEmptyState(context)
-                    : _buildRecordsList(context, provider),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -47,6 +35,13 @@ class AllRecordsView extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
