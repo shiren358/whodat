@@ -9,6 +9,7 @@ import '../widgets/custom_search_bar.dart';
 import '../widgets/tag_chip.dart';
 import '../widgets/person_card.dart';
 import '../models/person.dart';
+import '../services/app_update_service.dart';
 import 'add_person_view.dart';
 import 'calendar_view.dart';
 import 'map_view.dart';
@@ -47,6 +48,13 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     );
     _animationController.forward();
     _loadHeroTextIndex();
+
+    // アップデートチェックは最初のフレーム後に実行
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        AppUpdateService().checkForUpdates(context);
+      }
+    });
   }
 
   Future<void> _loadHeroTextIndex() async {
