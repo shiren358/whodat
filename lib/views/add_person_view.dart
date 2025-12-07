@@ -276,105 +276,109 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildAvatarPreview() {
-    final name = _provider.name;
-    final initial = name.isEmpty ? '？' : name[0];
-    final hasPhoto = _provider.selectedImage != null;
+    return Consumer<AddPersonProvider>(
+      builder: (context, provider, child) {
+        final name = provider.name;
+        final initial = name.isEmpty ? '？' : name[0];
+        final hasPhoto = provider.selectedImage != null;
 
-    return Center(
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            height: 130,
-            width: 130,
-            decoration: BoxDecoration(
-              color: hasPhoto
-                  ? Colors.transparent
-                  : _parseColor(
-                      _provider.avatarColors[_provider.selectedColorIndex],
-                    ).withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(24),
-              border: hasPhoto
-                  ? Border.all(
-                      color: _parseColor(
-                        _provider.avatarColors[_provider.selectedColorIndex],
-                      ),
-                      width: 4,
-                    )
-                  : null,
-            ),
-            child: hasPhoto
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.file(
-                      _provider.selectedImage!,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : Center(
-                    child: Text(
-                      initial,
-                      style: TextStyle(
-                        color: _parseColor(
-                          _provider.avatarColors[_provider.selectedColorIndex],
+        return Center(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                height: 130,
+                width: 130,
+                decoration: BoxDecoration(
+                  color: hasPhoto
+                      ? Colors.transparent
+                      : _parseColor(
+                          provider.avatarColors[provider.selectedColorIndex],
+                        ).withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(24),
+                  border: hasPhoto
+                      ? Border.all(
+                          color: _parseColor(
+                            provider.avatarColors[provider.selectedColorIndex],
+                          ),
+                          width: 4,
+                        )
+                      : null,
+                ),
+                child: hasPhoto
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.file(
+                          provider.selectedImage!,
+                          fit: BoxFit.cover,
                         ),
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
+                      )
+                    : Center(
+                        child: Text(
+                          initial,
+                          style: TextStyle(
+                            color: _parseColor(
+                              provider.avatarColors[provider.selectedColorIndex],
+                            ),
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+              ),
+              // カメラボタン（写真がない時）
+              if (!hasPhoto)
+                Positioned(
+                  bottom: -10,
+                  right: -10,
+                  child: GestureDetector(
+                    onTap: _handleAddPhoto,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 8,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.camera_alt_outlined,
+                        color: Colors.grey[600],
+                        size: 20,
                       ),
                     ),
                   ),
-          ),
-          // カメラボタン（写真がない時）
-          if (!hasPhoto)
-            Positioned(
-              bottom: -10,
-              right: -10,
-              child: GestureDetector(
-                onTap: _handleAddPhoto,
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 8,
-                        spreadRadius: 2,
+                ),
+              // 削除ボタン（写真がある時）
+              if (hasPhoto)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: GestureDetector(
+                    onTap: () {
+                      provider.removeImage();
+                    },
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700]?.withValues(alpha: 0.7),
+                        shape: BoxShape.circle,
                       ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.camera_alt_outlined,
-                    color: Colors.grey[600],
-                    size: 20,
+                      child: const Icon(Icons.close, color: Colors.white, size: 20),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          // 削除ボタン（写真がある時）
-          if (hasPhoto)
-            Positioned(
-              top: 8,
-              right: 8,
-              child: GestureDetector(
-                onTap: () {
-                  _provider.removeImage();
-                },
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[700]?.withValues(alpha: 0.7),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.close, color: Colors.white, size: 20),
-                ),
-              ),
-            ),
-        ],
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 
