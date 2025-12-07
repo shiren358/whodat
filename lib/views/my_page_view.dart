@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart'; // Add this import
 import '../providers/my_page_provider.dart';
 import 'tag_settings_view.dart';
 
@@ -51,6 +52,14 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
       });
       _animationController.forward();
     });
+  }
+
+  // URLを開く汎用関数
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $urlString';
+    }
   }
 
   @override
@@ -271,6 +280,17 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                       const SnackBar(content: Text('データのエクスポートは開発中です')),
                     );
                   },
+                ),
+                _buildMenuItem(
+                  context,
+                  title: 'プライバシーポリシー',
+                  onTap: () => _launchURL('https://tomople.com/privacy-policy/'),
+                ),
+                _buildMenuItem(
+                  context,
+                  title: '利用規約',
+                  onTap: () => _launchURL(
+                      'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'),
                 ),
               ],
             ),
