@@ -256,6 +256,10 @@ class _AddPersonViewState extends State<AddPersonView> {
           ),
           GestureDetector(
             onTap: () async {
+              // 保存前に残っているタグ入力を処理
+              _provider.addRemainingTag(_tagInputController.text);
+              _tagInputController.clear();
+
               final success = await _provider.save();
               if (success) {
                 widget.onSave?.call();
@@ -827,6 +831,15 @@ class _AddPersonViewState extends State<AddPersonView> {
                         border: InputBorder.none,
                       ),
                       onChanged: _handleTagInputWrapper,
+                      onEditingComplete: () {
+                        // Enterキーを押した時もタグを追加
+                        _provider.addRemainingTag(_tagInputController.text);
+                        _tagInputController.clear();
+                      },
+                      onSubmitted: (value) {
+                        // フォーム送信時もタグを追加
+                        _provider.addRemainingTag(value);
+                      },
                     ),
                   ),
                 ],

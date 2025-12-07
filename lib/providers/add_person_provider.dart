@@ -274,8 +274,8 @@ class AddPersonProvider with ChangeNotifier {
   // ===== タグ管理メソッド =====
 
   bool handleTagInput(String input) {
-    // スペースが入力されたらタグを追加
-    if (input.endsWith(' ')) {
+    // 半角スペースまたは全角スペースが入力されたらタグを追加
+    if (input.endsWith(' ') || input.endsWith('　')) {
       final tag = input.trim();
       if (tag.isNotEmpty && !_tags.contains(tag)) {
         _tags.add(tag);
@@ -284,6 +284,15 @@ class AddPersonProvider with ChangeNotifier {
       }
     }
     return false;
+  }
+
+  // 保存時に未保存のタグがあれば追加するメソッド
+  void addRemainingTag(String input) {
+    final tag = input.trim();
+    if (tag.isNotEmpty && !_tags.contains(tag)) {
+      _tags.add(tag);
+      notifyListeners();
+    }
   }
 
   void addSuggestedTag(String tag) {
