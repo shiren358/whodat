@@ -6,6 +6,7 @@ import '../providers/home_provider.dart';
 import '../providers/add_person_provider.dart';
 import '../models/meeting_record.dart';
 import '../models/person.dart';
+import '../services/location_service.dart';
 import 'add_person_view.dart';
 
 class MapView extends StatefulWidget {
@@ -17,7 +18,6 @@ class MapView extends StatefulWidget {
 
 class _MapViewState extends State<MapView> {
   GoogleMapController? _mapController;
-  final Set<Marker> _markers = {};
 
   // 日本の中心（東京付近）
   static const CameraPosition _initialPosition = CameraPosition(
@@ -26,62 +26,49 @@ class _MapViewState extends State<MapView> {
   );
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadMarkers();
-    });
-  }
-
-  @override
   void dispose() {
     _mapController?.dispose();
     super.dispose();
   }
 
-  void _loadMarkers() {
-    final provider = Provider.of<HomeProvider>(context, listen: false);
-    final records = provider.allLatestMeetingRecordsByPerson;
+  // 現在地にカメラを移動する
+  Future<void> _moveToCurrentUserLocation() async {
+    final position = await LocationService.getCurrentLocation();
+    if (position != null && _mapController != null) {
+      _mapController!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 15.0, // 少しズームインする
+          ),
+        ),
+      );
+    }
+  }
 
+  // Providerのデータからマーカーのセットを生成する
+  Set<Marker> _prepareMarkers(HomeProvider provider) {
+    final records = provider.allLatestMeetingRecordsByPerson;
     final markers = <Marker>{};
 
-    // デバッグログ
     if (kDebugMode) {
-      print('ロードする総記録数: ${records.length}');
+      print('表示する総記録数: ${records.length}');
     }
 
     for (final record in records) {
-      // デバッグログ
-      if (kDebugMode) {
-        print(
-          '記録: ${record.location}, lat: ${record.latitude}, lng: ${record.longitude}',
-        );
-      }
-
-      // 緯度経度が設定されている記録のみマーカーを作成
       if (record.latitude != null && record.longitude != null) {
         final person = provider.getPersonForRecord(record);
         if (person != null) {
           final marker = _createMarker(record, person);
           markers.add(marker);
-
-          // デバッグログ
-          if (kDebugMode) {
-            print('マーカー追加: ${person.name} at ${record.location}');
-          }
         }
       }
     }
 
-    setState(() {
-      _markers.clear();
-      _markers.addAll(markers);
-    });
-
-    // デバッグログ
     if (kDebugMode) {
       print('作成したマーカー数: ${markers.length}');
     }
+    return markers;
   }
 
   Marker _createMarker(MeetingRecord record, Person person) {
@@ -129,7 +116,7 @@ class _MapViewState extends State<MapView> {
                 listen: false,
               );
               provider.loadData().then((_) {
-                _loadMarkers();
+                // _loadMarkers(); // Removed call
               });
             },
           ),
@@ -196,10 +183,10 @@ class _MapViewState extends State<MapView> {
         builder: (context, provider, child) {
           return GoogleMap(
             initialCameraPosition: _initialPosition,
-            markers: _markers,
+            markers: _prepareMarkers(provider), // ここでマーカーを生成
             onMapCreated: (controller) {
               _mapController = controller;
-              _loadMarkers();
+              _moveToCurrentUserLocation(); // マップ作成後に現在地へ移動
             },
             myLocationEnabled: true,
             myLocationButtonEnabled: true,

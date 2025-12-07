@@ -65,7 +65,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -99,11 +99,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           else
             GestureDetector(
               onTap: _showSpeechRecognitionSheet,
-              child: Icon(
-                Icons.mic_none,
-                color: Colors.grey[400],
-                size: 24,
-              ),
+              child: Icon(Icons.mic_none, color: Colors.grey[400], size: 24),
             ),
         ],
       ),

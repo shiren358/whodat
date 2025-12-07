@@ -271,16 +271,16 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                     _showTagSettings();
                   },
                 ),
-                _buildMenuItem(
-                  context,
-                  title: 'データのエクスポート',
-                  onTap: () {
-                    // TODO: データエクスポート機能
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('データのエクスポートは開発中です')),
-                    );
-                  },
-                ),
+                // _buildMenuItem(
+                //   context,
+                //   title: 'データのエクスポート',
+                //   onTap: () {
+                //     // TODO: データエクスポート機能
+                //     ScaffoldMessenger.of(context).showSnackBar(
+                //       const SnackBar(content: Text('データのエクスポートは開発中です')),
+                //     );
+                //   },
+                // ),
                 _buildMenuItem(
                   context,
                   title: 'プライバシーポリシー',

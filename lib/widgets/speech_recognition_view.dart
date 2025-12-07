@@ -91,10 +91,7 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
             ),
             const Text(
               '音声で検索',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -102,11 +99,9 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
                 child: Text(
                   _speechToText.isListening
                       ? _lastWords.isEmpty
-                          ? 'お話しください…'
-                          : _lastWords
-                      : _speechEnabled
-                          ? 'マイクボタンを押して検索'
-                          : '音声認識は利用できません',
+                            ? 'お話しください…'
+                            : _lastWords
+                      : _status,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
@@ -138,9 +133,12 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: (_speechToText.isListening
+                      color:
+                          (_speechToText.isListening
                               ? Colors.red[200]
-                              : const Color(0xFF4D6FFF).withOpacity(0.5)) ??
+                              : const Color(
+                                  0xFF4D6FFF,
+                                ).withValues(alpha: 0.5)) ??
                           Colors.transparent,
                       blurRadius: 16,
                       spreadRadius: 4,
@@ -158,14 +156,14 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
             TextButton(
               onPressed: () {
                 _stopListening();
-                Navigator.pop(context, _lastWords.isNotEmpty ? _lastWords : null);
+                Navigator.pop(
+                  context,
+                  _lastWords.isNotEmpty ? _lastWords : null,
+                );
               },
               child: const Text(
                 '完了',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF4D6FFF),
-                ),
+                style: TextStyle(fontSize: 16, color: Color(0xFF4D6FFF)),
               ),
             ),
           ],
