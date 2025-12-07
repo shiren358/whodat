@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/foundation.dart';
 import '../models/person.dart';
 import '../models/meeting_record.dart';
@@ -8,10 +10,9 @@ class HomeProvider with ChangeNotifier {
   String _searchQuery = '';
   final List<String> _suggestedTags = ['先週会った', '今日', '今月'];
   List<Person> _allPersons = [];
-  List<MeetingRecord> _recentMeetingRecords = [];
   List<MeetingRecord> _allMeetingRecords = []; // 全記録を保持
   Map<String, Person> _personsMap = {};
-  List<MeetingRecord> _searchResults = [];
+  List<Person> _searchResults = [];
 
   String get searchQuery => _searchQuery;
   List<String> get suggestedTags => _suggestedTags;
@@ -39,41 +40,16 @@ class HomeProvider with ChangeNotifier {
     _randomTags = tagList.take(3).toList();
   }
 
-  List<Person> get recentPersons => _allPersons;
-  List<MeetingRecord> get recentMeetingRecords => _recentMeetingRecords;
-  List<MeetingRecord> get allMeetingRecords => _allMeetingRecords;
-  List<MeetingRecord> get searchResults => _searchResults;
+  List<Person> get searchResults => _searchResults;
   bool get hasSearchQuery => _searchQuery.isNotEmpty;
   bool get hasSearchResults => _searchResults.isNotEmpty;
 
   // 人物ごとの最新のMeetingRecordを取得（Home画面用）
-  List<MeetingRecord> get latestMeetingRecordsByPerson {
-    final personIdToRecord = <String, MeetingRecord>{};
-
-    for (final record in _recentMeetingRecords) {
-      final existingRecord = personIdToRecord[record.personId];
-      if (existingRecord == null) {
-        personIdToRecord[record.personId] = record;
-      } else {
-        // より新しい日付の記録を保持
-        if (record.meetingDate != null) {
-          if (existingRecord.meetingDate == null ||
-              record.meetingDate!.isAfter(existingRecord.meetingDate!)) {
-            personIdToRecord[record.personId] = record;
-          }
-        }
-      }
-    }
-
-    final records = personIdToRecord.values.toList();
-    records.sort((a, b) {
-      if (a.meetingDate == null && b.meetingDate == null) return 0;
-      if (a.meetingDate == null) return 1;
-      if (b.meetingDate == null) return -1;
-      return b.meetingDate!.compareTo(a.meetingDate!);
-    });
-
-    return records;
+  List<Person> get latestRegisteredPersons {
+    final persons = [..._allPersons];
+    // IDはタイムスタンプなので、降順にソートすれば新しい順になる
+    persons.sort((a, b) => b.id.compareTo(a.id));
+    return persons;
   }
 
   // 人物ごとの最新のMeetingRecordを取得（すべての記録用）
@@ -124,11 +100,12 @@ class HomeProvider with ChangeNotifier {
 
     final lowercaseQuery = query.toLowerCase();
 
-    _searchResults = _recentMeetingRecords.where((record) {
+    // クエリにマッチするMeetingRecordを全て見つける
+    final matchingRecords = _allMeetingRecords.where((record) {
       final person = _personsMap[record.personId];
       if (person == null) return false;
 
-      // 日付関連の検索（タグ検索の前に行う）
+      // 日付関連の検索
       if (_isDateSearch(query)) {
         return _matchesDateSearch(record, query);
       }
@@ -150,8 +127,8 @@ class HomeProvider with ChangeNotifier {
 
       // タグで検索（日付関連は除外）
       if (person.tags.any(
-        (tag) => tag.toLowerCase().contains(lowercaseQuery) &&
-                 !_isDateSearch(tag),
+        (tag) =>
+            tag.toLowerCase().contains(lowercaseQuery) && !_isDateSearch(tag),
       )) {
         return true;
       }
@@ -171,13 +148,22 @@ class HomeProvider with ChangeNotifier {
       return false;
     }).toList();
 
-    // 検索結果を日付でソート（新しい順）
-    _searchResults.sort((a, b) {
+    // マッチした記録を最新の面会日でソート
+    matchingRecords.sort((a, b) {
       if (a.meetingDate == null && b.meetingDate == null) return 0;
       if (a.meetingDate == null) return 1;
       if (b.meetingDate == null) return -1;
       return b.meetingDate!.compareTo(a.meetingDate!);
     });
+
+    // ユニークなPersonのリストに変換（最新の面会日順を維持）
+    final personIds = LinkedHashSet<String>.from(
+      matchingRecords.map((r) => r.personId),
+    );
+    _searchResults = personIds
+        .map((id) => _personsMap[id])
+        .whereType<Person>()
+        .toList();
   }
 
   void clearSearch() {
@@ -196,25 +182,8 @@ class HomeProvider with ChangeNotifier {
       _personsMap[person.id] = person;
     }
 
-    // 最近の記録（直近90日）でフィルタリング
-    final now = DateTime.now();
-    final cutoffDate = now.subtract(const Duration(days: 90));
-
-    _recentMeetingRecords = _allMeetingRecords
-        .where((record) =>
-            record.meetingDate != null &&
-            record.meetingDate!.isAfter(cutoffDate.subtract(const Duration(days: 1)))) // 境界日を含める
-        .toList();
-
     // MeetingRecordsを日付でソート（新しい順、nullは最後）
     _allMeetingRecords.sort((a, b) {
-      if (a.meetingDate == null && b.meetingDate == null) return 0;
-      if (a.meetingDate == null) return 1;
-      if (b.meetingDate == null) return -1;
-      return b.meetingDate!.compareTo(a.meetingDate!);
-    });
-
-    _recentMeetingRecords.sort((a, b) {
       if (a.meetingDate == null && b.meetingDate == null) return 0;
       if (a.meetingDate == null) return 1;
       if (b.meetingDate == null) return -1;
@@ -239,7 +208,7 @@ class HomeProvider with ChangeNotifier {
 
   // Personの全MeetingRecordを取得
   List<MeetingRecord> getMeetingRecordsForPerson(String personId) {
-    return _recentMeetingRecords
+    return _allMeetingRecords
         .where((record) => record.personId == personId)
         .toList()
       ..sort((a, b) {
@@ -261,26 +230,32 @@ class HomeProvider with ChangeNotifier {
     final now = DateTime.now();
     final meetingDate = record.meetingDate!;
     final today = DateTime(now.year, now.month, now.day);
-    final meetingDateOnly = DateTime(meetingDate.year, meetingDate.month, meetingDate.day);
+    final meetingDateOnly = DateTime(
+      meetingDate.year,
+      meetingDate.month,
+      meetingDate.day,
+    );
 
     switch (query) {
       case '先週会った':
         // 先週（月曜日から日曜日まで）
-        final startOfLastWeek = today.subtract(Duration(days: today.weekday + 6));
+        final startOfLastWeek = today.subtract(
+          Duration(days: today.weekday + 6),
+        );
         final endOfLastWeek = startOfLastWeek.add(const Duration(days: 6));
         return !meetingDateOnly.isBefore(startOfLastWeek) &&
-               !meetingDateOnly.isAfter(endOfLastWeek);
+            !meetingDateOnly.isAfter(endOfLastWeek);
 
       case '今日':
         // 今日
         return meetingDateOnly.year == today.year &&
-               meetingDateOnly.month == today.month &&
-               meetingDateOnly.day == today.day;
+            meetingDateOnly.month == today.month &&
+            meetingDateOnly.day == today.day;
 
       case '今月':
         // 今月
         return meetingDateOnly.year == today.year &&
-               meetingDateOnly.month == today.month;
+            meetingDateOnly.month == today.month;
 
       default:
         return false;

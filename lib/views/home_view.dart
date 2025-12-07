@@ -6,7 +6,7 @@ import '../providers/home_provider.dart';
 import '../providers/add_person_provider.dart';
 import '../widgets/custom_search_bar.dart';
 import '../widgets/tag_chip.dart';
-import '../widgets/meeting_record_card.dart';
+import '../widgets/person_card.dart';
 import '../models/person.dart';
 import 'add_person_view.dart';
 import 'calendar_view.dart';
@@ -325,7 +325,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           );
         }
 
-        // 通常の「最近会った人」を表示
+        // 通常の「最近登録した人」を表示
         return Container(
           decoration: const BoxDecoration(color: Color(0xFFF5F5F7)),
           child: Column(
@@ -336,7 +336,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      '最近会った人',
+                      '最近登録した人',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -401,17 +401,15 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                 ),
               ),
               Expanded(
-                child: provider.latestMeetingRecordsByPerson.isEmpty
+                child: provider.latestRegisteredPersons.isEmpty
                     ? _buildEmptyState(context)
                     : ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
-                        itemCount: provider.latestMeetingRecordsByPerson.length,
+                        itemCount: provider.latestRegisteredPersons.length,
                         itemBuilder: (context, index) {
-                          final record =
-                              provider.latestMeetingRecordsByPerson[index];
-                          final person = provider.getPersonForRecord(record);
-                          return MeetingRecordCard(
-                            record: record,
+                          final person =
+                              provider.latestRegisteredPersons[index];
+                          return PersonCard(
                             person: person,
                             onTap: () {
                               _animationController.reverse().then((_) {
@@ -423,7 +421,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                                   // デバッグログ
                                   if (kDebugMode) {
                                     print(
-                                      'HomeView: カードタップ - person=${person?.name ?? 'null'}, personId=${person?.id ?? 'null'}',
+                                      'HomeView: カードタップ - person=${person.name}, personId=${person.id}',
                                     );
                                   }
                                 });

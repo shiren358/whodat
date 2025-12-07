@@ -41,7 +41,7 @@ class _MapViewState extends State<MapView> {
 
   void _loadMarkers() {
     final provider = Provider.of<HomeProvider>(context, listen: false);
-    final records = provider.recentMeetingRecords;
+    final records = provider.allLatestMeetingRecordsByPerson;
 
     final markers = <Marker>{};
 

@@ -167,7 +167,7 @@ class _CalendarViewState extends State<CalendarView>
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             eventLoader: (day) =>
-                _getEventsForDay(day, provider.recentMeetingRecords),
+                _getEventsForDay(day, provider.allLatestMeetingRecordsByPerson),
             locale: 'ja_JP',
             headerStyle: const HeaderStyle(
               formatButtonVisible: false,
@@ -226,7 +226,7 @@ class _CalendarViewState extends State<CalendarView>
       builder: (context, provider, child) {
         final events = _getEventsForDay(
           _selectedDay!,
-          provider.recentMeetingRecords,
+          provider.allLatestMeetingRecordsByPerson,
         );
 
         if (events.isEmpty) {

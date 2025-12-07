@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/home_provider.dart';
-import '../widgets/meeting_record_card.dart';
+import '../widgets/person_card.dart'; // Import PersonCard
 import '../models/person.dart';
 
 class SearchResultsView extends StatelessWidget {
@@ -128,10 +128,8 @@ class SearchResultsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               itemCount: provider.searchResults.length,
               itemBuilder: (context, index) {
-                final record = provider.searchResults[index];
-                final person = provider.getPersonForRecord(record);
-                return MeetingRecordCard(
-                  record: record,
+                final person = provider.searchResults[index];
+                return PersonCard(
                   person: person,
                   onTap: () {
                     onPersonTap?.call(person);
