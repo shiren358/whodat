@@ -284,13 +284,15 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                 _buildMenuItem(
                   context,
                   title: 'プライバシーポリシー',
-                  onTap: () => _launchURL('https://tomople.com/privacy-policy/'),
+                  onTap: () =>
+                      _launchURL('https://tomople.com/privacy-policy/'),
                 ),
                 _buildMenuItem(
                   context,
                   title: '利用規約',
                   onTap: () => _launchURL(
-                      'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'),
+                    'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
+                  ),
                 ),
               ],
             ),

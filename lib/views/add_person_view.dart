@@ -573,62 +573,64 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildMeetingRecordsSection() {
-    return Column(
-      children: [
-        // 各会合記録のカード
-        ..._provider.meetingRecords.asMap().entries.map((entry) {
-          final index = entry.key;
-          final record = entry.value;
-          final isNew = index == _provider.newlyAddedIndex;
+    return Consumer<AddPersonProvider>(builder: (context, provider, child) {
+      return Column(
+        children: [
+          // 各会合記録のカード
+          ...provider.meetingRecords.asMap().entries.map((entry) {
+            final index = entry.key;
+            final record = entry.value;
+            final isNew = index == provider.newlyAddedIndex;
 
-          return TweenAnimationBuilder<double>(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeOutCubic,
-            tween: Tween<double>(begin: isNew ? 0.0 : 1.0, end: 1.0),
-            builder: (context, value, child) {
-              return Opacity(
-                opacity: value,
-                child: Transform.translate(
-                  offset: Offset(0, (1 - value) * 20),
-                  child: child,
-                ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _buildMeetingRecordCard(record, index),
-            ),
-          );
-        }),
-        // 会合記録追加ボタン
-        GestureDetector(
-          onTap: () => _provider.addMeetingRecord(),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0xFF4D6FFF), width: 2),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.add, color: Color(0xFF4D6FFF)),
-                const SizedBox(width: 8),
-                const Text(
-                  '別の日を追加',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF4D6FFF),
-                    fontWeight: FontWeight.w600,
+            return TweenAnimationBuilder<double>(
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeOutCubic,
+              tween: Tween<double>(begin: isNew ? 0.0 : 1.0, end: 1.0),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, (1 - value) * 20),
+                    child: child,
                   ),
-                ),
-              ],
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildMeetingRecordCard(record, index),
+              ),
+            );
+          }),
+          // 会合記録追加ボタン
+          GestureDetector(
+            onTap: () => provider.addMeetingRecord(),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFF4D6FFF), width: 2),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.add, color: Color(0xFF4D6FFF)),
+                  const SizedBox(width: 8),
+                  const Text(
+                    '別の日を追加',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF4D6FFF),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   Widget _buildMeetingRecordCard(MeetingRecordInput record, int index) {
