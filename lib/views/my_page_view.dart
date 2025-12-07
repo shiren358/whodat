@@ -294,6 +294,14 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                     'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
                   ),
                 ),
+                const SizedBox(height: 32), // スペースを追加
+                Center(
+                  child: Text(
+                    'バージョン: ${provider.appVersion}',
+                    style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                  ),
+                ),
+                const SizedBox(height: 24), // 下にスペースを追加
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../services/person_storage.dart';
 import '../services/meeting_record_storage.dart';
 import '../services/user_profile_storage.dart';
@@ -11,12 +12,14 @@ class MyPageProvider with ChangeNotifier {
   List<MeetingRecord> _allMeetingRecords = [];
   UserProfile? _userProfile;
   bool _isLoading = true;
+  String _appVersion = ''; // Add this
 
   // Getters
   List<Person> get allPersons => _allPersons;
   List<MeetingRecord> get allMeetingRecords => _allMeetingRecords;
   UserProfile? get userProfile => _userProfile;
   bool get isLoading => _isLoading;
+  String get appVersion => _appVersion; // Add this
 
   // 統計情報
   int get totalPersons => _allPersons.where((p) => p.isMemorized).length;
@@ -37,10 +40,15 @@ class MyPageProvider with ChangeNotifier {
       _allPersons = await PersonStorage.getAllPersons();
       _allMeetingRecords = await MeetingRecordStorage.getAllMeetingRecords();
       _userProfile = await UserProfileStorage.getUserProfile();
+
+      // Get app version
+      final packageInfo = await PackageInfo.fromPlatform();
+      _appVersion = 'v${packageInfo.version}';
     } catch (e) {
       if (kDebugMode) {
         print('MyPageProvider: データ読み込みエラー: $e');
       }
+      _appVersion = 'N/A'; // Fallback in case of error
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -72,7 +80,8 @@ class MyPageProvider with ChangeNotifier {
       if (record.meetingDate == null) return false;
       final meetingDate = record.meetingDate!;
       final meetingMonth = DateTime(meetingDate.year, meetingDate.month, 1);
-      return !meetingMonth.isBefore(thisMonth) && meetingMonth.isBefore(nextMonth);
+      return !meetingMonth.isBefore(thisMonth) &&
+          meetingMonth.isBefore(nextMonth);
     }).length;
   }
 
@@ -81,7 +90,8 @@ class MyPageProvider with ChangeNotifier {
 
     for (final record in _allMeetingRecords) {
       if (record.location != null && record.location!.isNotEmpty) {
-        locationCounts[record.location!] = (locationCounts[record.location!] ?? 0) + 1;
+        locationCounts[record.location!] =
+            (locationCounts[record.location!] ?? 0) + 1;
       }
     }
 
