@@ -37,7 +37,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                     Row(
                       children: [
                         // 左：閉じるボタン
-                        TextButton(
+                        IconButton(
                           onPressed: () {
                             if (widget.onClose != null) {
                               widget.onClose!();
@@ -45,10 +45,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                               Navigator.pop(context);
                             }
                           },
-                          child: const Text(
-                            '閉じる',
-                            style: TextStyle(color: Color(0xFF666666)),
-                          ),
+                          icon: const Icon(Icons.close),
                         ),
                         const Spacer(),
                         // 真ん中：タイトル
@@ -65,7 +62,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                         Consumer<TagSettingsProvider>(
                           builder: (context, provider, child) {
                             return IconButton(
-                              icon: const Icon(Icons.add),
+                              icon: const Icon(Icons.add, size: 28),
                               onPressed: () =>
                                   _showAddTagDialog(context, provider),
                               tooltip: 'タグを追加',

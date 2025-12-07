@@ -348,8 +348,10 @@ class _AddPersonViewState extends State<AddPersonView> {
     return Consumer<AddPersonProvider>(
       builder: (context, provider, child) {
         return Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 16.0,
+            runSpacing: 8.0,
             children: List.generate(provider.avatarColors.length, (index) {
               final isSelected = index == provider.selectedColorIndex;
               return GestureDetector(
@@ -359,7 +361,6 @@ class _AddPersonViewState extends State<AddPersonView> {
                 child: Container(
                   width: 48,
                   height: 48,
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
                   alignment: Alignment.center,
                   child: Container(
                     width: isSelected ? 48 : 40,
@@ -660,6 +661,7 @@ class _AddPersonViewState extends State<AddPersonView> {
                       child: Text(
                         dateText,
                         style: TextStyle(fontSize: 16, color: dateColor),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
