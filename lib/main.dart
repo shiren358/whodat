@@ -5,6 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:google_fonts/google_fonts.dart'; // Add this
 import 'firebase_options.dart';
 import 'providers/home_provider.dart';
 // import 'utils/dummy_data_generator.dart';
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
-          fontFamily: 'Hiragino Sans',
+          textTheme: GoogleFonts.notoSansJpTextTheme(Theme.of(context).textTheme),
           scaffoldBackgroundColor: const Color(0xFFF5F5F7),
         ),
         navigatorObservers: <NavigatorObserver>[observer],
