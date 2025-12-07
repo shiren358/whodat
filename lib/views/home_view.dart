@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../providers/home_provider.dart';
 import '../providers/add_person_provider.dart';
 import '../widgets/custom_search_bar.dart';
@@ -28,6 +29,15 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   final GlobalKey<ConvexAppBarState> _tabKey = GlobalKey<ConvexAppBarState>();
   Person? _personToEdit; // 編集対象のPerson
 
+  int _heroTextIndex = 0;
+  final List<String> _heroTexts = [
+    '「あの人、誰だっけ？」\nをなくそう。',
+    '大切な人との記録を\nここに残そう。',
+    'すべての出会いを\nあなたの資産に。',
+  ];
+
+  final _storage = const FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +46,20 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
       vsync: this,
     );
     _animationController.forward();
+    _loadHeroTextIndex();
+  }
+
+  Future<void> _loadHeroTextIndex() async {
+    final value = await _storage.read(key: 'heroTextIndex');
+    if (value != null) {
+      setState(() {
+        _heroTextIndex = int.parse(value);
+      });
+    }
+  }
+
+  Future<void> _saveHeroTextIndex(int index) async {
+    await _storage.write(key: 'heroTextIndex', value: index.toString());
   }
 
   @override
@@ -250,13 +274,41 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 8),
-              const Text(
-                '「あの人、誰だっけ？」\nをなくそう。',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  height: 1.3,
+              GestureDetector(
+                onTap: () {
+                  final newIndex = (_heroTextIndex + 1) % _heroTexts.length;
+                  _saveHeroTextIndex(newIndex);
+                  setState(() {
+                    _heroTextIndex = newIndex;
+                  });
+                },
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                  layoutBuilder:
+                      (Widget? currentChild, List<Widget> previousChildren) {
+                        return Stack(
+                          alignment: Alignment.centerLeft,
+                          children: <Widget>[
+                            ...previousChildren,
+                            if (currentChild != null) currentChild,
+                          ],
+                        );
+                      },
+                  child: Text(
+                    _heroTexts[_heroTextIndex],
+                    key: ValueKey<int>(_heroTextIndex),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      height: 1.3,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),

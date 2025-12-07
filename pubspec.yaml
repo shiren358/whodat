@@ -37,7 +37,7 @@ dependencies:
   provider: ^6.1.5+1
   convex_bottom_bar: ^3.2.0
   image_picker: ^1.2.1
-  shared_preferences: ^2.5.3
+
   table_calendar: ^3.2.0
   intl: ^0.20.2
   google_maps_flutter: ^2.14.0
