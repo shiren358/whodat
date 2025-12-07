@@ -298,7 +298,9 @@ class AddPersonProvider with ChangeNotifier {
 
     // デバッグログ
     if (kDebugMode) {
-      print('addMeetingRecord: 新規レコードID=${newRecord.id}, 総数=${_meetingRecords.length}');
+      print(
+        'addMeetingRecord: 新規レコードID=${newRecord.id}, 総数=${_meetingRecords.length}',
+      );
     }
 
     notifyListeners();
@@ -384,7 +386,9 @@ class AddPersonProvider with ChangeNotifier {
     if (kDebugMode) {
       print('Provider: 現在のレコード一覧 (${_meetingRecords.length}件):');
       for (int i = 0; i < _meetingRecords.length; i++) {
-        print('  [$i] ID: ${_meetingRecords[i].id}, 場所: ${_meetingRecords[i].locationController.text}');
+        print(
+          '  [$i] ID: ${_meetingRecords[i].id}, 場所: ${_meetingRecords[i].locationController.text}',
+        );
       }
       print('Provider: 検索対象ID: $recordId');
     }
@@ -430,6 +434,22 @@ class AddPersonProvider with ChangeNotifier {
     _meetingRecords[index].locationType = null;
     _meetingRecords[index].locationController.clear();
     notifyListeners();
+  }
+
+  // ===== 削除メソッド =====
+
+  Future<bool> deletePerson(String personId) async {
+    try {
+      // Personを削除
+      await PersonStorage.deletePerson(personId);
+
+      // 関連するMeetingRecordをすべて削除
+      await MeetingRecordStorage.deleteMeetingRecordsByPersonId(personId);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // ===== 保存メソッド =====

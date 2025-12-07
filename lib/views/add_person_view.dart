@@ -167,6 +167,12 @@ class _AddPersonViewState extends State<AddPersonView> {
                       const SizedBox(height: 32),
                       _buildConnectionInfo(),
                       const SizedBox(height: 24),
+                      // 編集モードの場合のみ削除ボタンを表示
+                      if (widget.person != null) ...[
+                        const SizedBox(height: 16),
+                        _buildDeleteButton(),
+                      ],
+                      const SizedBox(height: 100), // 広めの余白
                     ],
                   ),
                 ),
@@ -893,6 +899,70 @@ class _AddPersonViewState extends State<AddPersonView> {
     if (picked != null && mounted) {
       _provider.updateMeetingDate(index, picked);
     }
+  }
+
+  Widget _buildDeleteButton() {
+    return Center(
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: () => _showDeleteConfirmDialog(),
+          icon: const Icon(Icons.delete_outline, color: Colors.red),
+          label: const Text(
+            'この人を削除',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Colors.red),
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('削除の確認'),
+        content: Text(
+          '${widget.person?.name ?? 'この人'}のすべての記録を削除します。\nこの操作は元に戻せません。',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'キャンセル',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context); // ダイアログを閉じる
+
+              if (widget.person != null) {
+                final success = await _provider.deletePerson(widget.person!.id);
+                if (success && mounted) {
+                  widget.onSave?.call(); // データ更新を通知
+                }
+              }
+            },
+            child: const Text(
+              '削除',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
