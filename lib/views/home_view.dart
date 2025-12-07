@@ -16,6 +16,7 @@ import 'map_view.dart';
 import 'search_results_view.dart';
 import 'all_records_view.dart';
 import 'my_page_view.dart';
+import 'app_story_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -255,17 +256,21 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
               ),
             ],
           ),
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.person_outline,
-              color: Colors.white,
-              size: 24,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AppStoryView()),
+              );
+            },
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.lightbulb, color: Colors.white, size: 24),
             ),
           ),
         ],
