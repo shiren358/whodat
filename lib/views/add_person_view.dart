@@ -909,7 +909,7 @@ class _AddPersonViewState extends State<AddPersonView> {
           onPressed: () => _showDeleteConfirmDialog(),
           icon: const Icon(Icons.delete_outline, color: Colors.red),
           label: const Text(
-            'この人を削除',
+            '記録をすべて削除',
             style: TextStyle(
               color: Colors.red,
               fontSize: 16,
@@ -934,7 +934,7 @@ class _AddPersonViewState extends State<AddPersonView> {
       builder: (context) => AlertDialog(
         title: const Text('削除の確認'),
         content: Text(
-          '${widget.person?.name ?? 'この人'}のすべての記録を削除します。\nこの操作は元に戻せません。',
+          '${widget.person?.name ?? 'この人'}の記録をすべて削除します。\n削除した記録は復元できません。',
         ),
         actions: [
           TextButton(
