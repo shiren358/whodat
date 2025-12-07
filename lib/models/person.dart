@@ -61,4 +61,26 @@ class Person {
       photoPath: json['photoPath'] as String?,
     );
   }
+
+  Person copyWith({
+    String? id,
+    String? name,
+    String? company,
+    String? position,
+    List<String>? tags,
+    String? avatarColor,
+    int? additionalInfoCount,
+    String? photoPath,
+  }) {
+    return Person(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      company: company ?? this.company,
+      position: position ?? this.position,
+      tags: tags ?? this.tags,
+      avatarColor: avatarColor ?? this.avatarColor,
+      additionalInfoCount: additionalInfoCount ?? this.additionalInfoCount,
+      photoPath: photoPath ?? this.photoPath,
+    );
+  }
 }

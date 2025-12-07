@@ -1,211 +1,317 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/my_page_provider.dart';
+import 'tag_settings_view.dart';
 
-class MyPageView extends StatelessWidget {
+class MyPageView extends StatefulWidget {
   const MyPageView({super.key});
 
   @override
+  State<MyPageView> createState() => _MyPageViewState();
+}
+
+class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  bool _showingTagSettings = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    // 初期表示時にアニメーションを開始
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _animationController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _showTagSettings() {
+    _animationController.reverse().then((_) {
+      if (!mounted) return;
+      setState(() {
+        _showingTagSettings = true;
+      });
+      _animationController.forward();
+    });
+  }
+
+  void _hideTagSettings() {
+    _animationController.reverse().then((_) {
+      if (!mounted) return;
+      setState(() {
+        _showingTagSettings = false;
+      });
+      _animationController.forward();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.fastOutSlowIn,
+    );
+
+    final slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1), // 下から開始
+      end: Offset.zero,
+    ).animate(fadeAnimation);
+
     return ChangeNotifierProvider(
       create: (_) => MyPageProvider(),
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F7),
-        body: Consumer<MyPageProvider>(
-          builder: (context, provider, child) {
-            if (provider.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: Color(0xFF4D6FFF)),
-              );
-            }
+        body: SlideTransition(
+          position: slideAnimation,
+          child: FadeTransition(
+            opacity: fadeAnimation,
+            child: _getSelectedContent(),
+          ),
+        ),
+      ),
+    );
+  }
 
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // タイトル
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(24, 24, 24, 32),
-                      child: Text(
-                        'マイページ',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+  Widget _getSelectedContent() {
+    if (_showingTagSettings) {
+      return TagSettingsView(onClose: _hideTagSettings);
+    }
+
+    return Consumer<MyPageProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFF4D6FFF)),
+          );
+        }
+
+        return SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // タイトル
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(24, 24, 24, 32),
+                  child: Text(
+                    'マイページ',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+
+                // プロフィールセクション
+                Center(
+                  child: Column(
+                    children: [
+                      // アバター
+                      Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            provider.userProfile?.initials ?? '?',
+                            style: const TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 16),
 
-                    // プロフィールセクション
-                    Center(
-                      child: Column(
-                        children: [
-                          // アバター
-                          Container(
-                            width: 120,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: const LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
+                      // 名前（タップで編集）
+                      GestureDetector(
+                        onTap: () => _showEditNameDialog(context, provider),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              provider.userProfile?.name ?? '名前を設定',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: provider.userProfile == null
+                                    ? Colors.black38
+                                    : Colors.black87,
                               ),
                             ),
-                            child: Center(
-                              child: Text(
-                                provider.userProfile?.initials ?? '?',
-                                style: const TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              Icons.edit,
+                              size: 20,
+                              color: provider.userProfile == null
+                                  ? Colors.black38
+                                  : Colors.black54,
                             ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // 名前（タップで編集）
-                          GestureDetector(
-                            onTap: () => _showEditNameDialog(context, provider),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  provider.userProfile?.name ?? '名前を設定',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: provider.userProfile == null
-                                        ? Colors.black38
-                                        : Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Icon(
-                                  Icons.edit,
-                                  size: 20,
-                                  color: provider.userProfile == null
-                                      ? Colors.black38
-                                      : Colors.black54,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-
-                          // サブタイトル
-                          Text(
-                            '記憶ランク: ${provider.memoryRank}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 32),
+                      const SizedBox(height: 8),
 
-                    // 統計カード
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        children: [
-                          // 覚えた人
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFE3EEFF),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    '${provider.totalPersons}',
-                                    style: const TextStyle(
-                                      fontSize: 36,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFF4D6FFF),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  const Text(
-                                    '覚えた人',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-
-                          // 今月の出会い
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFDE8F4),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    '${provider.thisMonthMeetings}',
-                                    style: const TextStyle(
-                                      fontSize: 36,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFFD946C4),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  const Text(
-                                    '今月の出会い',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                      // サブタイトル
+                      Text(
+                        '記憶ランク: ${provider.memoryRank}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 32),
-
-                    // メニュー項目
-                    _buildMenuItem(
-                      context,
-                      title: 'タグ設定',
-                      onTap: () {
-                        // TODO: タグ設定画面に遷移
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('タグ設定は開発中です')),
-                        );
-                      },
-                    ),
-                    _buildMenuItem(
-                      context,
-                      title: 'データのエクスポート',
-                      onTap: () {
-                        // TODO: データエクスポート機能
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('データのエクスポートは開発中です')),
-                        );
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+                const SizedBox(height: 32),
+
+                // 統計カード
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    children: [
+                      // 覚えた人
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE3EEFF),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                '${provider.totalPersons}',
+                                style: const TextStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF4D6FFF),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                '覚えた人',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+
+                      // 今月の出会い
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFDE8F4),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                '${provider.thisMonthMeetings}',
+                                style: const TextStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFD946C4),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              const Text(
+                                '今月の出会い',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // メニュー項目
+                _buildMenuItem(
+                  context,
+                  title: 'タグ設定',
+                  onTap: () {
+                    _showTagSettings();
+                  },
+                ),
+                _buildMenuItem(
+                  context,
+                  title: 'データのエクスポート',
+                  onTap: () {
+                    // TODO: データエクスポート機能
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('データのエクスポートは開発中です')),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuItem(
+    BuildContext context, {
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Icon(Icons.chevron_right, color: Colors.grey[400]),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -225,16 +331,9 @@ class MyPageView extends StatelessWidget {
           autofocus: true,
           decoration: const InputDecoration(
             labelText: '名前',
-            hintText: '例: 山田太郎',
             border: OutlineInputBorder(),
           ),
-          textInputAction: TextInputAction.done,
-          onSubmitted: (value) {
-            if (value.trim().isNotEmpty) {
-              provider.updateUserProfile(value.trim());
-              Navigator.pop(context);
-            }
-          },
+          maxLength: 20,
         ),
         actions: [
           TextButton(
@@ -242,58 +341,18 @@ class MyPageView extends StatelessWidget {
             child: const Text('キャンセル'),
           ),
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               final name = nameController.text.trim();
               if (name.isNotEmpty) {
-                provider.updateUserProfile(name);
-                Navigator.pop(context);
+                await provider.updateUserProfile(name);
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
               }
             },
-            child: const Text('保存'),
+            child: const Text('保存', style: TextStyle(color: Color(0xFF4D6FFF))),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem(
-    BuildContext context, {
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
-                ),
-                const Icon(
-                  Icons.chevron_right,
-                  color: Colors.black38,
-                  size: 24,
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
