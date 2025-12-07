@@ -7,6 +7,7 @@ class Person {
   final String avatarColor;
   final int additionalInfoCount;
   final String? photoPath;
+  final bool isMemorized;
 
   Person({
     required this.id,
@@ -17,6 +18,7 @@ class Person {
     required this.avatarColor,
     this.additionalInfoCount = 0,
     this.photoPath,
+    this.isMemorized = false,
   });
 
   String get initials {
@@ -46,6 +48,7 @@ class Person {
       'avatarColor': avatarColor,
       'additionalInfoCount': additionalInfoCount,
       'photoPath': photoPath,
+      'isMemorized': isMemorized,
     };
   }
 
@@ -59,6 +62,7 @@ class Person {
       avatarColor: json['avatarColor'] as String,
       additionalInfoCount: json['additionalInfoCount'] as int? ?? 0,
       photoPath: json['photoPath'] as String?,
+      isMemorized: json['isMemorized'] as bool? ?? false,
     );
   }
 
@@ -71,6 +75,7 @@ class Person {
     String? avatarColor,
     int? additionalInfoCount,
     String? photoPath,
+    bool? isMemorized,
   }) {
     return Person(
       id: id ?? this.id,
@@ -81,6 +86,7 @@ class Person {
       avatarColor: avatarColor ?? this.avatarColor,
       additionalInfoCount: additionalInfoCount ?? this.additionalInfoCount,
       photoPath: photoPath ?? this.photoPath,
+      isMemorized: isMemorized ?? this.isMemorized,
     );
   }
 }

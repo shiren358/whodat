@@ -19,7 +19,7 @@ class MyPageProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   // 統計情報
-  int get totalPersons => _allPersons.length;
+  int get totalPersons => _allPersons.where((p) => p.isMemorized).length;
   int get totalMeetings => _allMeetingRecords.length;
   int get thisMonthMeetings => _getThisMonthMeetings();
   String get mostUsedLocation => _getMostUsedLocation();

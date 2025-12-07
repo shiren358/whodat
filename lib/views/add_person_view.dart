@@ -164,6 +164,10 @@ class _AddPersonViewState extends State<AddPersonView> {
                       _buildNameSection(),
                       const SizedBox(height: 24),
                       _buildCompanySection(),
+                      if (widget.person != null) ...[
+                        const SizedBox(height: 24),
+                        _buildMemorizedSwitch(),
+                      ],
                       const SizedBox(height: 32),
                       _buildConnectionInfo(),
                       const SizedBox(height: 24),
@@ -181,6 +185,42 @@ class _AddPersonViewState extends State<AddPersonView> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildMemorizedSwitch() {
+    return Consumer<AddPersonProvider>(
+      builder: (context, provider, child) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: SwitchListTile(
+            title: const Text(
+              'この人を覚えた',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            value: provider.isMemorized,
+            onChanged: (bool value) {
+              provider.updateIsMemorized(value);
+            },
+            activeColor: const Color(0xFF4D6FFF),
+            secondary: Icon(
+              provider.isMemorized
+                  ? Icons.check_circle
+                  : Icons.check_circle_outline,
+              color: provider.isMemorized
+                  ? const Color(0xFF4D6FFF)
+                  : Colors.grey[400],
+            ),
+          ),
+        );
+      },
     );
   }
 

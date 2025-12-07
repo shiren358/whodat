@@ -52,9 +52,11 @@ class AddPersonProvider with ChangeNotifier {
   File? _selectedImage;
   final List<String> _tags = [];
   int _selectedColorIndex = 0;
+  bool _isMemorized = false;
 
   // タグ管理
   List<String> _suggestedTags = [];
+
 
   // 会った記録
   final List<MeetingRecordInput> _meetingRecords = [];
@@ -85,6 +87,7 @@ class AddPersonProvider with ChangeNotifier {
   List<String> get avatarColors => List.unmodifiable(_avatarColors);
   bool get isEditingPerson => _isEditingPerson;
   bool get isEditingRecord => _isEditingRecord;
+  bool get isMemorized => _isMemorized;
 
   // ===== コンストラクタと初期化 =====
 
@@ -152,6 +155,7 @@ class AddPersonProvider with ChangeNotifier {
     _company = person.company ?? '';
     _position = person.position ?? '';
     _tags.addAll(person.tags);
+    _isMemorized = person.isMemorized;
 
     if (person.photoPath != null) {
       _selectedImage = File(person.photoPath!);
@@ -244,6 +248,11 @@ class AddPersonProvider with ChangeNotifier {
 
   void updatePosition(String value) {
     _position = value;
+    notifyListeners();
+  }
+
+  void updateIsMemorized(bool value) {
+    _isMemorized = value;
     notifyListeners();
   }
 
@@ -467,6 +476,7 @@ class AddPersonProvider with ChangeNotifier {
         tags: _tags,
         avatarColor: _avatarColors[_selectedColorIndex],
         photoPath: _selectedImage?.path,
+        isMemorized: _isMemorized,
       );
 
       if (_isEditingPerson) {
