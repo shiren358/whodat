@@ -289,9 +289,25 @@ class AddPersonProvider with ChangeNotifier {
   // 保存時に未保存のタグがあれば追加するメソッド
   void addRemainingTag(String input) {
     final tag = input.trim();
+    if (kDebugMode) {
+      print('addRemainingTag: 入力="$input", トリム後="$tag"');
+      print('addRemainingTag: 現在のタグリスト: $_tags');
+    }
+
     if (tag.isNotEmpty && !_tags.contains(tag)) {
       _tags.add(tag);
+      if (kDebugMode) {
+        print('addRemainingTag: タグ"$tag"を追加');
+      }
       notifyListeners();
+    } else if (tag.isEmpty) {
+      if (kDebugMode) {
+        print('addRemainingTag: タグが空なので追加しません');
+      }
+    } else {
+      if (kDebugMode) {
+        print('addRemainingTag: タグ"$tag"は既に存在します');
+      }
     }
   }
 
@@ -303,8 +319,21 @@ class AddPersonProvider with ChangeNotifier {
   }
 
   void removeTag(String tag) {
-    _tags.remove(tag);
-    notifyListeners();
+    if (kDebugMode) {
+      print('removeTag: 削除前のタグリスト: $_tags');
+      print('removeTag: 削除対象: "$tag"');
+    }
+
+    final removed = _tags.remove(tag);
+
+    if (kDebugMode) {
+      print('removeTag: 削除成功: $removed');
+      print('removeTag: 削除後のタグリスト: $_tags');
+    }
+
+    if (removed) {
+      notifyListeners();
+    }
   }
 
   // ===== 会った記録管理メソッド =====

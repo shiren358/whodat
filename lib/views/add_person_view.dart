@@ -871,25 +871,37 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   Widget _buildTag(String label) {
-    return GestureDetector(
-      onTap: () => _provider.removeTag(label),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(fontSize: 14, color: Colors.black87),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: () {
+              if (kDebugMode) {
+                print('タグ削除ボタンがクリックされました: "$label"');
+              }
+              _provider.removeTag(label);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              child: const Icon(
+                Icons.close,
+                size: 16,
+                color: Colors.black54,
+              ),
             ),
-            const SizedBox(width: 4),
-            const Icon(Icons.close, size: 16, color: Colors.black54),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
