@@ -7,7 +7,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'firebase_options.dart';
 import 'providers/home_provider.dart';
-import 'utils/dummy_data_generator.dart';
+// import 'utils/dummy_data_generator.dart';
 import 'views/home_view.dart';
 
 void main() async {

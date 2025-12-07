@@ -401,42 +401,69 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  itemCount: provider.latestMeetingRecordsByPerson.length,
-                  itemBuilder: (context, index) {
-                    final record = provider.latestMeetingRecordsByPerson[index];
-                    final person = provider.getPersonForRecord(record);
-                    return MeetingRecordCard(
-                      record: record,
-                      person: person,
-                      onTap: () {
-                        // TODO: Update to support editing meeting records
-                        // when AddPersonView is refactored to support 3 modes
-                        _animationController.reverse().then((_) {
-                          if (!mounted) return;
-                          setState(() {
-                            _personToEdit = person;
-                            _selectedIndex = 2; // Add画面に移動
+                child: provider.latestMeetingRecordsByPerson.isEmpty
+                    ? _buildEmptyState(context)
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        itemCount: provider.latestMeetingRecordsByPerson.length,
+                        itemBuilder: (context, index) {
+                          final record =
+                              provider.latestMeetingRecordsByPerson[index];
+                          final person = provider.getPersonForRecord(record);
+                          return MeetingRecordCard(
+                            record: record,
+                            person: person,
+                            onTap: () {
+                              _animationController.reverse().then((_) {
+                                if (!mounted) return;
+                                setState(() {
+                                  _personToEdit = person;
+                                  _selectedIndex = 2; // Add画面に移動
 
-                            // デバッグログ
-                            if (kDebugMode) {
-                              print(
-                                'HomeView: カードタップ - person=${person?.name ?? 'null'}, personId=${person?.id ?? 'null'}',
-                              );
-                            }
-                          });
-                          _animationController.forward();
-                        });
-                      },
-                    );
-                  },
-                ),
+                                  // デバッグログ
+                                  if (kDebugMode) {
+                                    print(
+                                      'HomeView: カードタップ - person=${person?.name ?? 'null'}, personId=${person?.id ?? 'null'}',
+                                    );
+                                  }
+                                });
+                                _animationController.forward();
+                              });
+                            },
+                          );
+                        },
+                      ),
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.history, size: 64, color: Colors.grey[300]),
+          const SizedBox(height: 16),
+          Text(
+            '記録がありません',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '追加(+)ボタンで\n最初の人を追加してみましょう',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+          ),
+        ],
+      ),
     );
   }
 }
