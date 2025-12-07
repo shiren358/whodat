@@ -4,11 +4,15 @@ import 'map_location_selection_view.dart';
 
 class LocationSelectionView extends StatefulWidget {
   final String initialLocation;
+  final double? initialLatitude;
+  final double? initialLongitude;
   final Function(String location, double? latitude, double? longitude, LocationType type) onLocationSelected;
 
   const LocationSelectionView({
     super.key,
     required this.initialLocation,
+    this.initialLatitude,
+    this.initialLongitude,
     required this.onLocationSelected,
   });
 
@@ -199,6 +203,8 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
       MaterialPageRoute(
         builder: (context) => MapLocationSelectionView(
           initialLocation: widget.initialLocation,
+          initialLatitude: widget.initialLatitude,
+          initialLongitude: widget.initialLongitude,
         ),
       ),
     );

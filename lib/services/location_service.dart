@@ -37,7 +37,7 @@ class LocationService {
 
     // パーミッションが許可されている
     return permission == LocationPermission.whileInUse ||
-           permission == LocationPermission.always;
+        permission == LocationPermission.always;
   }
 
   // 現在位置の取得
@@ -56,6 +56,13 @@ class LocationService {
         ),
       );
 
+      // デバッグログ
+      if (kDebugMode) {
+        print('位置情報取得成功: ${position.latitude}, ${position.longitude}');
+        print('精度: ${position.accuracy}m');
+        print('取得時刻: ${position.timestamp}');
+      }
+
       return position;
     } catch (e) {
       if (kDebugMode) {
@@ -66,22 +73,22 @@ class LocationService {
   }
 
   // 位置情報が有効かチェック
-  static Future<bool> isLocationEnabled() async {
+  Future<bool> isLocationEnabled() async {
     return await Geolocator.isLocationServiceEnabled();
   }
 
   // アプリ設定を開く（位置情報が無効な場合用）
-  static Future<bool> openLocationSettings() async {
+  Future<bool> openLocationSettings() async {
     return await Geolocator.openLocationSettings();
   }
 
   // アプリ設定を開く（パーミッションが永久に拒否されている場合用）
-  static Future<bool> openAppSettings() async {
+  Future<bool> openAppSettings() async {
     return await Geolocator.openAppSettings();
   }
 
   // 位置情報の精度レベルを取得
-  static String getAccuracyLevel(LocationAccuracy accuracy) {
+  String getAccuracyLevel(LocationAccuracy accuracy) {
     switch (accuracy) {
       case LocationAccuracy.low:
         return '低精度';
@@ -99,12 +106,12 @@ class LocationService {
   }
 
   // 2点間の距離を計算（メートル）
-  static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
     return Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
   }
 
   // 位置情報ソースの説明
-  static String getLocationSourceDescription(LocationType type) {
+  String getLocationSourceDescription(LocationType type) {
     switch (type) {
       case LocationType.gps:
         return 'GPSで取得';
@@ -118,7 +125,7 @@ class LocationService {
 
 // 位置情報の種別
 enum LocationType {
-  manual,  // 手動入力
-  map,     // 地図で選択
-  gps,     // GPSで取得
+  manual, // 手動入力
+  map, // 地図で選択
+  gps, // GPSで取得
 }

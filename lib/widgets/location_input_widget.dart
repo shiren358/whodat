@@ -9,8 +9,13 @@ class LocationInputWidget extends StatefulWidget {
   final double? latitude;
   final double? longitude;
   final LocationType? locationType;
-  final Function(String location, double? latitude, double? longitude, LocationType type)?
-      onLocationChanged;
+  final Function(
+    String location,
+    double? latitude,
+    double? longitude,
+    LocationType type,
+  )?
+  onLocationChanged;
 
   const LocationInputWidget({
     super.key,
@@ -108,22 +113,30 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       backgroundColor: Colors.transparent,
       builder: (context) => LocationSelectionView(
         initialLocation: widget.controller.text,
-        onLocationSelected: (
-          String location,
-          double? latitude,
-          double? longitude,
-          LocationType type,
-        ) {
-          // コントローラーを更新
-          widget.controller.text = location;
+        initialLatitude: widget.latitude,
+        initialLongitude: widget.longitude,
+        onLocationSelected:
+            (
+              String location,
+              double? latitude,
+              double? longitude,
+              LocationType type,
+            ) {
+              // コントローラーを更新
+              widget.controller.text = location;
 
-          // コールバックを呼び出し
-          widget.onLocationChanged?.call(location, latitude, longitude, type);
-          widget.onChanged?.call(location);
+              // コールバックを呼び出し
+              widget.onLocationChanged?.call(
+                location,
+                latitude,
+                longitude,
+                type,
+              );
+              widget.onChanged?.call(location);
 
-          // 状態を更新してUIを再描画
-          setState(() {});
-        },
+              // 状態を更新してUIを再描画
+              setState(() {});
+            },
       ),
     );
   }

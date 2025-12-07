@@ -126,17 +126,30 @@ class MapLocationProvider with ChangeNotifier {
     try {
       // 初期位置を設定
       if (initialLatitude != null && initialLongitude != null) {
+        if (kDebugMode) {
+          print('初期位置を使用: $initialLatitude, $initialLongitude');
+        }
         _selectedLocation = LatLng(initialLatitude, initialLongitude);
       } else {
         // 現在位置を取得
-        final currentPosition = await LocationService.getCurrentLocation();
-        if (currentPosition != null) {
-          _selectedLocation = LatLng(
-            currentPosition.latitude,
-            currentPosition.longitude,
-          );
+        if (kDebugMode) {
+          print('現在地を取得します...');
+        }
+        final currentLocation = await getCurrentLocation();
+        if (currentLocation != null) {
+          _selectedLocation = currentLocation;
+          if (kDebugMode) {
+            print(
+              '現在地を設定: ${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
+            );
+          }
         } else {
           _selectedLocation = _getDefaultLocation();
+          if (kDebugMode) {
+            print(
+              'デフォルト位置を設定: ${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
+            );
+          }
         }
       }
 
@@ -183,7 +196,9 @@ class MapLocationProvider with ChangeNotifier {
     notifyListeners();
 
     // 地図をタップした位置に移動
-    _mapController?.animateCamera(CameraUpdate.newLatLng(location));
+    if (_mapController != null) {
+      _mapController!.animateCamera(CameraUpdate.newLatLng(location));
+    }
 
     // 逆ジオコーディングで住所を取得
     await _getAddressForLocation(location);
@@ -207,78 +222,24 @@ class MapLocationProvider with ChangeNotifier {
   }
 
   /// 現在地を取得
-  Future<void> getCurrentLocation() async {
-    _setLoading(true);
-
-    try {
-      final currentPosition = await LocationService.getCurrentLocation();
-      if (currentPosition != null) {
-        final currentLocation = LatLng(
-          currentPosition.latitude,
-          currentPosition.longitude,
-        );
-
-        _selectedLocation = currentLocation;
-        _markers.clear();
-        _markers.add(
-          Marker(
-            markerId: const MarkerId('current_location'),
-            position: currentLocation,
-            infoWindow: const InfoWindow(title: '現在地'),
-          ),
-        );
-
-        // 住所を取得して場所名を更新
-        await _getAddressForLocation(currentLocation);
-
-        // 現在地にカメラを移動
-        _mapController?.animateCamera(
-          CameraUpdate.newLatLngZoom(currentLocation, 15),
-        );
-      } else {
-        // 現在地が取得できない場合、デフォルト位置に移動
-        final defaultLocation = _getDefaultLocation();
-        final defaultLocationName = _getDefaultLocationName(defaultLocation);
-
-        _selectedLocation = defaultLocation;
-        _markers.clear();
-        _markers.add(
-          Marker(
-            markerId: const MarkerId('default_location'),
-            position: defaultLocation,
-            infoWindow: InfoWindow(title: defaultLocationName),
-          ),
-        );
-        _locationName = defaultLocationName;
-
-        // デフォルト位置にカメラを移動
-        _mapController?.animateCamera(
-          CameraUpdate.newLatLngZoom(defaultLocation, 15),
-        );
-
-        // デバッグログ
-        if (kDebugMode) {
-          print('現在地取得できないため、デフォルト位置に移動: $defaultLocationName');
-        }
-      }
-    } catch (e) {
-      // エラーの場合もデフォルト位置に移動
-      final defaultLocation = _getDefaultLocation();
-      final defaultLocationName = _getDefaultLocationName(defaultLocation);
-
-      _selectedLocation = defaultLocation;
-      _locationName = defaultLocationName;
-
-      // デバッグログ
-      if (kDebugMode) {
-        print('位置情報取得エラー: $e');
-        print('デフォルト位置に移動: $defaultLocationName');
-      }
-    } finally {
-      _setLoading(false);
+  Future<LatLng?> getCurrentLocation() async {
+    final currentPosition = await LocationService.getCurrentLocation();
+    if (currentPosition != null) {
+      return LatLng(
+        currentPosition.latitude,
+        currentPosition.longitude,
+      );
     }
+    return null;
+  }
 
-    notifyListeners();
+  /// 地図を移動
+  void moveToLocation(LatLng location) {
+    if (_mapController != null) {
+      _mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(location, 15),
+      );
+    }
   }
 
   /// 場所名を手動で更新
@@ -324,7 +285,7 @@ class MapLocationProvider with ChangeNotifier {
   /// クリーンアップ
   @override
   void dispose() {
-    _mapController?.dispose();
+    _mapController = null;
     super.dispose();
   }
 }

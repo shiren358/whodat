@@ -101,7 +101,12 @@ class _MapLocationSelectionViewState extends State<MapLocationSelectionView> {
                         Icons.my_location,
                         color: Color(0xFF4CAF50),
                       ),
-                      onPressed: provider.getCurrentLocation,
+                      onPressed: () async {
+                      final location = await provider.getCurrentLocation();
+                      if (location != null) {
+                        provider.moveToLocation(location);
+                      }
+                    },
                     );
                   },
                 ),
