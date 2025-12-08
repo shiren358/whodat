@@ -866,12 +866,12 @@ class _AddPersonViewState extends State<AddPersonView> {
                   children: provider.tags.map((tag) => _buildTag(tag)).toList(),
                 ),
               ],
-              if (provider.suggestedTags.isNotEmpty) ...[
+              if (_getSuggestedTags().isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: provider.suggestedTags
+                  children: _getSuggestedTags()
                       .where((tag) => !provider.tags.contains(tag))
                       .map((tag) => _buildSuggestedTag(tag))
                       .toList(),
@@ -1054,6 +1054,14 @@ class _AddPersonViewState extends State<AddPersonView> {
         ],
       ),
     );
+  }
+
+  List<String> _getSuggestedTags() {
+    return [
+      S.of(context)!.metLastWeek,
+      S.of(context)!.today,
+      S.of(context)!.thisMonth,
+    ];
   }
 }
 

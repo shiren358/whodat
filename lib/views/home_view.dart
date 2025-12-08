@@ -345,8 +345,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                 runSpacing: 8,
                 children: [
                   // 固定タグ（1行目）
-                  ...provider.suggestedTags
-                      .take(3)
+                  ..._getSuggestedTags()
                       .map(
                         (tag) => TagChip(
                           label: tag,
@@ -541,5 +540,13 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  List<String> _getSuggestedTags() {
+    return [
+      S.of(context)!.metLastWeek,
+      S.of(context)!.today,
+      S.of(context)!.thisMonth,
+    ];
   }
 }

@@ -670,4 +670,13 @@ class AppLocalizationsJa extends AppLocalizations {
   ) {
     return '$year年$month月$day日 ($weekday)';
   }
+
+  @override
+  String get metLastWeek => '先週会った';
+
+  @override
+  String get today => '今日';
+
+  @override
+  String get thisMonth => '今月';
 }

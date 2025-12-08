@@ -164,12 +164,12 @@ class _CalendarViewState extends State<CalendarView>
           ),
           child: TableCalendar(
             firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
+            lastDay: DateTime.utc(2100, 12, 31),
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             eventLoader: (day) =>
                 _getEventsForDay(day, provider.allLatestMeetingRecordsByPerson),
-            locale: 'ja_JP',
+            locale: Localizations.localeOf(context).toString(),
             headerStyle: const HeaderStyle(
               formatButtonVisible: false,
               titleCentered: false,
@@ -235,14 +235,14 @@ class _CalendarViewState extends State<CalendarView>
         }
 
         final weekdayNames = [
-      S.of(context)!.monday,
-      S.of(context)!.tuesday,
-      S.of(context)!.wednesday,
-      S.of(context)!.thursday,
-      S.of(context)!.friday,
-      S.of(context)!.saturday,
-      S.of(context)!.sunday,
-    ];
+          S.of(context)!.monday,
+          S.of(context)!.tuesday,
+          S.of(context)!.wednesday,
+          S.of(context)!.thursday,
+          S.of(context)!.friday,
+          S.of(context)!.saturday,
+          S.of(context)!.sunday,
+        ];
         final weekday = weekdayNames[_selectedDay!.weekday - 1];
 
         return Container(
@@ -251,12 +251,14 @@ class _CalendarViewState extends State<CalendarView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                S.of(context)!.dateWithWeekday(
-                  _selectedDay!.year,
-                  _selectedDay!.month,
-                  _selectedDay!.day,
-                  weekday,
-                ),
+                S
+                    .of(context)!
+                    .dateWithWeekday(
+                      _selectedDay!.year,
+                      _selectedDay!.month,
+                      _selectedDay!.day,
+                      weekday,
+                    ),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

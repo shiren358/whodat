@@ -8,14 +8,12 @@ import '../services/meeting_record_storage.dart';
 
 class HomeProvider with ChangeNotifier {
   String _searchQuery = '';
-  final List<String> _suggestedTags = ['先週会った', '今日', '今月'];
   List<Person> _allPersons = [];
   List<MeetingRecord> _allMeetingRecords = []; // 全記録を保持
   Map<String, Person> _personsMap = {};
   List<Person> _searchResults = [];
 
   String get searchQuery => _searchQuery;
-  List<String> get suggestedTags => _suggestedTags;
 
   List<String> _randomTags = [];
 

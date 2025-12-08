@@ -685,4 +685,13 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return '$weekday, $month/$day/$year';
   }
+
+  @override
+  String get metLastWeek => 'Met last week';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get thisMonth => 'This month';
 }

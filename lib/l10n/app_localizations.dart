@@ -1351,6 +1351,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{weekday}, {month}/{day}/{year}'**
   String dateWithWeekday(Object day, Object month, Object weekday, Object year);
+
+  /// No description provided for @metLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Met last week'**
+  String get metLastWeek;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @thisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get thisMonth;
 }
 
 class _AppLocalizationsDelegate
