@@ -668,7 +668,7 @@ class _AddPersonViewState extends State<AddPersonView> {
               currentRecord.date!.month == now.month &&
               currentRecord.date!.day == now.day;
           dateText =
-              '${currentRecord.date!.year}.${currentRecord.date!.month.toString().padLeft(2, '0')}.${currentRecord.date!.day.toString().padLeft(2, '0')}${isToday ? ' (今日)' : ''}';
+              '${currentRecord.date!.year}.${currentRecord.date!.month.toString().padLeft(2, '0')}.${currentRecord.date!.day.toString().padLeft(2, '0')}${isToday ? ' (${S.of(context)!.today})' : ''}';
           dateColor = Colors.black87;
         }
 
@@ -866,12 +866,12 @@ class _AddPersonViewState extends State<AddPersonView> {
                   children: provider.tags.map((tag) => _buildTag(tag)).toList(),
                 ),
               ],
-              if (_getSuggestedTags().isNotEmpty) ...[
+              if (provider.suggestedTags.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _getSuggestedTags()
+                  children: provider.suggestedTags
                       .where((tag) => !provider.tags.contains(tag))
                       .map((tag) => _buildSuggestedTag(tag))
                       .toList(),
@@ -1054,14 +1054,6 @@ class _AddPersonViewState extends State<AddPersonView> {
         ],
       ),
     );
-  }
-
-  List<String> _getSuggestedTags() {
-    return [
-      S.of(context)!.metLastWeek,
-      S.of(context)!.today,
-      S.of(context)!.thisMonth,
-    ];
   }
 }
 

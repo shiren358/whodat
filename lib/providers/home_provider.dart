@@ -8,12 +8,20 @@ import '../services/meeting_record_storage.dart';
 
 class HomeProvider with ChangeNotifier {
   String _searchQuery = '';
+  List<String> _suggestedTags = []; // ローカライズされたタグを外部から設定
   List<Person> _allPersons = [];
   List<MeetingRecord> _allMeetingRecords = []; // 全記録を保持
   Map<String, Person> _personsMap = {};
   List<Person> _searchResults = [];
 
   String get searchQuery => _searchQuery;
+  List<String> get suggestedTags => _suggestedTags;
+
+  // ローカライズされたタグを設定するメソッド
+  void updateLocalizedSuggestedTags(List<String> tags) {
+    _suggestedTags = tags;
+    notifyListeners();
+  }
 
   List<String> _randomTags = [];
 
@@ -218,8 +226,8 @@ class HomeProvider with ChangeNotifier {
   }
 
   bool _isDateSearch(String query) {
-    final dateKeywords = ['先週会った', '今日', '今月'];
-    return dateKeywords.contains(query);
+    // suggestedTagsに含まれるかチェック（ローカライズされたタグ）
+    return _suggestedTags.contains(query);
   }
 
   bool _matchesDateSearch(MeetingRecord record, String query) {
@@ -234,8 +242,11 @@ class HomeProvider with ChangeNotifier {
       meetingDate.day,
     );
 
-    switch (query) {
-      case '先週会った':
+    // タグのインデックスで判定（言語に依存しない）
+    final tagIndex = _suggestedTags.indexOf(query);
+
+    switch (tagIndex) {
+      case 0: // 「先週会った」/ "Met last week"
         // 先週（月曜日から日曜日まで）
         final startOfLastWeek = today.subtract(
           Duration(days: today.weekday + 6),
@@ -244,13 +255,13 @@ class HomeProvider with ChangeNotifier {
         return !meetingDateOnly.isBefore(startOfLastWeek) &&
             !meetingDateOnly.isAfter(endOfLastWeek);
 
-      case '今日':
+      case 1: // 「今日」/ "Today"
         // 今日
         return meetingDateOnly.year == today.year &&
             meetingDateOnly.month == today.month &&
             meetingDateOnly.day == today.day;
 
-      case '今月':
+      case 2: // 「今月」/ "This month"
         // 今月
         return meetingDateOnly.year == today.year &&
             meetingDateOnly.month == today.month;

@@ -56,6 +56,15 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
       if (mounted) {
         final l10n = S.of(context)!;
         _heroTexts = [l10n.heroTitle1, l10n.heroTitle2, l10n.heroTitle3];
+
+        // ローカライズされたタグをProviderに設定
+        final provider = Provider.of<HomeProvider>(context, listen: false);
+        provider.updateLocalizedSuggestedTags([
+          l10n.metLastWeek,
+          l10n.today,
+          l10n.thisMonth,
+        ]);
+
         setState(() {});
       }
     });
@@ -345,15 +354,14 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                 runSpacing: 8,
                 children: [
                   // 固定タグ（1行目）
-                  ..._getSuggestedTags()
-                      .map(
-                        (tag) => TagChip(
-                          label: tag,
-                          onTap: () {
-                            provider.updateSearchQuery(tag);
-                          },
-                        ),
-                      ),
+                  ...provider.suggestedTags.map(
+                    (tag) => TagChip(
+                      label: tag,
+                      onTap: () {
+                        provider.updateSearchQuery(tag);
+                      },
+                    ),
+                  ),
                   // 動的タグ（2行目）
                   ...provider.randomTags.map(
                     (tag) => TagChip(
@@ -540,13 +548,5 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         ],
       ),
     );
-  }
-
-  List<String> _getSuggestedTags() {
-    return [
-      S.of(context)!.metLastWeek,
-      S.of(context)!.today,
-      S.of(context)!.thisMonth,
-    ];
   }
 }
