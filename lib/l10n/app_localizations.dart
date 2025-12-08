@@ -1283,31 +1283,31 @@ abstract class AppLocalizations {
   /// No description provided for @memoryRankBeginner.
   ///
   /// In en, this message translates to:
-  /// **'Beginner'**
+  /// **'Memory Apprentice'**
   String get memoryRankBeginner;
 
   /// No description provided for @memoryRankBronze.
   ///
   /// In en, this message translates to:
-  /// **'Bronze Member'**
+  /// **'Starting to Remember'**
   String get memoryRankBronze;
 
   /// No description provided for @memoryRankSilver.
   ///
   /// In en, this message translates to:
-  /// **'Silver Member'**
+  /// **'Faces Match Names'**
   String get memoryRankSilver;
 
   /// No description provided for @memoryRankGold.
   ///
   /// In en, this message translates to:
-  /// **'Gold Member'**
+  /// **'Can Talk to Anyone'**
   String get memoryRankGold;
 
   /// No description provided for @memoryRankPlatinum.
   ///
   /// In en, this message translates to:
-  /// **'Platinum Member'**
+  /// **'Network Master'**
   String get memoryRankPlatinum;
 
   /// No description provided for @searchResultsFor.

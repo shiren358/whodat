@@ -637,19 +637,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get platinumMember => 'Platinum Member';
 
   @override
-  String get memoryRankBeginner => 'Beginner';
+  String get memoryRankBeginner => 'Memory Apprentice';
 
   @override
-  String get memoryRankBronze => 'Bronze Member';
+  String get memoryRankBronze => 'Starting to Remember';
 
   @override
-  String get memoryRankSilver => 'Silver Member';
+  String get memoryRankSilver => 'Faces Match Names';
 
   @override
-  String get memoryRankGold => 'Gold Member';
+  String get memoryRankGold => 'Can Talk to Anyone';
 
   @override
-  String get memoryRankPlatinum => 'Platinum Member';
+  String get memoryRankPlatinum => 'Network Master';
 
   @override
   String searchResultsFor(Object query) {

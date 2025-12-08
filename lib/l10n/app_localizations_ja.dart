@@ -622,19 +622,19 @@ class AppLocalizationsJa extends AppLocalizations {
   String get platinumMember => 'プラチナ会員';
 
   @override
-  String get memoryRankBeginner => '初心者';
+  String get memoryRankBeginner => '記憶の見習い';
 
   @override
-  String get memoryRankBronze => 'ブロンズ会員';
+  String get memoryRankBronze => '名前を覚え始めた';
 
   @override
-  String get memoryRankSilver => 'シルバー会員';
+  String get memoryRankSilver => '顔と名前が一致';
 
   @override
-  String get memoryRankGold => 'ゴールド会員';
+  String get memoryRankGold => '誰とでも会話できる';
 
   @override
-  String get memoryRankPlatinum => 'プラチナ会員';
+  String get memoryRankPlatinum => '人脈マスター';
 
   @override
   String searchResultsFor(Object query) {
