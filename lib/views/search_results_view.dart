@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/home_provider.dart';
 import '../widgets/person_card.dart'; // Import PersonCard
 import '../models/person.dart';
+import '../l10n/l10n.dart';
 
 class SearchResultsView extends StatelessWidget {
   const SearchResultsView({super.key, this.onPersonTap});
@@ -50,7 +51,7 @@ class SearchResultsView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '見つかりませんでした',
+            S.of(context)!.notFound,
             style: TextStyle(
               fontSize: 16,
               color: Colors.grey[500],
@@ -69,7 +70,7 @@ class SearchResultsView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: const Text('検索をクリア'),
+            child: Text(S.of(context)!.clearSearch),
           ),
           const SizedBox(height: 40), // 下部に余白を追加
         ],

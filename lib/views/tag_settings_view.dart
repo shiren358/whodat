@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/tag_settings_provider.dart';
+import '../l10n/l10n.dart';
 
 class TagSettingsView extends StatefulWidget {
   final VoidCallback? onClose;
@@ -49,9 +50,9 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                         ),
                         const Spacer(),
                         // 真ん中：タイトル
-                        const Text(
-                          'タグ設定',
-                          style: TextStyle(
+                        Text(
+                          S.of(context)!.tagSettings,
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
@@ -65,7 +66,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                               icon: const Icon(Icons.add, size: 28),
                               onPressed: () =>
                                   _showAddTagDialog(context, provider),
-                              tooltip: 'タグを追加',
+                              tooltip: S.of(context)!.addTag,
                             );
                           },
                         ),
@@ -104,7 +105,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      'タグについて',
+                                      S.of(context)!.tagAbout,
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -150,7 +151,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
           Icon(Icons.local_offer_outlined, size: 64, color: Colors.grey[300]),
           const SizedBox(height: 16),
           Text(
-            '登録されたタグがありません',
+            S.of(context)!.noRegisteredTags,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -159,7 +160,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
           ),
           const SizedBox(height: 8),
           Text(
-            'よく使うタグを追加してみましょう',
+            S.of(context)!.addFrequentTags,
             style: TextStyle(fontSize: 16, color: Colors.grey[500]),
           ),
         ],
@@ -218,12 +219,12 @@ class _TagSettingsViewState extends State<TagSettingsView> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('タグを追加'),
+        title: Text(S.of(context)!.addTag),
         content: TextField(
           controller: controller,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: '例: 先輩、同期、お客さん',
+            hintText: S.of(context)!.tagPlaceholder,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           ),
           maxLength: 20,
@@ -231,7 +232,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('キャンセル'),
+            child: Text(S.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -243,7 +244,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                 }
               }
             },
-            child: const Text('追加', style: TextStyle(color: Color(0xFF4D6FFF))),
+            child: Text(S.of(context)!.add, style: const TextStyle(color: Color(0xFF4D6FFF))),
           ),
         ],
       ),
@@ -258,12 +259,12 @@ class _TagSettingsViewState extends State<TagSettingsView> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('タグの削除'),
-        content: Text('「#$tag」を削除します。\nこのタグが設定された人物のタグも削除されます。\nよろしいですか？'),
+        title: Text(S.of(context)!.deleteTag),
+        content: Text(S.of(context)!.deleteTagConfirmation('#$tag')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('キャンセル'),
+            child: Text(S.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -272,7 +273,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                 Navigator.pop(context);
               }
             },
-            child: const Text('削除', style: TextStyle(color: Colors.red)),
+            child: Text(S.of(context)!.delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart'; // Add this import
 import '../providers/my_page_provider.dart';
 import 'tag_settings_view.dart';
 import 'feedback_screen.dart';
+import '../l10n/l10n.dart';
 
 class MyPageView extends StatefulWidget {
   const MyPageView({super.key});
@@ -133,11 +134,11 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // タイトル
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(24, 24, 24, 32),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
                   child: Text(
-                    'マイページ',
-                    style: TextStyle(
+                    S.of(context)!.myPageTitle,
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -181,7 +182,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              provider.userProfile?.name ?? '名前を設定',
+                              provider.userProfile?.name ?? S.of(context)!.setName,
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -205,7 +206,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
 
                       // サブタイトル
                       Text(
-                        '記憶ランク: ${provider.memoryRank}',
+                        S.of(context)!.memoryRank(provider.memoryRank),
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
@@ -240,9 +241,9 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
-                                '覚えた人',
-                                style: TextStyle(
+                              Text(
+                                S.of(context)!.rememberedPeople,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black54,
                                 ),
@@ -272,9 +273,9 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
-                                '今月の出会い',
-                                style: TextStyle(
+                              Text(
+                                S.of(context)!.monthlyMeetings,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.black54,
                                 ),
@@ -291,7 +292,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                 // メニュー項目
                 _buildMenuItem(
                   context,
-                  title: 'タグ設定',
+                  title: S.of(context)!.tagSettings,
                   onTap: () {
                     _showTagSettings();
                   },
@@ -299,7 +300,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                 ),
                 _buildMenuItem(
                   context,
-                  title: 'フィードバック',
+                  title: S.of(context)!.feedbackTitle,
                   onTap: () {
                     _showFeedback();
                   },
@@ -318,14 +319,14 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                 // ),
                 _buildMenuItem(
                   context,
-                  title: 'プライバシーポリシー',
+                  title: S.of(context)!.privacyPolicy,
                   onTap: () =>
                       _launchURL('https://tomople.com/privacy-policy/'),
                   icon: Icons.privacy_tip,
                 ),
                 _buildMenuItem(
                   context,
-                  title: '利用規約',
+                  title: S.of(context)!.termsOfService,
                   onTap: () => _launchURL(
                     'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
                   ),
@@ -334,7 +335,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                 const SizedBox(height: 32), // スペースを追加
                 Center(
                   child: Text(
-                    'バージョン: ${provider.appVersion}',
+                    S.of(context)!.versionLabel(provider.appVersion),
                     style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                   ),
                 ),
@@ -403,20 +404,20 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('名前の設定'),
+        title: Text(S.of(context)!.nameSettings),
         content: TextField(
           controller: nameController,
           autofocus: true,
-          decoration: const InputDecoration(
-            labelText: '名前',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: S.of(context)!.nameLabel,
+            border: const OutlineInputBorder(),
           ),
           maxLength: 20,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('キャンセル'),
+            child: Text(S.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -428,7 +429,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                 }
               }
             },
-            child: const Text('保存', style: TextStyle(color: Color(0xFF4D6FFF))),
+            child: Text(S.of(context)!.save, style: const TextStyle(color: Color(0xFF4D6FFF))),
           ),
         ],
       ),

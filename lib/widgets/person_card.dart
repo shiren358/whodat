@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/person.dart';
+import '../l10n/l10n.dart';
 
 class PersonCard extends StatelessWidget {
   final Person person;
@@ -86,7 +87,7 @@ class PersonCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    person.name ?? '名前未登録',
+                    person.name ?? S.of(context)!.nameNotRegistered,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

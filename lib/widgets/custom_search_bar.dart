@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'speech_recognition_view.dart'; // Will be created next
+import '../l10n/l10n.dart';
 
 class CustomSearchBar extends StatefulWidget {
-  final String hintText;
+  final String? hintText;
   final ValueChanged<String>? onChanged;
 
   const CustomSearchBar({
     super.key,
-    this.hintText = '名前、会社、場所、タグで検索...',
+    this.hintText,
     this.onChanged,
   });
 
@@ -80,7 +81,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               controller: _controller,
               style: const TextStyle(fontSize: 16, color: Colors.black87),
               decoration: InputDecoration(
-                hintText: widget.hintText,
+                hintText: widget.hintText ?? S.of(context)!.searchHint,
                 hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
                 border: InputBorder.none,
                 isDense: true,

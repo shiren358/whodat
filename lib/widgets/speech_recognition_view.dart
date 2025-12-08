@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
+import '../l10n/l10n.dart';
 
 class SpeechRecognitionView extends StatefulWidget {
   const SpeechRecognitionView({super.key});
@@ -13,12 +14,13 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
   final SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
   String _lastWords = '';
-  String _status = '認識を開始するにはマイクボタンをタップ';
+  late String _status;
   bool _isNavigating = false; // 追加: ナビゲーション中フラグ
 
   @override
   void initState() {
     super.initState();
+    _status = S.of(context)!.tapMicToStart;
     _initSpeech();
   }
 
@@ -31,7 +33,7 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
       },
       onError: (error) {
         if (mounted) {
-          setState(() => _status = 'エラー: ${error.errorMsg}');
+          setState(() => _status = S.of(context)!.speechError(error.errorMsg));
         }
       },
     );
@@ -91,8 +93,8 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const Text(
-              '音声で検索',
+            Text(
+              S.of(context)!.searchByVoice,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
@@ -101,7 +103,7 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
                 child: Text(
                   _speechToText.isListening
                       ? _lastWords.isEmpty
-                            ? 'お話しください…'
+                            ? S.of(context)!.pleaseSpeak
                             : _lastWords
                       : _status,
                   textAlign: TextAlign.center,
@@ -167,8 +169,8 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
                   );
                 }
               },
-              child: const Text(
-                '完了',
+              child: Text(
+                S.of(context)!.complete,
                 style: TextStyle(fontSize: 16, color: Color(0xFF4D6FFF)),
               ),
             ),

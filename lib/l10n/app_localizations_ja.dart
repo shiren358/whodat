@@ -33,7 +33,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get calendar => 'カレンダー';
 
   @override
-  String get allRecords => '全記録';
+  String get allRecords => 'すべての記録';
 
   @override
   String get myPage => 'マイページ';
@@ -220,7 +220,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get feedback => 'フィードバック';
 
   @override
-  String get feedbackTitle => 'フィードバックを送信';
+  String get feedbackTitle => 'フィードバック';
 
   @override
   String get feedbackPlaceholder => 'ご意見、ご要望、バグ報告などをお聞かせください';
@@ -378,4 +378,183 @@ class AppLocalizationsJa extends AppLocalizations {
   String deletePersonConfirmation(Object name) {
     return '$nameの記録をすべて削除します。\n削除した記録は復元できません。';
   }
+
+  @override
+  String get haveYouEver => 'そんな経験ありませんか？';
+
+  @override
+  String get monday => '月';
+
+  @override
+  String get tuesday => '火';
+
+  @override
+  String get wednesday => '水';
+
+  @override
+  String get thursday => '木';
+
+  @override
+  String get friday => '金';
+
+  @override
+  String get saturday => '土';
+
+  @override
+  String get sunday => '日';
+
+  @override
+  String get nameNotRegistered => '名前未登録';
+
+  @override
+  String get notFound => '見つかりませんでした';
+
+  @override
+  String get viewPeopleList => '会った人の一覧を見る';
+
+  @override
+  String get pleaseTellUs => 'ご意見をお聞かせください';
+
+  @override
+  String get whatFeedback => 'どのようなフィードバックですか？';
+
+  @override
+  String get bugReport => 'バグ報告';
+
+  @override
+  String get bugReportDesc => 'アプリの不具合やクラッシュなどの報告';
+
+  @override
+  String get featureRequest => '機能リクエスト';
+
+  @override
+  String get featureRequestDesc => 'こんな機能があったら便利かもというアイデア';
+
+  @override
+  String get appReview => 'アプリの感想';
+
+  @override
+  String get appReviewDesc => '使い心地やデザインについての率直な意見';
+
+  @override
+  String get other => 'その他';
+
+  @override
+  String get otherDesc => 'その他、どんなことでもお聞かせください';
+
+  @override
+  String get feedbackThankYou => 'いただいたフィードバックは、\n今後のアップデートの参考にさせていただきます';
+
+  @override
+  String get openFeedbackForm => 'フィードバックフォームを開く';
+
+  @override
+  String get myPageTitle => 'マイページ';
+
+  @override
+  String get setName => '名前を設定';
+
+  @override
+  String memoryRank(Object rank) {
+    return '記憶ランク: $rank';
+  }
+
+  @override
+  String get rememberedPeople => '覚えた人';
+
+  @override
+  String get monthlyMeetings => '今月の出会い';
+
+  @override
+  String get privacyPolicy => 'プライバシーポリシー';
+
+  @override
+  String get termsOfService => '利用規約';
+
+  @override
+  String versionLabel(Object version) {
+    return 'バージョン: $version';
+  }
+
+  @override
+  String get nameSettings => '名前の設定';
+
+  @override
+  String get nameLabel => '名前';
+
+  @override
+  String get mapTitle => 'マップ';
+
+  @override
+  String get confirmLocation => '地図で場所を選択';
+
+  @override
+  String get tapToSelectLocation => '地図をタップして場所を選択してください';
+
+  @override
+  String get locationEntryMethod => '場所の入力方法を選択';
+
+  @override
+  String get selectOnMapDesc => '地図上で場所をタップして指定';
+
+  @override
+  String get enterManually => '手動で入力';
+
+  @override
+  String get enterManuallyDesc => '場所の名前をテキストで入力';
+
+  @override
+  String get enterLocation => '場所を入力';
+
+  @override
+  String get locationNote => '手動で入力した場合、Mapにピンは表示されません';
+
+  @override
+  String get tagAbout => 'タグについて';
+
+  @override
+  String get tagAboutDesc =>
+      '人物に付けるタグを管理できます。\nよく使うタグを登録しておくと、新しい記録を追加する時にタップで選べて便利です。';
+
+  @override
+  String get noRegisteredTags => '登録されたタグがありません';
+
+  @override
+  String get addFrequentTags => 'よく使うタグを追加してみましょう';
+
+  @override
+  String get confirm => '決定';
+
+  @override
+  String get selectLocationOnMap => '地図で場所を選択';
+
+  @override
+  String get selectedLocation => '選択された場所';
+
+  @override
+  String get developerNote =>
+      'このアプリは、私自身の「人を覚えられない」という悩みから生まれました。もしこのアプリが、あなたの出会いを少しでも豊かにできたら、これほど嬉しいことはありません。';
+
+  @override
+  String get reviewMeetings => 'いつ会ったかを振り返る';
+
+  @override
+  String get tapMicToStart => '認識を開始するにはマイクボタンをタップ';
+
+  @override
+  String speechError(Object error) {
+    return 'エラー: $error';
+  }
+
+  @override
+  String get searchByVoice => '音声で検索';
+
+  @override
+  String get pleaseSpeak => 'お話しください…';
+
+  @override
+  String get complete => '完了';
+
+  @override
+  String get searchHint => '名前、会社、場所、タグで検索...';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../providers/map_location_provider.dart';
+import '../l10n/l10n.dart';
 
 class MapLocationSelectionView extends StatefulWidget {
   final String initialLocation;
@@ -82,9 +83,9 @@ class _MapLocationSelectionViewState extends State<MapLocationSelectionView> {
           return Scaffold(
             backgroundColor: const Color(0xFFF5F5F7),
             appBar: AppBar(
-              title: const Text(
-                '地図で場所を選択',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              title: Text(
+                S.of(context)!.selectLocationOnMap,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               backgroundColor: Colors.white,
               elevation: 0,
@@ -125,9 +126,9 @@ class _MapLocationSelectionViewState extends State<MapLocationSelectionView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              '選択された場所',
-                              style: TextStyle(
+                            Text(
+                              S.of(context)!.selectedLocation,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF666666),
                               ),
@@ -135,7 +136,7 @@ class _MapLocationSelectionViewState extends State<MapLocationSelectionView> {
                             const SizedBox(height: 4),
                             Text(
                               provider.locationName.isEmpty
-                                  ? '地図をタップして場所を選択してください'
+                                  ? S.of(context)!.tapToSelectLocation
                                   : provider.locationName,
                               style: const TextStyle(
                                 fontSize: 16,
@@ -257,7 +258,7 @@ class _MapLocationSelectionViewState extends State<MapLocationSelectionView> {
                                 ).updateLocationName(value);
                               },
                               decoration: InputDecoration(
-                                hintText: '場所名を入力（例: 渋谷駅）',
+                                hintText: S.of(context)!.locationNamePlaceholder,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: const BorderSide(
@@ -306,9 +307,9 @@ class _MapLocationSelectionViewState extends State<MapLocationSelectionView> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
-                                    child: const Text(
-                                      'キャンセル',
-                                      style: TextStyle(
+                                    child: Text(
+                                      S.of(context)!.cancel,
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         color: Color(0xFF666666),
                                       ),
@@ -340,9 +341,9 @@ class _MapLocationSelectionViewState extends State<MapLocationSelectionView> {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
-                                    child: const Text(
-                                      '決定',
-                                      style: TextStyle(
+                                    child: Text(
+                                      S.of(context)!.confirm,
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,
                                       ),

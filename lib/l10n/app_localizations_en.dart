@@ -225,7 +225,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedback => 'Feedback';
 
   @override
-  String get feedbackTitle => 'Send Feedback';
+  String get feedbackTitle => 'Feedback';
 
   @override
   String get feedbackPlaceholder =>
@@ -391,4 +391,184 @@ class AppLocalizationsEn extends AppLocalizations {
   String deletePersonConfirmation(Object name) {
     return 'Delete all records for $name.\nDeleted records cannot be restored.';
   }
+
+  @override
+  String get haveYouEver => 'Have you ever had this experience?';
+
+  @override
+  String get monday => 'Mon';
+
+  @override
+  String get tuesday => 'Tue';
+
+  @override
+  String get wednesday => 'Wed';
+
+  @override
+  String get thursday => 'Thu';
+
+  @override
+  String get friday => 'Fri';
+
+  @override
+  String get saturday => 'Sat';
+
+  @override
+  String get sunday => 'Sun';
+
+  @override
+  String get nameNotRegistered => 'Name not registered';
+
+  @override
+  String get notFound => 'Not found';
+
+  @override
+  String get viewPeopleList => 'View People List';
+
+  @override
+  String get pleaseTellUs => 'Please tell us your thoughts';
+
+  @override
+  String get whatFeedback => 'What kind of feedback is this?';
+
+  @override
+  String get bugReport => 'Bug Report';
+
+  @override
+  String get bugReportDesc => 'Report app issues or crashes';
+
+  @override
+  String get featureRequest => 'Feature Request';
+
+  @override
+  String get featureRequestDesc => 'Ideas for features that would be useful';
+
+  @override
+  String get appReview => 'App Review';
+
+  @override
+  String get appReviewDesc => 'Honest opinions about usability and design';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get otherDesc => 'Anything else you\'d like to tell us';
+
+  @override
+  String get feedbackThankYou =>
+      'Your feedback will be used as reference for future updates';
+
+  @override
+  String get openFeedbackForm => 'Open Feedback Form';
+
+  @override
+  String get myPageTitle => 'My Page';
+
+  @override
+  String get setName => 'Set Name';
+
+  @override
+  String memoryRank(Object rank) {
+    return 'Memory Rank: $rank';
+  }
+
+  @override
+  String get rememberedPeople => 'Remembered People';
+
+  @override
+  String get monthlyMeetings => 'This Month\'s Meetings';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String versionLabel(Object version) {
+    return 'Version: $version';
+  }
+
+  @override
+  String get nameSettings => 'Name Settings';
+
+  @override
+  String get nameLabel => 'Name';
+
+  @override
+  String get mapTitle => 'Map';
+
+  @override
+  String get confirmLocation => 'Confirm location on map';
+
+  @override
+  String get tapToSelectLocation => 'Tap on the map to select a location';
+
+  @override
+  String get locationEntryMethod => 'Choose location entry method';
+
+  @override
+  String get selectOnMapDesc => 'Tap on the map to specify location';
+
+  @override
+  String get enterManually => 'Enter Manually';
+
+  @override
+  String get enterManuallyDesc => 'Enter location name as text';
+
+  @override
+  String get enterLocation => 'Enter Location';
+
+  @override
+  String get locationNote => 'Note: Manual entry won\'t show pins on the Map';
+
+  @override
+  String get tagAbout => 'About Tags';
+
+  @override
+  String get tagAboutDesc =>
+      'You can manage tags for people.\nRegistering frequently used tags makes it convenient to select them with a tap when adding new records.';
+
+  @override
+  String get noRegisteredTags => 'No registered tags';
+
+  @override
+  String get addFrequentTags => 'Add frequently used tags';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get selectLocationOnMap => 'Select location on map';
+
+  @override
+  String get selectedLocation => 'Selected Location';
+
+  @override
+  String get developerNote =>
+      'This app was born from my own struggle with \"not being able to remember people\". If this app can enrich your encounters even a little, there would be no greater joy.';
+
+  @override
+  String get reviewMeetings => 'Review when you met';
+
+  @override
+  String get tapMicToStart => 'Tap microphone button to start recognition';
+
+  @override
+  String speechError(Object error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get searchByVoice => 'Search by voice';
+
+  @override
+  String get pleaseSpeak => 'Please speak...';
+
+  @override
+  String get complete => 'Complete';
+
+  @override
+  String get searchHint => 'Search by name, company, location, tags...';
 }

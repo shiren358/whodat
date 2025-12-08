@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/meeting_record.dart';
 import '../models/person.dart';
+import '../l10n/l10n.dart';
 
 class MeetingRecordCard extends StatelessWidget {
   final MeetingRecord record;
@@ -22,7 +23,7 @@ class MeetingRecordCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayName = person?.name ?? '名前未登録';
+    final displayName = person?.name ?? S.of(context)!.nameNotRegistered;
     final initials = person?.initials ?? '？';
     final avatarColor = person?.avatarColor ?? '#4D6FFF';
     final photoPath = person?.photoPath;

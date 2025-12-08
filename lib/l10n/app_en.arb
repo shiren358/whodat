@@ -511,5 +511,260 @@
         "type": "String"
       }
     }
+  },
+  "haveYouEver": "Have you ever had this experience?",
+  "@@haveYouEver": {
+    "description": "Story opening question"
+  },
+  "monday": "Mon",
+  "@@monday": {
+    "description": "Monday abbreviation"
+  },
+  "tuesday": "Tue",
+  "@@tuesday": {
+    "description": "Tuesday abbreviation"
+  },
+  "wednesday": "Wed",
+  "@@wednesday": {
+    "description": "Wednesday abbreviation"
+  },
+  "thursday": "Thu",
+  "@@thursday": {
+    "description": "Thursday abbreviation"
+  },
+  "friday": "Fri",
+  "@@friday": {
+    "description": "Friday abbreviation"
+  },
+  "saturday": "Sat",
+  "@@saturday": {
+    "description": "Saturday abbreviation"
+  },
+  "sunday": "Sun",
+  "@@sunday": {
+    "description": "Sunday abbreviation"
+  },
+  "nameNotRegistered": "Name not registered",
+  "@@nameNotRegistered": {
+    "description": "Placeholder for unregistered names"
+  },
+  "notFound": "Not found",
+  "@@notFound": {
+    "description": "Search not found message"
+  },
+  "allRecords": "All Records",
+  "@@allRecords": {
+    "description": "All records section title"
+  },
+  "viewPeopleList": "View People List",
+  "@@viewPeopleList": {
+    "description": "View people list button text"
+  },
+  "feedbackTitle": "Feedback",
+  "@@feedbackTitle": {
+    "description": "Feedback title"
+  },
+  "pleaseTellUs": "Please tell us your thoughts",
+  "@@pleaseTellUs": {
+    "description": "Feedback prompt"
+  },
+  "whatFeedback": "What kind of feedback is this?",
+  "@@whatFeedback": {
+    "description": "Feedback type selection title"
+  },
+  "bugReport": "Bug Report",
+  "@@bugReport": {
+    "description": "Bug report option title"
+  },
+  "bugReportDesc": "Report app issues or crashes",
+  "@@bugReportDesc": {
+    "description": "Bug report description"
+  },
+  "featureRequest": "Feature Request",
+  "@@featureRequest": {
+    "description": "Feature request option title"
+  },
+  "featureRequestDesc": "Ideas for features that would be useful",
+  "@@featureRequestDesc": {
+    "description": "Feature request description"
+  },
+  "appReview": "App Review",
+  "@@appReview": {
+    "description": "App review option title"
+  },
+  "appReviewDesc": "Honest opinions about usability and design",
+  "@@appReviewDesc": {
+    "description": "App review description"
+  },
+  "other": "Other",
+  "@@other": {
+    "description": "Other option title"
+  },
+  "otherDesc": "Anything else you'd like to tell us",
+  "@@otherDesc": {
+    "description": "Other feedback description"
+  },
+  "feedbackThankYou": "Your feedback will be used as reference for future updates",
+  "@@feedbackThankYou": {
+    "description": "Thank you message for feedback"
+  },
+  "openFeedbackForm": "Open Feedback Form",
+  "@@openFeedbackForm": {
+    "description": "Open feedback form button text"
+  },
+  "myPageTitle": "My Page",
+  "@@myPageTitle": {
+    "description": "My page title"
+  },
+  "setName": "Set Name",
+  "@@setName": {
+    "description": "Set name menu item"
+  },
+  "memoryRank": "Memory Rank: {rank}",
+  "@@memoryRank": {
+    "description": "Memory rank display",
+    "placeholders": {
+      "rank": {
+        "type": "String"
+      }
+    }
+  },
+  "rememberedPeople": "Remembered People",
+  "@@rememberedPeople": {
+    "description": "Remembered people count label"
+  },
+  "monthlyMeetings": "This Month's Meetings",
+  "@@monthlyMeetings": {
+    "description": "Monthly meetings label"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@@privacyPolicy": {
+    "description": "Privacy policy menu item"
+  },
+  "termsOfService": "Terms of Service",
+  "@@termsOfService": {
+    "description": "Terms of service menu item"
+  },
+  "versionLabel": "Version: {version}",
+  "@@versionLabel": {
+    "description": "Version display",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "nameSettings": "Name Settings",
+  "@@nameSettings": {
+    "description": "Name settings dialog title"
+  },
+  "nameLabel": "Name",
+  "@@nameLabel": {
+    "description": "Name field label in settings"
+  },
+  "mapTitle": "Map",
+  "@@mapTitle": {
+    "description": "Map page title"
+  },
+  "confirmLocation": "Confirm location on map",
+  "@@confirmLocation": {
+    "description": "Confirm location button text"
+  },
+  "tapToSelectLocation": "Tap on the map to select a location",
+  "@@tapToSelectLocation": {
+    "description": "Map selection instruction"
+  },
+  "locationEntryMethod": "Choose location entry method",
+  "@@locationEntryMethod": {
+    "description": "Location entry method selection title"
+  },
+  "selectOnMap": "Select on Map",
+  "@@selectOnMap": {
+    "description": "Select on map option"
+  },
+  "selectOnMapDesc": "Tap on the map to specify location",
+  "@@selectOnMapDesc": {
+    "description": "Select on map description"
+  },
+  "enterManually": "Enter Manually",
+  "@@enterManually": {
+    "description": "Enter manually option"
+  },
+  "enterManuallyDesc": "Enter location name as text",
+  "@@enterManuallyDesc": {
+    "description": "Enter manually description"
+  },
+  "enterLocation": "Enter Location",
+  "@@enterLocation": {
+    "description": "Enter location dialog title"
+  },
+  "locationNote": "Note: Manual entry won't show pins on the Map",
+  "@@locationNote": {
+    "description": "Location entry note"
+  },
+  "tagAbout": "About Tags",
+  "@@tagAbout": {
+    "description": "Tag about dialog title"
+  },
+  "tagAboutDesc": "You can manage tags for people.\nRegistering frequently used tags makes it convenient to select them with a tap when adding new records.",
+  "@@tagAboutDesc": {
+    "description": "Tag about description"
+  },
+  "noRegisteredTags": "No registered tags",
+  "@@noRegisteredTags": {
+    "description": "No tags message"
+  },
+  "addFrequentTags": "Add frequently used tags",
+  "@@addFrequentTags": {
+    "description": "Add tags suggestion"
+  },
+  "confirm": "Confirm",
+  "@@confirm": {
+    "description": "Confirm button text"
+  },
+  "selectLocationOnMap": "Select location on map",
+  "@@selectLocationOnMap": {
+    "description": "Select location on map title"
+  },
+  "selectedLocation": "Selected Location",
+  "@@selectedLocation": {
+    "description": "Selected location label"
+  },
+  "developerNote": "This app was born from my own struggle with \"not being able to remember people\". If this app can enrich your encounters even a little, there would be no greater joy.",
+  "@@developerNote": {
+    "description": "Developer note about the app"
+  },
+  "reviewMeetings": "Review when you met",
+  "@@reviewMeetings": {
+    "description": "Calendar subtitle text"
+  },
+  "tapMicToStart": "Tap microphone button to start recognition",
+  "@@tapMicToStart": {
+    "description": "Speech recognition initial status"
+  },
+  "speechError": "Error: {error}",
+  "@@speechError": {
+    "description": "Speech recognition error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "searchByVoice": "Search by voice",
+  "@@searchByVoice": {
+    "description": "Voice search button text"
+  },
+  "pleaseSpeak": "Please speak...",
+  "@@pleaseSpeak": {
+    "description": "Speech recognition listening message"
+  },
+  "complete": "Complete",
+  "@@complete": {
+    "description": "Complete button text"
+  },
+  "searchHint": "Search by name, company, location, tags...",
+  "@@searchHint": {
+    "description": "Search bar hint text"
   }
 }

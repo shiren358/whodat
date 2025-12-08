@@ -8,6 +8,7 @@ import '../models/meeting_record.dart';
 import '../models/person.dart';
 import '../services/location_service.dart';
 import 'add_person_view.dart';
+import '../l10n/l10n.dart';
 
 class MapView extends StatefulWidget {
   const MapView({super.key});
@@ -47,7 +48,7 @@ class _MapViewState extends State<MapView> {
   }
 
   // Providerのデータからマーカーのセットを生成する
-  Set<Marker> _prepareMarkers(HomeProvider provider) {
+  Set<Marker> _prepareMarkers(HomeProvider provider, BuildContext context) {
     final records = provider.allLatestMeetingRecordsByPerson;
     final markers = <Marker>{};
 
@@ -59,7 +60,7 @@ class _MapViewState extends State<MapView> {
       if (record.latitude != null && record.longitude != null) {
         final person = provider.getPersonForRecord(record);
         if (person != null) {
-          final marker = _createMarker(record, person);
+          final marker = _createMarker(record, person, context);
           markers.add(marker);
         }
       }
@@ -71,12 +72,12 @@ class _MapViewState extends State<MapView> {
     return markers;
   }
 
-  Marker _createMarker(MeetingRecord record, Person person) {
+  Marker _createMarker(MeetingRecord record, Person person, BuildContext context) {
     return Marker(
       markerId: MarkerId(record.id),
       position: LatLng(record.latitude!, record.longitude!),
       infoWindow: InfoWindow(
-        title: person.name ?? '名前未登録',
+        title: person.name ?? S.of(context)!.nameNotRegistered,
         snippet: record.location ?? '',
         onTap: () => _navigateToEditScreen(person),
       ),
@@ -129,27 +130,31 @@ class _MapViewState extends State<MapView> {
   Widget build(BuildContext context) {
     return Container(
       color: const Color(0xFFF5F5F7),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            Expanded(child: _buildMap()),
-          ],
-        ),
+      child: Builder(
+        builder: (context) {
+          return SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(context),
+                Expanded(child: _buildMap()),
+              ],
+            ),
+          );
+        }
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'マップ',
-            style: TextStyle(
+          Text(
+            S.of(context)!.mapTitle,
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -157,7 +162,7 @@ class _MapViewState extends State<MapView> {
           ),
           const SizedBox(height: 4),
           Text(
-            'どこで会ったかを確認する',
+            S.of(context)!.confirmLocation,
             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
         ],
@@ -183,7 +188,7 @@ class _MapViewState extends State<MapView> {
         builder: (context, provider, child) {
           return GoogleMap(
             initialCameraPosition: _initialPosition,
-            markers: _prepareMarkers(provider), // ここでマーカーを生成
+            markers: _prepareMarkers(provider, context), // ここでマーカーを生成
             onMapCreated: (controller) {
               _mapController = controller;
               _moveToCurrentUserLocation(); // マップ作成後に現在地へ移動

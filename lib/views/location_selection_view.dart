@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/location_service.dart';
 import 'map_location_selection_view.dart';
+import '../l10n/l10n.dart';
 
 class LocationSelectionView extends StatefulWidget {
   final String initialLocation;
@@ -63,11 +64,11 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
           ),
 
           // タイトル
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             child: Text(
-              '場所の入力方法を選択',
-              style: TextStyle(
+              S.of(context)!.locationEntryMethod,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF333333),
@@ -83,8 +84,8 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                 // 地図で選択
                 _buildSelectionOption(
                   icon: Icons.map,
-                  title: '地図で選択',
-                  subtitle: '地図上で場所をタップして指定',
+                  title: S.of(context)!.selectOnMap,
+                  subtitle: S.of(context)!.selectOnMapDesc,
                   color: const Color(0xFF4CAF50),
                   onTap: _selectOnMap,
                 ),
@@ -94,8 +95,8 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                 // 手動で入力
                 _buildSelectionOption(
                   icon: Icons.keyboard,
-                  title: '手動で入力',
-                  subtitle: '場所の名前をテキストで入力',
+                  title: S.of(context)!.enterManually,
+                  subtitle: S.of(context)!.enterManuallyDesc,
                   color: const Color(0xFF757575),
                   onTap: _showManualInput,
                 ),
@@ -122,9 +123,9 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'キャンセル',
-                  style: TextStyle(fontSize: 16, color: Color(0xFF666666)),
+                child: Text(
+                  S.of(context)!.cancel,
+                  style: const TextStyle(fontSize: 16, color: Color(0xFF666666)),
                 ),
               ),
             ),
@@ -247,11 +248,11 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
             ),
 
             // タイトル
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: Text(
-                '場所を入力',
-                style: TextStyle(
+                S.of(context)!.enterLocation,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF333333),
@@ -266,7 +267,7 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                 controller: _textController,
                 autofocus: true,
                 decoration: InputDecoration(
-                  hintText: '例: 渋谷駅、東京オフィス、カフェ・ド・クリエ',
+                  hintText: S.of(context)!.locationExample,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
@@ -305,10 +306,10 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '手動で入力した場合、Mapにピンは表示されません',
-                        style: TextStyle(
+                        S.of(context)!.locationNote,
+                        style: const TextStyle(
                           fontSize: 14,
-                          color: const Color(0xFFFF6F00),
+                          color: Color(0xFFFF6F00),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -338,9 +339,9 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        'キャンセル',
-                        style: TextStyle(
+                      child: Text(
+                        S.of(context)!.cancel,
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Color(0xFF666666),
                         ),
@@ -369,9 +370,9 @@ class _LocationSelectionViewState extends State<LocationSelectionView> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text(
-                        '決定',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      child: Text(
+                        S.of(context)!.confirm,
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
                   ),

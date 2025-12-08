@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/home_provider.dart';
 import '../widgets/meeting_record_card.dart';
 import '../models/person.dart';
+import '../l10n/l10n.dart';
 
 class AllRecordsView extends StatelessWidget {
   const AllRecordsView({super.key, this.onPersonTap});
@@ -68,9 +69,9 @@ class AllRecordsView extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              const Text(
-                'すべての記録',
-                style: TextStyle(
+              Text(
+                S.of(context)!.allRecords,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -80,7 +81,7 @@ class AllRecordsView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '会った人の一覧を見る',
+            S.of(context)!.viewPeopleList,
             style: TextStyle(
               fontSize: 16,
               color: Colors.white.withValues(alpha: 0.8),
@@ -99,7 +100,7 @@ class AllRecordsView extends StatelessWidget {
           Icon(Icons.history, size: 64, color: Colors.grey[300]),
           const SizedBox(height: 16),
           Text(
-            '記録がありません',
+            S.of(context)!.noData,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -108,7 +109,7 @@ class AllRecordsView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '最初の人を追加してみましょう',
+            S.of(context)!.startAddingPeople,
             style: TextStyle(fontSize: 16, color: Colors.grey[500]),
           ),
         ],

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../services/location_service.dart';
 import '../views/location_selection_view.dart';
+import '../l10n/l10n.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final TextEditingController controller;
-  final String hintText;
+  final String? hintText;
   final ValueChanged<String>? onChanged;
   final double? latitude;
   final double? longitude;
@@ -20,7 +21,7 @@ class LocationInputWidget extends StatefulWidget {
   const LocationInputWidget({
     super.key,
     required this.controller,
-    this.hintText = '場所',
+    this.hintText,
     this.onChanged,
     this.latitude,
     this.longitude,
@@ -82,7 +83,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               child: TextField(
                 controller: widget.controller,
                 decoration: InputDecoration(
-                  hintText: widget.hintText,
+                  hintText: widget.hintText ?? S.of(context)!.location,
                   hintStyle: TextStyle(color: Colors.grey[600], fontSize: 16),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,

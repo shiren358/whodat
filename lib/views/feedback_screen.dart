@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../l10n/l10n.dart';
 
 class FeedbackScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -28,9 +29,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           centerTitle: true,
           backgroundColor: Colors.white,
           elevation: 0,
-          title: const Text(
-            'フィードバック',
-            style: TextStyle(
+          title: Text(
+            S.of(context)!.feedbackTitle,
+            style: const TextStyle(
               color: Colors.black87,
               fontWeight: FontWeight.bold,
             ),
@@ -64,9 +65,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     children: [
                       const Icon(Icons.favorite, size: 48, color: Colors.white),
                       const SizedBox(height: 16),
-                      const Text(
-                        'ご意見をお聞かせください',
-                        style: TextStyle(
+                      Text(
+                        S.of(context)!.pleaseTellUs,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -74,9 +75,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
-                      const Text(
-                        'Whodat?をより良くするために、\nあなたのフィードバックがとても大切です',
-                        style: TextStyle(
+                      Text(
+                        S.of(context)!.feedbackTitle,
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white,
                           height: 1.5,
@@ -92,31 +93,31 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 // 説明セクション
                 _buildSection(
                   context,
-                  title: 'どのようなフィードバックですか？',
+                  title: S.of(context)!.whatFeedback,
                   icon: Icons.chat,
                   children: [
                     _buildItem(
                       context,
-                      title: 'バグ報告',
-                      description: 'アプリの不具合やクラッシュなどの報告',
+                      title: S.of(context)!.bugReport,
+                      description: S.of(context)!.bugReportDesc,
                       icon: Icons.bug_report,
                     ),
                     _buildItem(
                       context,
-                      title: '機能リクエスト',
-                      description: 'こんな機能があったら便利かもというアイデア',
+                      title: S.of(context)!.featureRequest,
+                      description: S.of(context)!.featureRequestDesc,
                       icon: Icons.lightbulb,
                     ),
                     _buildItem(
                       context,
-                      title: 'アプリの感想',
-                      description: '使い心地やデザインについての率直な意見',
+                      title: S.of(context)!.appReview,
+                      description: S.of(context)!.appReviewDesc,
                       icon: Icons.sentiment_satisfied,
                     ),
                     _buildItem(
                       context,
-                      title: 'その他',
-                      description: 'その他、どんなことでもお聞かせください',
+                      title: S.of(context)!.other,
+                      description: S.of(context)!.otherDesc,
                       icon: Icons.more_horiz,
                     ),
                   ],
@@ -149,7 +150,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'いただいたフィードバックは、\n今後のアップデートの参考にさせていただきます',
+                        S.of(context)!.feedbackThankYou,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -175,9 +176,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     }
                   },
                   icon: const Icon(Icons.send, size: 20),
-                  label: const Text(
-                    'フィードバックフォームを開く',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  label: Text(
+                    S.of(context)!.openFeedbackForm,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4D6FFF),

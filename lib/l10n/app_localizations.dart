@@ -515,7 +515,7 @@ abstract class AppLocalizations {
   /// No description provided for @feedbackTitle.
   ///
   /// In en, this message translates to:
-  /// **'Send Feedback'**
+  /// **'Feedback'**
   String get feedbackTitle;
 
   /// No description provided for @feedbackPlaceholder.
@@ -811,6 +811,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete all records for {name}.\nDeleted records cannot be restored.'**
   String deletePersonConfirmation(Object name);
+
+  /// No description provided for @haveYouEver.
+  ///
+  /// In en, this message translates to:
+  /// **'Have you ever had this experience?'**
+  String get haveYouEver;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get sunday;
+
+  /// No description provided for @nameNotRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Name not registered'**
+  String get nameNotRegistered;
+
+  /// No description provided for @notFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found'**
+  String get notFound;
+
+  /// No description provided for @viewPeopleList.
+  ///
+  /// In en, this message translates to:
+  /// **'View People List'**
+  String get viewPeopleList;
+
+  /// No description provided for @pleaseTellUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Please tell us your thoughts'**
+  String get pleaseTellUs;
+
+  /// No description provided for @whatFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'What kind of feedback is this?'**
+  String get whatFeedback;
+
+  /// No description provided for @bugReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Bug Report'**
+  String get bugReport;
+
+  /// No description provided for @bugReportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Report app issues or crashes'**
+  String get bugReportDesc;
+
+  /// No description provided for @featureRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature Request'**
+  String get featureRequest;
+
+  /// No description provided for @featureRequestDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ideas for features that would be useful'**
+  String get featureRequestDesc;
+
+  /// No description provided for @appReview.
+  ///
+  /// In en, this message translates to:
+  /// **'App Review'**
+  String get appReview;
+
+  /// No description provided for @appReviewDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Honest opinions about usability and design'**
+  String get appReviewDesc;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// No description provided for @otherDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything else you\'d like to tell us'**
+  String get otherDesc;
+
+  /// No description provided for @feedbackThankYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Your feedback will be used as reference for future updates'**
+  String get feedbackThankYou;
+
+  /// No description provided for @openFeedbackForm.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Feedback Form'**
+  String get openFeedbackForm;
+
+  /// No description provided for @myPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Page'**
+  String get myPageTitle;
+
+  /// No description provided for @setName.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Name'**
+  String get setName;
+
+  /// No description provided for @memoryRank.
+  ///
+  /// In en, this message translates to:
+  /// **'Memory Rank: {rank}'**
+  String memoryRank(Object rank);
+
+  /// No description provided for @rememberedPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Remembered People'**
+  String get rememberedPeople;
+
+  /// No description provided for @monthlyMeetings.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month\'s Meetings'**
+  String get monthlyMeetings;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// No description provided for @versionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Version: {version}'**
+  String versionLabel(Object version);
+
+  /// No description provided for @nameSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Name Settings'**
+  String get nameSettings;
+
+  /// No description provided for @nameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get nameLabel;
+
+  /// No description provided for @mapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get mapTitle;
+
+  /// No description provided for @confirmLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm location on map'**
+  String get confirmLocation;
+
+  /// No description provided for @tapToSelectLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on the map to select a location'**
+  String get tapToSelectLocation;
+
+  /// No description provided for @locationEntryMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose location entry method'**
+  String get locationEntryMethod;
+
+  /// No description provided for @selectOnMapDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on the map to specify location'**
+  String get selectOnMapDesc;
+
+  /// No description provided for @enterManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Manually'**
+  String get enterManually;
+
+  /// No description provided for @enterManuallyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter location name as text'**
+  String get enterManuallyDesc;
+
+  /// No description provided for @enterLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Location'**
+  String get enterLocation;
+
+  /// No description provided for @locationNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Manual entry won\'t show pins on the Map'**
+  String get locationNote;
+
+  /// No description provided for @tagAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About Tags'**
+  String get tagAbout;
+
+  /// No description provided for @tagAboutDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You can manage tags for people.\nRegistering frequently used tags makes it convenient to select them with a tap when adding new records.'**
+  String get tagAboutDesc;
+
+  /// No description provided for @noRegisteredTags.
+  ///
+  /// In en, this message translates to:
+  /// **'No registered tags'**
+  String get noRegisteredTags;
+
+  /// No description provided for @addFrequentTags.
+  ///
+  /// In en, this message translates to:
+  /// **'Add frequently used tags'**
+  String get addFrequentTags;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @selectLocationOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Select location on map'**
+  String get selectLocationOnMap;
+
+  /// No description provided for @selectedLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Location'**
+  String get selectedLocation;
+
+  /// No description provided for @developerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This app was born from my own struggle with \"not being able to remember people\". If this app can enrich your encounters even a little, there would be no greater joy.'**
+  String get developerNote;
+
+  /// No description provided for @reviewMeetings.
+  ///
+  /// In en, this message translates to:
+  /// **'Review when you met'**
+  String get reviewMeetings;
+
+  /// No description provided for @tapMicToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap microphone button to start recognition'**
+  String get tapMicToStart;
+
+  /// No description provided for @speechError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String speechError(Object error);
+
+  /// No description provided for @searchByVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by voice'**
+  String get searchByVoice;
+
+  /// No description provided for @pleaseSpeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Please speak...'**
+  String get pleaseSpeak;
+
+  /// No description provided for @complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get complete;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name, company, location, tags...'**
+  String get searchHint;
 }
 
 class _AppLocalizationsDelegate

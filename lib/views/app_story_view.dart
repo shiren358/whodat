@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/l10n.dart';
 
 class AppStoryView extends StatefulWidget {
   const AppStoryView({super.key});
@@ -98,9 +99,9 @@ class _AppStoryViewState extends State<AppStoryView>
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'そんな経験ありませんか？',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      Text(
+                        S.of(context)!.haveYouEver,
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -111,7 +112,7 @@ class _AppStoryViewState extends State<AppStoryView>
 
                 // 問題提起
                 _buildStorySection(
-                  title: '出会いのジレンマ',
+                  title: S.of(context)!.storyTitle,
                   icon: Icons.help_outline,
                   color: Colors.orange,
                   children: [
@@ -126,7 +127,7 @@ class _AppStoryViewState extends State<AppStoryView>
 
                 // 解決策
                 _buildStorySection(
-                  title: 'もっと気楽に',
+                  title: S.of(context)!.storySolution,
                   icon: Icons.psychology,
                   color: Colors.green,
                   children: [
@@ -157,7 +158,7 @@ class _AppStoryViewState extends State<AppStoryView>
 
                 // ミッション
                 _buildStorySection(
-                  title: '私たちのミッション',
+                  title: S.of(context)!.missionTitle,
                   icon: Icons.favorite,
                   color: Colors.red,
                   children: [
@@ -192,9 +193,9 @@ class _AppStoryViewState extends State<AppStoryView>
                         color: Color(0xFF4D6FFF),
                       ),
                       const SizedBox(height: 16),
-                      const Text(
-                        'さあ、始めましょう',
-                        style: TextStyle(
+                      Text(
+                        S.of(context)!.save,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -203,7 +204,7 @@ class _AppStoryViewState extends State<AppStoryView>
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '最初の一歩は、あなたから。',
+                        S.of(context)!.appTitle,
                         style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                         textAlign: TextAlign.center,
                       ),
@@ -224,7 +225,7 @@ class _AppStoryViewState extends State<AppStoryView>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '開発者より',
+                        S.of(context)!.feature5,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -232,9 +233,9 @@ class _AppStoryViewState extends State<AppStoryView>
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'このアプリは、私自身の「人を覚えられない」という悩みから生まれました。もしこのアプリが、あなたの出会いを少しでも豊かにできたら、これほど嬉しいことはありません。',
-                        style: TextStyle(
+                      Text(
+                        S.of(context)!.developerNote,
+                        style: const TextStyle(
                           fontSize: 14,
                           height: 1.6,
                           color: Colors.black87,

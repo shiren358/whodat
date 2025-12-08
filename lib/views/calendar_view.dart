@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/meeting_record.dart';
 import '../models/person.dart';
 import '../providers/home_provider.dart';
+import '../l10n/l10n.dart';
 import 'add_person_view.dart';
 
 class CalendarView extends StatefulWidget {
@@ -133,9 +134,9 @@ class _CalendarViewState extends State<CalendarView>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'カレンダー',
-            style: TextStyle(
+          Text(
+            S.of(context)!.calendar,
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -143,7 +144,7 @@ class _CalendarViewState extends State<CalendarView>
           ),
           const SizedBox(height: 4),
           Text(
-            'いつ会ったかを振り返る',
+            S.of(context)!.reviewMeetings,
             style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
         ],
@@ -233,7 +234,15 @@ class _CalendarViewState extends State<CalendarView>
           return const SizedBox();
         }
 
-        final weekdayNames = ['月', '火', '水', '木', '金', '土', '日'];
+        final weekdayNames = [
+      S.of(context)!.monday,
+      S.of(context)!.tuesday,
+      S.of(context)!.wednesday,
+      S.of(context)!.thursday,
+      S.of(context)!.friday,
+      S.of(context)!.saturday,
+      S.of(context)!.sunday,
+    ];
         final weekday = weekdayNames[_selectedDay!.weekday - 1];
 
         return Container(
@@ -297,7 +306,7 @@ class _CalendarViewState extends State<CalendarView>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    person?.name ?? '名前未登録',
+                    person?.name ?? S.of(context)!.nameNotRegistered,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
