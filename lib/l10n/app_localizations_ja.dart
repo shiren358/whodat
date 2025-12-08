@@ -237,7 +237,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get noData => 'まだデータがありません';
+  String get noData => 'データなし';
 
   @override
   String get noPeopleAdded => 'まだ人物が追加されていません';
@@ -557,4 +557,117 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get searchHint => '名前、会社、場所、タグで検索...';
+
+  @override
+  String get businessMeetings => 'ビジネスの会合、勉強会、イベント…';
+
+  @override
+  String get morePeopleBut => '新しい人と出会う機会は増えるのに、';
+
+  @override
+  String get forgetNames => '名前と顔が結びつかないまま過ごしてしまう。';
+
+  @override
+  String get worriedAboutForgetting => '名前を忘れているのが気になって…';
+
+  @override
+  String get forgettingIsNatural => '忘れるのは当然。人間だもの。';
+
+  @override
+  String get dontNeedToBePerfect => '完璧でなくたっていい。';
+
+  @override
+  String get littleRecords => 'ちょっとした記録が、';
+
+  @override
+  String get enrichNextEncounters => '次の出会いをより豊かにしてくれる。';
+
+  @override
+  String get recordNameAndFace => '• 名前と顔を簡単に記録';
+
+  @override
+  String get rememberPlaceAndTime => '• 出会った場所や時間を思い出す';
+
+  @override
+  String get saveFeaturesAndMemo => '• 特徴や会話のメモを残す';
+
+  @override
+  String get manageWithColors => '• 色分けで直感的に管理';
+
+  @override
+  String get checkRememberedPeople => '• 覚えた人にチェックマーク';
+
+  @override
+  String get turnMeetingsToAssets => '出会いをすべて資産に。';
+
+  @override
+  String get worldEasyToRemember => '誰もが人の名前を覚えやすい、';
+
+  @override
+  String get createSuchWorld => 'そんな世界を作りたい。';
+
+  @override
+  String get beginner => '初心者';
+
+  @override
+  String get bronzeMember => 'ブロンズ会員';
+
+  @override
+  String get silverMember => 'シルバー会員';
+
+  @override
+  String get goldMember => 'ゴールド会員';
+
+  @override
+  String get platinumMember => 'プラチナ会員';
+
+  @override
+  String get memoryRankBeginner => '初心者';
+
+  @override
+  String get memoryRankBronze => 'ブロンズ会員';
+
+  @override
+  String get memoryRankSilver => 'シルバー会員';
+
+  @override
+  String get memoryRankGold => 'ゴールド会員';
+
+  @override
+  String get memoryRankPlatinum => 'プラチナ会員';
+
+  @override
+  String searchResultsFor(Object query) {
+    return '「$query」の検索結果';
+  }
+
+  @override
+  String foundResultsCount(Object count) {
+    return '$count件見つかりました';
+  }
+
+  @override
+  String get whodatStory => 'Whodat?の物語';
+
+  @override
+  String get whoWasThatPerson => '「あの人、誰だっけ？」';
+
+  @override
+  String get tagManagementDescription =>
+      '人物に付けるタグを管理できます。\nよく使うタグを登録しておくと、新しい記録を追加する時にタップで選べて便利です。';
+
+  @override
+  String recordsUsingTag(Object count) {
+    return '$count件の記録で使用';
+  }
+
+  @override
+  String dateWithWeekday(
+    Object day,
+    Object month,
+    Object weekday,
+    Object year,
+  ) {
+    return '$year年$month月$day日 ($weekday)';
+  }
 }

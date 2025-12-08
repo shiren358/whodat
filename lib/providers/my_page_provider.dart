@@ -23,10 +23,8 @@ class MyPageProvider with ChangeNotifier {
 
   // 統計情報
   int get totalPersons => _allPersons.where((p) => p.isMemorized).length;
-  int get totalMeetings => _allMeetingRecords.length;
   int get thisMonthMeetings => _getThisMonthMeetings();
-  String get mostUsedLocation => _getMostUsedLocation();
-  String get memoryRank => _getMemoryRank();
+  int get memoryRankLevel => _getMemoryRankLevel();
 
   MyPageProvider() {
     loadData();
@@ -85,39 +83,13 @@ class MyPageProvider with ChangeNotifier {
     }).length;
   }
 
-  String _getMostUsedLocation() {
-    final locationCounts = <String, int>{};
-
-    for (final record in _allMeetingRecords) {
-      if (record.location != null && record.location!.isNotEmpty) {
-        locationCounts[record.location!] =
-            (locationCounts[record.location!] ?? 0) + 1;
-      }
-    }
-
-    if (locationCounts.isEmpty) return 'データなし';
-
-    // 最も多い場所を見つける
-    String mostUsedLocation = '';
-    int maxCount = 0;
-
-    locationCounts.forEach((location, count) {
-      if (count > maxCount) {
-        maxCount = count;
-        mostUsedLocation = location;
-      }
-    });
-
-    return '$mostUsedLocation ($maxCount回)';
-  }
-
-  String _getMemoryRank() {
+  int _getMemoryRankLevel() {
     final count = totalPersons;
-    if (count == 0) return '初心者';
-    if (count < 10) return 'ブロンズ会員';
-    if (count < 30) return 'シルバー会員';
-    if (count < 100) return 'ゴールド会員';
-    return 'プラチナ会員';
+    if (count == 0) return 0;
+    if (count < 10) return 1;
+    if (count < 30) return 2;
+    if (count < 100) return 3;
+    return 4;
   }
 
   Future<void> deletePerson(String personId) async {

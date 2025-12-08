@@ -51,9 +51,9 @@ class _AppStoryViewState extends State<AppStoryView>
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          'Whodat?の物語',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+        title: Text(
+          S.of(context)!.whodatStory,
+          style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.black54),
@@ -89,9 +89,9 @@ class _AppStoryViewState extends State<AppStoryView>
                         color: Colors.white,
                       ),
                       const SizedBox(height: 16),
-                      const Text(
-                        '「あの人、誰だっけ？」',
-                        style: TextStyle(
+                      Text(
+                        S.of(context)!.whoWasThatPerson,
+                        style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -116,10 +116,10 @@ class _AppStoryViewState extends State<AppStoryView>
                   icon: Icons.help_outline,
                   color: Colors.orange,
                   children: [
-                    _buildStoryText('ビジネスの会合、勉強会、イベント…'),
-                    _buildStoryText('新しい人と出会う機会は増えるのに、'),
-                    _buildStoryText('名前と顔が結びつかないまま過ごしてしまう。'),
-                    _buildStoryText('名前を忘れているのが気になって…', isHighlight: true),
+                    _buildStoryText(S.of(context)!.businessMeetings),
+                    _buildStoryText(S.of(context)!.morePeopleBut),
+                    _buildStoryText(S.of(context)!.forgetNames),
+                    _buildStoryText(S.of(context)!.worriedAboutForgetting, isHighlight: true),
                   ],
                 ),
 
@@ -131,10 +131,10 @@ class _AppStoryViewState extends State<AppStoryView>
                   icon: Icons.psychology,
                   color: Colors.green,
                   children: [
-                    _buildStoryText('忘れるのは当然。人間だもの。'),
-                    _buildStoryText('完璧でなくたっていい。'),
-                    _buildStoryText('ちょっとした記録が、'),
-                    _buildStoryText('次の出会いをより豊かにしてくれる。', isHighlight: true),
+                    _buildStoryText(S.of(context)!.forgettingIsNatural),
+                    _buildStoryText(S.of(context)!.dontNeedToBePerfect),
+                    _buildStoryText(S.of(context)!.littleRecords),
+                    _buildStoryText(S.of(context)!.enrichNextEncounters, isHighlight: true),
                   ],
                 ),
 
@@ -142,15 +142,15 @@ class _AppStoryViewState extends State<AppStoryView>
 
                 // このアプリの価値
                 _buildStorySection(
-                  title: 'Whodat?ができること',
+                  title: S.of(context)!.whodatFeatures,
                   icon: Icons.star,
                   color: Colors.purple,
                   children: [
-                    _buildStoryText('• 名前と顔を簡単に記録'),
-                    _buildStoryText('• 出会った場所や時間を思い出す'),
-                    _buildStoryText('• 特徴や会話のメモを残す'),
-                    _buildStoryText('• 色分けで直感的に管理'),
-                    _buildStoryText('• 覚えた人にチェックマーク'),
+                    _buildStoryText(S.of(context)!.recordNameAndFace),
+                    _buildStoryText(S.of(context)!.rememberPlaceAndTime),
+                    _buildStoryText(S.of(context)!.saveFeaturesAndMemo),
+                    _buildStoryText(S.of(context)!.manageWithColors),
+                    _buildStoryText(S.of(context)!.checkRememberedPeople),
                   ],
                 ),
 
@@ -162,9 +162,9 @@ class _AppStoryViewState extends State<AppStoryView>
                   icon: Icons.favorite,
                   color: Colors.red,
                   children: [
-                    _buildStoryText('出会いをすべて資産に。'),
-                    _buildStoryText('誰もが人の名前を覚えやすい、'),
-                    _buildStoryText('そんな世界を作りたい。', isHighlight: true),
+                    _buildStoryText(S.of(context)!.turnMeetingsToAssets),
+                    _buildStoryText(S.of(context)!.worldEasyToRemember),
+                    _buildStoryText(S.of(context)!.createSuchWorld, isHighlight: true),
                   ],
                 ),
 

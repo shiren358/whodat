@@ -115,10 +115,9 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                                   ],
                                 ),
                                 const SizedBox(height: 8),
-                                const Text(
-                                  '人物に付けるタグを管理できます。\n'
-                                  'よく使うタグを登録しておくと、新しい記録を追加する時にタップで選べて便利です。',
-                                  style: TextStyle(fontSize: 14),
+                                Text(
+                                  S.of(context)!.tagManagementDescription,
+                                  style: const TextStyle(fontSize: 14),
                                 ),
                               ],
                             ),
@@ -200,7 +199,7 @@ class _TagSettingsViewState extends State<TagSettingsView> {
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             subtitle: Text(
-              '${provider.getTagUsageCount(tag)}件の記録で使用',
+              S.of(context)!.recordsUsingTag(provider.getTagUsageCount(tag)),
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             trailing: IconButton(

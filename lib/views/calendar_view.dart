@@ -251,7 +251,12 @@ class _CalendarViewState extends State<CalendarView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${_selectedDay!.year}年${_selectedDay!.month}月${_selectedDay!.day}日 ($weekday)',
+                S.of(context)!.dateWithWeekday(
+                  _selectedDay!.year,
+                  _selectedDay!.month,
+                  _selectedDay!.day,
+                  weekday,
+                ),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

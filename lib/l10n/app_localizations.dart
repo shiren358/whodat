@@ -545,7 +545,7 @@ abstract class AppLocalizations {
   /// No description provided for @noData.
   ///
   /// In en, this message translates to:
-  /// **'No data yet'**
+  /// **'No Data'**
   String get noData;
 
   /// No description provided for @noPeopleAdded.
@@ -1153,6 +1153,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search by name, company, location, tags...'**
   String get searchHint;
+
+  /// No description provided for @businessMeetings.
+  ///
+  /// In en, this message translates to:
+  /// **'Business meetings, study groups, events...'**
+  String get businessMeetings;
+
+  /// No description provided for @morePeopleBut.
+  ///
+  /// In en, this message translates to:
+  /// **'Opportunities to meet new people increase, but'**
+  String get morePeopleBut;
+
+  /// No description provided for @forgetNames.
+  ///
+  /// In en, this message translates to:
+  /// **'we go on without connecting names and faces.'**
+  String get forgetNames;
+
+  /// No description provided for @worriedAboutForgetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Worried about forgetting names...'**
+  String get worriedAboutForgetting;
+
+  /// No description provided for @forgettingIsNatural.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgetting is natural. We\'re only human.'**
+  String get forgettingIsNatural;
+
+  /// No description provided for @dontNeedToBePerfect.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t need to be perfect.'**
+  String get dontNeedToBePerfect;
+
+  /// No description provided for @littleRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Little records'**
+  String get littleRecords;
+
+  /// No description provided for @enrichNextEncounters.
+  ///
+  /// In en, this message translates to:
+  /// **'enrich your next encounters.'**
+  String get enrichNextEncounters;
+
+  /// No description provided for @recordNameAndFace.
+  ///
+  /// In en, this message translates to:
+  /// **'• Easily record names and faces'**
+  String get recordNameAndFace;
+
+  /// No description provided for @rememberPlaceAndTime.
+  ///
+  /// In en, this message translates to:
+  /// **'• Remember where and when you met'**
+  String get rememberPlaceAndTime;
+
+  /// No description provided for @saveFeaturesAndMemo.
+  ///
+  /// In en, this message translates to:
+  /// **'• Save features and conversation memos'**
+  String get saveFeaturesAndMemo;
+
+  /// No description provided for @manageWithColors.
+  ///
+  /// In en, this message translates to:
+  /// **'• Manage intuitively with colors'**
+  String get manageWithColors;
+
+  /// No description provided for @checkRememberedPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'• Check off people you\'ve remembered'**
+  String get checkRememberedPeople;
+
+  /// No description provided for @turnMeetingsToAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn all encounters into assets.'**
+  String get turnMeetingsToAssets;
+
+  /// No description provided for @worldEasyToRemember.
+  ///
+  /// In en, this message translates to:
+  /// **'A world where everyone can easily remember people\'s names,'**
+  String get worldEasyToRemember;
+
+  /// No description provided for @createSuchWorld.
+  ///
+  /// In en, this message translates to:
+  /// **'let\'s create such a world.'**
+  String get createSuchWorld;
+
+  /// No description provided for @beginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get beginner;
+
+  /// No description provided for @bronzeMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Bronze Member'**
+  String get bronzeMember;
+
+  /// No description provided for @silverMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Silver Member'**
+  String get silverMember;
+
+  /// No description provided for @goldMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold Member'**
+  String get goldMember;
+
+  /// No description provided for @platinumMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Platinum Member'**
+  String get platinumMember;
+
+  /// No description provided for @memoryRankBeginner.
+  ///
+  /// In en, this message translates to:
+  /// **'Beginner'**
+  String get memoryRankBeginner;
+
+  /// No description provided for @memoryRankBronze.
+  ///
+  /// In en, this message translates to:
+  /// **'Bronze Member'**
+  String get memoryRankBronze;
+
+  /// No description provided for @memoryRankSilver.
+  ///
+  /// In en, this message translates to:
+  /// **'Silver Member'**
+  String get memoryRankSilver;
+
+  /// No description provided for @memoryRankGold.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold Member'**
+  String get memoryRankGold;
+
+  /// No description provided for @memoryRankPlatinum.
+  ///
+  /// In en, this message translates to:
+  /// **'Platinum Member'**
+  String get memoryRankPlatinum;
+
+  /// No description provided for @searchResultsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Search results for \"{query}\"'**
+  String searchResultsFor(Object query);
+
+  /// No description provided for @foundResultsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Found {count} results'**
+  String foundResultsCount(Object count);
+
+  /// No description provided for @whodatStory.
+  ///
+  /// In en, this message translates to:
+  /// **'The Whodat? Story'**
+  String get whodatStory;
+
+  /// No description provided for @whoWasThatPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Who was that person?'**
+  String get whoWasThatPerson;
+
+  /// No description provided for @tagManagementDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You can manage tags for people.\nIf you register frequently used tags, you can easily select them when adding new records.'**
+  String get tagManagementDescription;
+
+  /// No description provided for @recordsUsingTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Used in {count} records'**
+  String recordsUsingTag(Object count);
+
+  /// No description provided for @dateWithWeekday.
+  ///
+  /// In en, this message translates to:
+  /// **'{weekday}, {month}/{day}/{year}'**
+  String dateWithWeekday(Object day, Object month, Object weekday, Object year);
 }
 
 class _AppLocalizationsDelegate

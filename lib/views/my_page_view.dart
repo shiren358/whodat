@@ -206,7 +206,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
 
                       // サブタイトル
                       Text(
-                        S.of(context)!.memoryRank(provider.memoryRank),
+                        _getMemoryRankText(provider.memoryRankLevel),
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.black54,
@@ -434,5 +434,20 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  String _getMemoryRankText(int level) {
+    switch (level) {
+      case 0:
+        return S.of(context)!.memoryRankBeginner;
+      case 1:
+        return S.of(context)!.memoryRankBronze;
+      case 2:
+        return S.of(context)!.memoryRankSilver;
+      case 3:
+        return S.of(context)!.memoryRankGold;
+      default:
+        return S.of(context)!.memoryRankPlatinum;
+    }
   }
 }

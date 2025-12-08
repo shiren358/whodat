@@ -243,7 +243,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get noData => 'No data yet';
+  String get noData => 'No Data';
 
   @override
   String get noPeopleAdded => 'No people added yet';
@@ -571,4 +571,118 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchHint => 'Search by name, company, location, tags...';
+
+  @override
+  String get businessMeetings => 'Business meetings, study groups, events...';
+
+  @override
+  String get morePeopleBut => 'Opportunities to meet new people increase, but';
+
+  @override
+  String get forgetNames => 'we go on without connecting names and faces.';
+
+  @override
+  String get worriedAboutForgetting => 'Worried about forgetting names...';
+
+  @override
+  String get forgettingIsNatural => 'Forgetting is natural. We\'re only human.';
+
+  @override
+  String get dontNeedToBePerfect => 'You don\'t need to be perfect.';
+
+  @override
+  String get littleRecords => 'Little records';
+
+  @override
+  String get enrichNextEncounters => 'enrich your next encounters.';
+
+  @override
+  String get recordNameAndFace => '• Easily record names and faces';
+
+  @override
+  String get rememberPlaceAndTime => '• Remember where and when you met';
+
+  @override
+  String get saveFeaturesAndMemo => '• Save features and conversation memos';
+
+  @override
+  String get manageWithColors => '• Manage intuitively with colors';
+
+  @override
+  String get checkRememberedPeople => '• Check off people you\'ve remembered';
+
+  @override
+  String get turnMeetingsToAssets => 'Turn all encounters into assets.';
+
+  @override
+  String get worldEasyToRemember =>
+      'A world where everyone can easily remember people\'s names,';
+
+  @override
+  String get createSuchWorld => 'let\'s create such a world.';
+
+  @override
+  String get beginner => 'Beginner';
+
+  @override
+  String get bronzeMember => 'Bronze Member';
+
+  @override
+  String get silverMember => 'Silver Member';
+
+  @override
+  String get goldMember => 'Gold Member';
+
+  @override
+  String get platinumMember => 'Platinum Member';
+
+  @override
+  String get memoryRankBeginner => 'Beginner';
+
+  @override
+  String get memoryRankBronze => 'Bronze Member';
+
+  @override
+  String get memoryRankSilver => 'Silver Member';
+
+  @override
+  String get memoryRankGold => 'Gold Member';
+
+  @override
+  String get memoryRankPlatinum => 'Platinum Member';
+
+  @override
+  String searchResultsFor(Object query) {
+    return 'Search results for \"$query\"';
+  }
+
+  @override
+  String foundResultsCount(Object count) {
+    return 'Found $count results';
+  }
+
+  @override
+  String get whodatStory => 'The Whodat? Story';
+
+  @override
+  String get whoWasThatPerson => 'Who was that person?';
+
+  @override
+  String get tagManagementDescription =>
+      'You can manage tags for people.\nIf you register frequently used tags, you can easily select them when adding new records.';
+
+  @override
+  String recordsUsingTag(Object count) {
+    return 'Used in $count records';
+  }
+
+  @override
+  String dateWithWeekday(
+    Object day,
+    Object month,
+    Object weekday,
+    Object year,
+  ) {
+    return '$weekday, $month/$day/$year';
+  }
 }

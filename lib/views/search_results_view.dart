@@ -42,7 +42,7 @@ class SearchResultsView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            '「$query」の検索結果',
+            S.of(context)!.searchResultsFor(query),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ class SearchResultsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '「${provider.searchQuery}」の検索結果',
+                      S.of(context)!.searchResultsFor(provider.searchQuery),
                       style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xFF666666),
@@ -100,7 +100,7 @@ class SearchResultsView extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${provider.searchResults.length}件見つかりました',
+                      S.of(context)!.foundResultsCount(provider.searchResults.length),
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
