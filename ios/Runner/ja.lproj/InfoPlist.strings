@@ -1,0 +1,11 @@
+/* App Display Name */
+CFBundleDisplayName = "Whodat";
+
+/* Location Permissions */
+NSLocationWhenInUseUsageDescription = "このアプリは地図上に登録された人の位置を表示するために位置情報を使用します";
+NSLocationAlwaysUsageDescription = "このアプリは地図上に登録された人の位置を表示するために位置情報を使用します";
+NSLocationAlwaysAndWhenInUseUsageDescription = "このアプリは地図上に登録された人の位置を表示するために位置情報を使用します";
+
+/* Microphone and Speech Recognition Permissions */
+NSSpeechRecognitionUsageDescription = "音声認識を使用して検索キーワードを入力するために使用します";
+NSMicrophoneUsageDescription = "音声検索のためにマイクへのアクセスを許可してください";

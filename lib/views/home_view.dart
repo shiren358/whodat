@@ -10,6 +10,7 @@ import '../widgets/tag_chip.dart';
 import '../widgets/person_card.dart';
 import '../models/person.dart';
 import '../services/app_update_service.dart';
+import '../l10n/l10n.dart';
 import 'add_person_view.dart';
 import 'calendar_view.dart';
 import 'map_view.dart';
@@ -32,23 +33,32 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   Person? _personToEdit; // 編集対象のPerson
 
   int _heroTextIndex = 0;
-  final List<String> _heroTexts = [
-    '「あの人、誰だっけ？」\nをなくそう。',
-    '大切な人との記録を\nここに残そう。',
-    'すべての出会いを\nあなたの資産に。',
-  ];
+  late List<String> _heroTexts;
 
   final _storage = const FlutterSecureStorage();
 
   @override
   void initState() {
     super.initState();
+
+    // Initialize hero texts with empty strings first
+    _heroTexts = ['', '', ''];
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
     _animationController.forward();
     _loadHeroTextIndex();
+
+    // Update hero texts with localization after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final l10n = S.of(context)!;
+        _heroTexts = [l10n.heroTitle1, l10n.heroTitle2, l10n.heroTitle3];
+        setState(() {});
+      }
+    });
 
     // アップデートチェックは最初のフレーム後に実行
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -101,12 +111,15 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         child: ConvexAppBar(
           key: _tabKey,
-          items: const [
-            TabItem(icon: Icons.home_outlined, title: 'Home'),
-            TabItem(icon: Icons.calendar_today_outlined, title: 'Calendar'),
-            TabItem(icon: Icons.add, title: 'Add'),
-            TabItem(icon: Icons.map_outlined, title: 'Map'),
-            TabItem(icon: Icons.person_outline, title: 'MyPage'),
+          items: [
+            TabItem(icon: Icons.home_outlined, title: S.of(context)!.home),
+            TabItem(
+              icon: Icons.calendar_today_outlined,
+              title: S.of(context)!.calendar,
+            ),
+            TabItem(icon: Icons.add, title: S.of(context)!.addPerson),
+            TabItem(icon: Icons.map_outlined, title: S.of(context)!.map),
+            TabItem(icon: Icons.person_outline, title: S.of(context)!.myPage),
           ],
           initialActiveIndex: _selectedIndex,
           backgroundColor: Colors.white,
@@ -246,9 +259,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'Whodat?',
-                style: TextStyle(
+              Text(
+                S.of(context)!.appTitle,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -400,9 +413,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      '最近登録した人',
-                      style: TextStyle(
+                    Text(
+                      S.of(context)!.recentlyRegistered,
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
@@ -453,9 +466,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                           });
                         });
                       },
-                      child: const Text(
-                        'すべて見る',
-                        style: TextStyle(
+                      child: Text(
+                        S.of(context)!.viewAll,
+                        style: const TextStyle(
                           fontSize: 14,
                           color: Color(0xFF4D6FFF),
                           fontWeight: FontWeight.w600,
@@ -512,7 +525,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           Icon(Icons.history, size: 64, color: Colors.grey[300]),
           const SizedBox(height: 16),
           Text(
-            '記録がありません',
+            S.of(context)!.noRecords,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -521,7 +534,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           ),
           const SizedBox(height: 8),
           Text(
-            '追加(+)ボタンで\n最初の人を追加してみましょう',
+            S.of(context)!.addFirstPerson,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: Colors.grey[500]),
           ),

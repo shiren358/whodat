@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Whodat</string>
+
+    <!-- Location Permissions -->
+    <string name="location_permission_description">このアプリは地図上に登録された人の位置を表示するために位置情報を使用します</string>
+
+    <!-- Microphone and Speech Recognition Permissions -->
+    <string name="speech_recognition_permission_description">音声認識を使用して検索キーワードを入力するために使用します</string>
+    <string name="microphone_permission_description">音声検索のためにマイクへのアクセスを許可してください</string>
+</resources>

@@ -8,6 +8,7 @@ import '../models/meeting_record.dart';
 import '../providers/add_person_provider.dart';
 import '../widgets/location_input_widget.dart';
 import '../services/location_service.dart';
+import '../l10n/l10n.dart';
 
 class AddPersonView extends StatefulWidget {
   final VoidCallback? onSave;
@@ -128,7 +129,11 @@ class _AddPersonViewState extends State<AddPersonView> {
             // エラー時はエラーメッセージを表示
             return Scaffold(
               backgroundColor: const Color(0xFFF8FAFC),
-              body: Center(child: Text('エラーが発生しました: ${snapshot.error}')),
+              body: Center(
+                child: Text(
+                  S.of(context)!.errorOccurred(snapshot.error.toString()),
+                ),
+              ),
             );
           }
 
@@ -198,9 +203,9 @@ class _AddPersonViewState extends State<AddPersonView> {
             borderRadius: BorderRadius.circular(20),
           ),
           child: SwitchListTile(
-            title: const Text(
-              'この人を覚えた',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            title: Text(
+              S.of(context)!.iRememberThisPerson,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             value: provider.isMemorized,
             onChanged: (bool value) {
@@ -246,9 +251,9 @@ class _AddPersonViewState extends State<AddPersonView> {
                   ),
                 )
               : const SizedBox(width: 48),
-          const Text(
-            '記憶を記録',
-            style: TextStyle(
+          Text(
+            S.of(context)!.saveMemory,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -265,9 +270,9 @@ class _AddPersonViewState extends State<AddPersonView> {
                 widget.onSave?.call();
               }
             },
-            child: const Text(
-              '保存',
-              style: TextStyle(
+            child: Text(
+              S.of(context)!.save,
+              style: const TextStyle(
                 fontSize: 16,
                 color: Color(0xFF4D6FFF),
                 fontWeight: FontWeight.w600,
@@ -322,7 +327,8 @@ class _AddPersonViewState extends State<AddPersonView> {
                           initial,
                           style: TextStyle(
                             color: _parseColor(
-                              provider.avatarColors[provider.selectedColorIndex],
+                              provider.avatarColors[provider
+                                  .selectedColorIndex],
                             ),
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
@@ -375,7 +381,11 @@ class _AddPersonViewState extends State<AddPersonView> {
                         color: Colors.grey[700]?.withValues(alpha: 0.7),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.close, color: Colors.white, size: 20),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
@@ -392,7 +402,7 @@ class _AddPersonViewState extends State<AddPersonView> {
         return Center(
           child: Wrap(
             alignment: WrapAlignment.center,
-            spacing: 8.0,  // 16.0から8.0に減らして間隔を縮小
+            spacing: 8.0, // 16.0から8.0に減らして間隔を縮小
             runSpacing: 8.0,
             children: List.generate(provider.avatarColors.length, (index) {
               final isSelected = index == provider.selectedColorIndex;
@@ -401,18 +411,18 @@ class _AddPersonViewState extends State<AddPersonView> {
                   provider.selectColor(index);
                 },
                 child: Container(
-                  width: 42,  // 48から42にサイズを縮小
+                  width: 42, // 48から42にサイズを縮小
                   height: 42,
                   alignment: Alignment.center,
                   child: Container(
-                    width: isSelected ? 42 : 36,  // サイズを縮小
+                    width: isSelected ? 42 : 36, // サイズを縮小
                     height: isSelected ? 42 : 36,
                     decoration: BoxDecoration(
                       color: _parseColor(provider.avatarColors[index]),
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: isSelected ? Colors.white : Colors.transparent,
-                        width: 2,  // 3から2に減らす
+                        width: 2, // 3から2に減らす
                       ),
                       boxShadow: isSelected
                           ? [
@@ -420,14 +430,18 @@ class _AddPersonViewState extends State<AddPersonView> {
                                 color: _parseColor(
                                   provider.avatarColors[index],
                                 ).withValues(alpha: 0.5),
-                                blurRadius: 6,  // 8から6に減らす
-                                spreadRadius: 1,  // 2から1に減らす
+                                blurRadius: 6, // 8から6に減らす
+                                spreadRadius: 1, // 2から1に減らす
                               ),
                             ]
                           : null,
                     ),
                     child: isSelected
-                        ? const Icon(Icons.check, color: Colors.white, size: 20)  // 24から20に縮小
+                        ? const Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 20,
+                          ) // 24から20に縮小
                         : null,
                   ),
                 ),
@@ -455,7 +469,7 @@ class _AddPersonViewState extends State<AddPersonView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '名前',
+            S.of(context)!.name,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey[600],
@@ -466,7 +480,7 @@ class _AddPersonViewState extends State<AddPersonView> {
           TextField(
             controller: _nameController,
             decoration: InputDecoration(
-              hintText: 'わからなければ空欄でOK',
+              hintText: S.of(context)!.nameOptional,
               hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
@@ -492,7 +506,7 @@ class _AddPersonViewState extends State<AddPersonView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '所属',
+                  S.of(context)!.company,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
@@ -503,7 +517,7 @@ class _AddPersonViewState extends State<AddPersonView> {
                 TextField(
                   controller: _companyController,
                   decoration: InputDecoration(
-                    hintText: '会社、学校など',
+                    hintText: S.of(context)!.companyHint,
                     hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
@@ -519,7 +533,7 @@ class _AddPersonViewState extends State<AddPersonView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '肩書き',
+                  S.of(context)!.position,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[600],
@@ -530,7 +544,7 @@ class _AddPersonViewState extends State<AddPersonView> {
                 TextField(
                   controller: _positionController,
                   decoration: InputDecoration(
-                    hintText: '役職、学年など',
+                    hintText: S.of(context)!.positionHint,
                     hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
@@ -549,9 +563,9 @@ class _AddPersonViewState extends State<AddPersonView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '特徴・タグ',
-          style: TextStyle(
+        Text(
+          S.of(context)!.featuresTags,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
@@ -560,9 +574,9 @@ class _AddPersonViewState extends State<AddPersonView> {
         const SizedBox(height: 16),
         _buildTagsCard(),
         const SizedBox(height: 24),
-        const Text(
-          'いつ、どこで会った？',
-          style: TextStyle(
+        Text(
+          S.of(context)!.whenWhereMet,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.black87,
@@ -619,9 +633,9 @@ class _AddPersonViewState extends State<AddPersonView> {
                   children: [
                     const Icon(Icons.add, color: Color(0xFF4D6FFF)),
                     const SizedBox(width: 8),
-                    const Text(
-                      '別の日を追加',
-                      style: TextStyle(
+                    Text(
+                      S.of(context)!.addAnotherDay,
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Color(0xFF4D6FFF),
                         fontWeight: FontWeight.w600,
@@ -645,7 +659,7 @@ class _AddPersonViewState extends State<AddPersonView> {
         final Color dateColor;
 
         if (currentRecord.date == null) {
-          dateText = 'いつ会った？（タップして設定）';
+          dateText = S.of(context)!.whenDidYouMeet;
           dateColor = Colors.grey.shade600;
         } else {
           final now = DateTime.now();
@@ -717,7 +731,7 @@ class _AddPersonViewState extends State<AddPersonView> {
               // 場所入力
               LocationInputWidget(
                 controller: currentRecord.locationController,
-                hintText: '場所',
+                hintText: S.of(context)!.locationPlaceholder,
                 latitude: currentRecord.latitude,
                 longitude: currentRecord.longitude,
                 locationType: currentRecord.locationType,
@@ -768,7 +782,7 @@ class _AddPersonViewState extends State<AddPersonView> {
                     child: TextField(
                       controller: record.notesController,
                       decoration: InputDecoration(
-                        hintText: 'メモ（会話内容など）',
+                        hintText: S.of(context)!.memoHint,
                         hintStyle: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 16,
@@ -823,7 +837,7 @@ class _AddPersonViewState extends State<AddPersonView> {
                     child: TextField(
                       controller: _tagInputController,
                       decoration: InputDecoration(
-                        hintText: '特徴タグ（スペース区切り）',
+                        hintText: S.of(context)!.tagsHint,
                         hintStyle: TextStyle(
                           color: Colors.grey[400],
                           fontSize: 16,
@@ -894,11 +908,7 @@ class _AddPersonViewState extends State<AddPersonView> {
             },
             child: Container(
               padding: const EdgeInsets.all(2),
-              child: const Icon(
-                Icons.close,
-                size: 16,
-                color: Colors.black54,
-              ),
+              child: const Icon(Icons.close, size: 16, color: Colors.black54),
             ),
           ),
         ],
@@ -946,16 +956,16 @@ class _AddPersonViewState extends State<AddPersonView> {
       final shouldClear = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('日付を変更'),
-          content: const Text('日付を変更しますか？それとも未設定にしますか？'),
+          title: Text(S.of(context)!.changeDate),
+          content: Text(S.of(context)!.changeDateConfirmation),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('未設定にする'),
+              child: Text(S.of(context)!.unsetDate),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('日付を変更'),
+              child: Text(S.of(context)!.changeDate),
             ),
           ],
         ),
@@ -989,9 +999,9 @@ class _AddPersonViewState extends State<AddPersonView> {
         child: OutlinedButton.icon(
           onPressed: () => _showDeleteConfirmDialog(),
           icon: const Icon(Icons.delete_outline, color: Colors.red),
-          label: const Text(
-            '記録をすべて削除',
-            style: TextStyle(
+          label: Text(
+            S.of(context)!.deleteAllRecords,
+            style: const TextStyle(
               color: Colors.red,
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -1013,14 +1023,17 @@ class _AddPersonViewState extends State<AddPersonView> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('削除の確認'),
+        title: Text(S.of(context)!.deleteConfirmation),
         content: Text(
-          '${widget.person?.name ?? 'この人'}の記録をすべて削除します。\n削除した記録は復元できません。',
+          S.of(context)!.deletePersonConfirmation(widget.person?.name ?? 'この人'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('キャンセル', style: TextStyle(color: Colors.grey)),
+            child: Text(
+              S.of(context)!.cancel,
+              style: const TextStyle(color: Colors.grey),
+            ),
           ),
           TextButton(
             onPressed: () async {
@@ -1033,7 +1046,10 @@ class _AddPersonViewState extends State<AddPersonView> {
                 }
               }
             },
-            child: const Text('削除', style: TextStyle(color: Colors.red)),
+            child: Text(
+              S.of(context)!.delete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),

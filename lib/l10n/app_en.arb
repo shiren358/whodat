@@ -1,0 +1,515 @@
+{
+  "appTitle": "Whodat",
+  "@@appTitle": {
+    "description": "The title of the application"
+  },
+  "heroTitle1": "\"Who was that person?\"\nLet's eliminate that feeling.",
+  "@@heroTitle1": {
+    "description": "Main hero text first part"
+  },
+  "heroTitle2": "Let's save your records\nwith important people here.",
+  "@@heroTitle2": {
+    "description": "Main hero text second part"
+  },
+  "heroTitle3": "Turn every encounter\ninto your asset.",
+  "@@heroTitle3": {
+    "description": "Main hero text third part"
+  },
+  "home": "Home",
+  "@@home": {
+    "description": "Home tab label"
+  },
+  "addPerson": "Add Person",
+  "@@addPerson": {
+    "description": "Add person tab label"
+  },
+  "map": "Map",
+  "@@map": {
+    "description": "Map tab label"
+  },
+  "calendar": "Calendar",
+  "@@calendar": {
+    "description": "Calendar tab label"
+  },
+  "allRecords": "All Records",
+  "@@allRecords": {
+    "description": "All records tab label"
+  },
+  "myPage": "My Page",
+  "@@myPage": {
+    "description": "My page tab label"
+  },
+  "location": "Location",
+  "@@location": {
+    "description": "Location field label"
+  },
+  "memo": "Memo (conversation content, etc.)",
+  "@@memo": {
+    "description": "Memo field label"
+  },
+  "featureTags": "Feature Tags (space separated)",
+  "@@featureTags": {
+    "description": "Feature tags field label"
+  },
+  "cancel": "Cancel",
+  "@@cancel": {
+    "description": "Cancel button text"
+  },
+  "add": "Add",
+  "@@add": {
+    "description": "Add button text"
+  },
+  "delete": "Delete",
+  "@@delete": {
+    "description": "Delete button text"
+  },
+  "save": "Save",
+  "@@save": {
+    "description": "Save button text"
+  },
+  "edit": "Edit",
+  "@@edit": {
+    "description": "Edit button text"
+  },
+  "ok": "OK",
+  "@@ok": {
+    "description": "OK button text"
+  },
+  "yes": "Yes",
+  "@@yes": {
+    "description": "Yes button text"
+  },
+  "no": "No",
+  "@@no": {
+    "description": "No button text"
+  },
+  "error": "Error",
+  "@@error": {
+    "description": "Error title"
+  },
+  "errorOccurred": "An error occurred: {error}",
+  "@@errorOccurred": {
+    "description": "Error message with error details",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "searchPlaceholder": "Search by name or tag...",
+  "@@searchPlaceholder": {
+    "description": "Search bar placeholder text"
+  },
+  "voiceSearch": "Voice Search",
+  "@@voiceSearch": {
+    "description": "Voice search button label"
+  },
+  "clearSearch": "Clear Search",
+  "@@clearSearch": {
+    "description": "Clear search button text"
+  },
+  "noResultsFound": "No results found",
+  "@@noResultsFound": {
+    "description": "Message when no search results are found"
+  },
+  "addPersonTitle": "Add New Person",
+  "@@addPersonTitle": {
+    "description": "Title for add person screen"
+  },
+  "editPersonTitle": "Edit Person",
+  "@@editPersonTitle": {
+    "description": "Title for edit person screen"
+  },
+  "personName": "Person's Name",
+  "@@personName": {
+    "description": "Person name field label"
+  },
+  "takePhoto": "Take Photo",
+  "@@takePhoto": {
+    "description": "Take photo button text"
+  },
+  "selectFromGallery": "Select from Gallery",
+  "@@selectFromGallery": {
+    "description": "Select from gallery button text"
+  },
+  "changePhoto": "Change Photo",
+  "@@changePhoto": {
+    "description": "Change photo button text"
+  },
+  "selectLocation": "Select Location",
+  "@@selectLocation": {
+    "description": "Select location button text"
+  },
+  "selectOnMap": "Select on Map",
+  "@@selectOnMap": {
+    "description": "Select on map button text"
+  },
+  "enterLocationManually": "Enter Location Manually",
+  "@@enterLocationManually": {
+    "description": "Enter location manually button text"
+  },
+  "locationNamePlaceholder": "Enter location name (e.g., Shibuya Station)",
+  "@@locationNamePlaceholder": {
+    "description": "Location name input placeholder"
+  },
+  "locationExample": "e.g., Shibuya Station, Tokyo Office, Café du Créé",
+  "@@locationExample": {
+    "description": "Location input example"
+  },
+  "selectOnMapDescription": "Tap on the map to specify location",
+  "@@selectOnMapDescription": {
+    "description": "Description for map location selection"
+  },
+  "dateAndTime": "Date & Time",
+  "@@dateAndTime": {
+    "description": "Date and time section label"
+  },
+  "changeDate": "Change Date",
+  "@@changeDate": {
+    "description": "Change date option"
+  },
+  "unsetDate": "Set to Unset",
+  "@@unsetDate": {
+    "description": "Set date to unset option"
+  },
+  "confirmChangeDate": "Do you want to change the date or unset it?",
+  "@@confirmChangeDate": {
+    "description": "Confirmation dialog for date change"
+  },
+  "tagSettings": "Tag Settings",
+  "@@tagSettings": {
+    "description": "Tag settings screen title"
+  },
+  "addTag": "Add Tag",
+  "@@addTag": {
+    "description": "Add tag button text"
+  },
+  "tagPlaceholder": "e.g., senior, colleague, client",
+  "@@tagPlaceholder": {
+    "description": "Tag input placeholder"
+  },
+  "deleteTag": "Delete Tag",
+  "@@deleteTag": {
+    "description": "Delete tag confirmation title"
+  },
+  "deleteTagConfirmation": "Delete \"#{tag}\".\nThis tag will also be removed from people who have it set.\nAre you sure?",
+  "@@deleteTagConfirmation": {
+    "description": "Delete tag confirmation message",
+    "placeholders": {
+      "tag": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTitle": "The Encounter Dilemma",
+  "@@storyTitle": {
+    "description": "Story section title"
+  },
+  "storySubtitle1": "Business meetings, study groups, events...",
+  "@@storySubtitle1": {
+    "description": "Story subtitle part 1"
+  },
+  "storySubtitle2": "Opportunities to meet new people increase, yet",
+  "@@storySubtitle2": {
+    "description": "Story subtitle part 2"
+  },
+  "storySubtitle3": "we end up passing time without connecting names and faces.",
+  "@@storySubtitle3": {
+    "description": "Story subtitle part 3"
+  },
+  "storySubtitle4": "Worried about having forgotten their name...",
+  "@@storySubtitle4": {
+    "description": "Story subtitle part 4"
+  },
+  "storySolution": "More casually",
+  "@@storySolution": {
+    "description": "Story solution title"
+  },
+  "storySolutionDesc": "Forgetting is natural. We're only human.",
+  "@@storySolutionDesc": {
+    "description": "Story solution description"
+  },
+  "storySolution2": "It's okay not to be perfect.",
+  "@@storySolution2": {
+    "description": "Story solution part 2"
+  },
+  "storyBenefit": "A small record can",
+  "@@storyBenefit": {
+    "description": "Story benefit title"
+  },
+  "storyBenefit2": "make your next encounter even richer.",
+  "@@storyBenefit2": {
+    "description": "Story benefit part 2"
+  },
+  "whodatFeatures": "What Whodat? Can Do",
+  "@@whodatFeatures": {
+    "description": "Features section title"
+  },
+  "feature1": "Easily record names and faces",
+  "@@feature1": {
+    "description": "Feature 1 description"
+  },
+  "feature2": "Remember where and when you met",
+  "@@feature2": {
+    "description": "Feature 2 description"
+  },
+  "feature3": "Save features and conversation memos",
+  "@@feature3": {
+    "description": "Feature 3 description"
+  },
+  "feature4": "Intuitive management with color coding",
+  "@@feature4": {
+    "description": "Feature 4 description"
+  },
+  "feature5": "Check off people you've remembered",
+  "@@feature5": {
+    "description": "Feature 5 description"
+  },
+  "missionTitle": "Our Mission",
+  "@@missionTitle": {
+    "description": "Mission section title"
+  },
+  "missionDesc": "Turn every encounter into an asset.",
+  "@@missionDesc": {
+    "description": "Mission description part 1"
+  },
+  "missionDesc2": "Create a world where",
+  "@@missionDesc2": {
+    "description": "Mission description part 2"
+  },
+  "missionDesc3": "anyone can easily remember people's names.",
+  "@@missionDesc3": {
+    "description": "Mission description part 3"
+  },
+  "feedback": "Feedback",
+  "@@feedback": {
+    "description": "Feedback menu item"
+  },
+  "feedbackTitle": "Send Feedback",
+  "@@feedbackTitle": {
+    "description": "Feedback screen title"
+  },
+  "feedbackPlaceholder": "Please share your opinions, requests, bug reports, etc.",
+  "@@feedbackPlaceholder": {
+    "description": "Feedback input placeholder"
+  },
+  "submitFeedback": "Submit Feedback",
+  "@@submitFeedback": {
+    "description": "Submit feedback button text"
+  },
+  "appStory": "App Story",
+  "@@appStory": {
+    "description": "App story menu item"
+  },
+  "versionInfo": "Version {version}",
+  "@@versionInfo": {
+    "description": "Version information display",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "noData": "No data yet",
+  "@@noData": {
+    "description": "Message when no data is available"
+  },
+  "noPeopleAdded": "No people added yet",
+  "@@noPeopleAdded": {
+    "description": "Message when no people are added"
+  },
+  "noRecordsFound": "No records found",
+  "@@noRecordsFound": {
+    "description": "Message when no records are found"
+  },
+  "startAddingPeople": "Start adding people you meet!",
+  "@@startAddingPeople": {
+    "description": "Call to action when no people are added"
+  },
+  "markedAsRemembered": "Marked as remembered",
+  "@@markedAsRemembered": {
+    "description": "Toast message when person is marked as remembered"
+  },
+  "unmarkedAsRemembered": "Unmarked as remembered",
+  "@@unmarkedAsRemembered": {
+    "description": "Toast message when person is unmarked as remembered"
+  },
+  "permissionRequiredTitle": "Permission Required",
+  "@@permissionRequiredTitle": {
+    "description": "Permission required dialog title"
+  },
+  "locationPermissionRequired": "Location permission is required to display people's locations on the map.",
+  "@@locationPermissionRequired": {
+    "description": "Location permission required message"
+  },
+  "locationPermissionDenied": "Location permission is denied. Please enable it in settings to use location features.",
+  "@@locationPermissionDenied": {
+    "description": "Location permission denied message"
+  },
+  "locationPermissionDeniedForever": "Location permission is permanently denied. Please enable it in settings to use location features.",
+  "@@locationPermissionDeniedForever": {
+    "description": "Location permission permanently denied message"
+  },
+  "settings": "Settings",
+  "@@settings": {
+    "description": "Settings button text"
+  },
+  "grantPermission": "Grant Permission",
+  "@@grantPermission": {
+    "description": "Grant permission button text"
+  },
+  "enableLocationServices": "Please enable location services to use this feature.",
+  "@@enableLocationServices": {
+    "description": "Message when location services are disabled"
+  },
+  "microphonePermissionRequired": "Microphone permission is required for voice search.",
+  "@@microphonePermissionRequired": {
+    "description": "Microphone permission required message"
+  },
+  "microphonePermissionDenied": "Microphone permission is denied. Please enable it in settings to use voice search.",
+  "@@microphonePermissionDenied": {
+    "description": "Microphone permission denied message"
+  },
+  "speechRecognitionNotAvailable": "Speech recognition is not available on this device.",
+  "@@speechRecognitionNotAvailable": {
+    "description": "Message when speech recognition is not available"
+  },
+  "listening": "Listening...",
+  "@@listening": {
+    "description": "Message when speech recognition is listening"
+  },
+  "speechRecognitionError": "Speech recognition error: {error}",
+  "@@speechRecognitionError": {
+    "description": "Speech recognition error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "speechRecognitionNoResults": "No speech recognition results",
+  "@@speechRecognitionNoResults": {
+    "description": "Message when speech recognition returns no results"
+  },
+  "permissionLocationDescription": "This app uses location information to display registered people's locations on the map",
+  "@@permissionLocationDescription": {
+    "description": "Location permission description for iOS"
+  },
+  "permissionSpeechRecognitionDescription": "Used for inputting search keywords using speech recognition",
+  "@@permissionSpeechRecognitionDescription": {
+    "description": "Speech recognition permission description for iOS"
+  },
+  "permissionMicrophoneDescription": "Please allow microphone access for voice search",
+  "@@permissionMicrophoneDescription": {
+    "description": "Microphone permission description for iOS"
+  },
+  "recentlyRegistered": "Recently Registered",
+  "@@recentlyRegistered": {
+    "description": "Title for recently registered people section"
+  },
+  "viewAll": "View All",
+  "@@viewAll": {
+    "description": "View all button text"
+  },
+  "noRecords": "No records",
+  "@@noRecords": {
+    "description": "Message when no records exist"
+  },
+  "addFirstPerson": "Add your first person using the + button",
+  "@@addFirstPerson": {
+    "description": "Call to action when no people are added"
+  },
+  "iRememberThisPerson": "I remember this person",
+  "@@iRememberThisPerson": {
+    "description": "Checkbox label for remembering a person"
+  },
+  "saveMemory": "Save Memory",
+  "@@saveMemory": {
+    "description": "Save memory button text"
+  },
+  "save": "Save",
+  "@@save": {
+    "description": "Save button text"
+  },
+  "name": "Name",
+  "@@name": {
+    "description": "Name field label"
+  },
+  "nameOptional": "Optional if unknown",
+  "@@nameOptional": {
+    "description": "Name field hint text"
+  },
+  "company": "Company",
+  "@@company": {
+    "description": "Company field label"
+  },
+  "companyHint": "Company, school, etc.",
+  "@@companyHint": {
+    "description": "Company field hint text"
+  },
+  "position": "Position",
+  "@@position": {
+    "description": "Position field label"
+  },
+  "positionHint": "Position, school year, etc.",
+  "@@positionHint": {
+    "description": "Position field hint text"
+  },
+  "featuresTags": "Features/Tags",
+  "@@featuresTags": {
+    "description": "Features and tags section title"
+  },
+  "whenWhereMet": "When & Where Did You Meet?",
+  "@@whenWhereMet": {
+    "description": "When and where section title"
+  },
+  "addAnotherDay": "Add Another Day",
+  "@@addAnotherDay": {
+    "description": "Add another meeting record button"
+  },
+  "whenDidYouMeet": "When did you meet? (Tap to set)",
+  "@@whenDidYouMeet": {
+    "description": "Date input hint text"
+  },
+  "locationPlaceholder": "Location",
+  "@@locationPlaceholder": {
+    "description": "Location input placeholder"
+  },
+  "memoHint": "Memo (conversation content, etc.)",
+  "@@memoHint": {
+    "description": "Memo field hint text"
+  },
+  "tagsHint": "Feature tags (space separated)",
+  "@@tagsHint": {
+    "description": "Tags field hint text"
+  },
+  "changeDate": "Change Date",
+  "@@changeDate": {
+    "description": "Change date dialog title"
+  },
+  "changeDateConfirmation": "Do you want to change the date or unset it?",
+  "@@changeDateConfirmation": {
+    "description": "Change date confirmation message"
+  },
+  "unsetDate": "Set to Unset",
+  "@@unsetDate": {
+    "description": "Unset date button text"
+  },
+  "deleteAllRecords": "Delete All Records",
+  "@@deleteAllRecords": {
+    "description": "Delete all records button text"
+  },
+  "deleteConfirmation": "Delete Confirmation",
+  "@@deleteConfirmation": {
+    "description": "Delete confirmation dialog title"
+  },
+  "deletePersonConfirmation": "Delete all records for {name}.\nDeleted records cannot be restored.",
+  "@@deletePersonConfirmation": {
+    "description": "Delete person confirmation message",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
+}
