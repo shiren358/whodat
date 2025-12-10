@@ -694,4 +694,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get thisMonth => 'This month';
+
+  @override
+  String get themeSettings => 'Theme Settings';
+
+  @override
+  String get selectThemeColor => 'Choose your favorite theme color';
+
+  @override
+  String get themePreview => 'Preview';
 }

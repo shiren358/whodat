@@ -215,5 +215,8 @@
   "dateWithWeekday": "{year}年{month}月{day}日 ({weekday})",
   "metLastWeek": "先週会った",
   "today": "今日",
-  "thisMonth": "今月"
+  "thisMonth": "今月",
+  "themeSettings": "テーマ設定",
+  "selectThemeColor": "お好きなテーマカラーを選んでください",
+  "themePreview": "プレビュー"
 }

@@ -804,5 +804,8 @@
   "dateWithWeekday": "{weekday}, {month}/{day}/{year}",
   "metLastWeek": "Met last week",
   "today": "Today",
-  "thisMonth": "This month"
+  "thisMonth": "This month",
+  "themeSettings": "Theme Settings",
+  "selectThemeColor": "Choose your favorite theme color",
+  "themePreview": "Preview"
 }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart'; // Add this import
 import '../providers/my_page_provider.dart';
+import '../providers/theme_provider.dart';
 import 'tag_settings_view.dart';
 import 'feedback_screen.dart';
+import 'theme_settings_view.dart';
 import '../l10n/l10n.dart';
 
 class MyPageView extends StatefulWidget {
@@ -17,6 +19,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
   late AnimationController _animationController;
   bool _showingTagSettings = false;
   bool _showingFeedback = false;
+  bool _showingThemeSettings = false;
 
   @override
   void initState() {
@@ -77,6 +80,26 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
     });
   }
 
+  void _showThemeSettings() {
+    _animationController.reverse().then((_) {
+      if (!mounted) return;
+      setState(() {
+        _showingThemeSettings = true;
+      });
+      _animationController.forward();
+    });
+  }
+
+  void _hideThemeSettings() {
+    _animationController.reverse().then((_) {
+      if (!mounted) return;
+      setState(() {
+        _showingThemeSettings = false;
+      });
+      _animationController.forward();
+    });
+  }
+
   // URLを開く汎用関数
   Future<void> _launchURL(String urlString) async {
     final Uri url = Uri.parse(urlString);
@@ -119,12 +142,19 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
     if (_showingFeedback) {
       return FeedbackScreen(onClose: _hideFeedback);
     }
+    if (_showingThemeSettings) {
+      return ThemeSettingsView(onClose: _hideThemeSettings);
+    }
 
     return Consumer<MyPageProvider>(
       builder: (context, provider, child) {
         if (provider.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(color: Color(0xFF4D6FFF)),
+          return Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return Center(
+                child: CircularProgressIndicator(color: themeProvider.themeColor),
+              );
+            },
           );
         }
 
@@ -151,27 +181,38 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                   child: Column(
                     children: [
                       // アバター
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            provider.userProfile?.initials ?? '?',
-                            style: const TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                      Consumer<ThemeProvider>(
+                        builder: (context, themeProvider, child) {
+                          return Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  themeProvider.themeColor.withValues(alpha: 0.9),
+                                  themeProvider.themeColor.withValues(alpha: 0.6),
+                                ],
+                              ),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.8),
+                                width: 3,
+                              ),
                             ),
-                          ),
-                        ),
+                            child: Center(
+                              child: Text(
+                                provider.userProfile?.initials ?? '?',
+                                style: const TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(height: 16),
 
@@ -224,64 +265,80 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                     children: [
                       // 覚えた人
                       Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE3EEFF),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                '${provider.totalPersons}',
-                                style: const TextStyle(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF4D6FFF),
+                        child: Consumer<ThemeProvider>(
+                          builder: (context, themeProvider, child) {
+                            return Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: themeProvider.themeColor.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: themeProvider.themeColor.withValues(alpha: 0.2),
+                                  width: 1,
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                S.of(context)!.rememberedPeople,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black54,
-                                ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '${provider.totalPersons}',
+                                    style: TextStyle(
+                                      fontSize: 36,
+                                      fontWeight: FontWeight.bold,
+                                      color: themeProvider.themeColor.withValues(alpha: 0.9),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    S.of(context)!.rememberedPeople,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(width: 16),
 
                       // 今月の出会い
                       Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFDE8F4),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                '${provider.thisMonthMeetings}',
-                                style: const TextStyle(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFD946C4),
+                        child: Consumer<ThemeProvider>(
+                          builder: (context, themeProvider, child) {
+                            return Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: themeProvider.themeColor.withValues(alpha: 0.06),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: themeProvider.themeColor.withValues(alpha: 0.1),
+                                  width: 1,
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                S.of(context)!.monthlyMeetings,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black54,
-                                ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '${provider.thisMonthMeetings}',
+                                    style: TextStyle(
+                                      fontSize: 36,
+                                      fontWeight: FontWeight.bold,
+                                      color: themeProvider.themeColor.withValues(alpha: 0.75),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    S.of(context)!.monthlyMeetings,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -290,6 +347,14 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
                 const SizedBox(height: 32),
 
                 // メニュー項目
+                _buildMenuItem(
+                  context,
+                  title: S.of(context)!.themeSettings,
+                  onTap: () {
+                    _showThemeSettings();
+                  },
+                  icon: Icons.palette,
+                ),
                 _buildMenuItem(
                   context,
                   title: S.of(context)!.tagSettings,
@@ -354,45 +419,49 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
     required VoidCallback onTap,
     IconData? icon,
   }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                if (icon != null) ...[
-                  Icon(
-                    icon,
-                    color: const Color(0xFF4D6FFF),
-                    size: 24,
-                  ),
-                  const SizedBox(width: 16),
-                ] else ...[
-                  Icon(Icons.chevron_right, color: Colors.grey[400]),
-                  const SizedBox(width: 16),
-                ],
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    if (icon != null) ...[
+                      Icon(
+                        icon,
+                        color: themeProvider.themeColor,
+                        size: 24,
+                      ),
+                      const SizedBox(width: 16),
+                    ] else ...[
+                      Icon(Icons.chevron_right, color: Colors.grey[400]),
+                      const SizedBox(width: 16),
+                    ],
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
                     ),
-                  ),
+                    Icon(Icons.chevron_right, color: Colors.grey[400]),
+                  ],
                 ),
-                Icon(Icons.chevron_right, color: Colors.grey[400]),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -419,17 +488,24 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
             onPressed: () => Navigator.pop(context),
             child: Text(S.of(context)!.cancel),
           ),
-          TextButton(
-            onPressed: () async {
-              final name = nameController.text.trim();
-              if (name.isNotEmpty) {
-                await provider.updateUserProfile(name);
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
-              }
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return TextButton(
+                onPressed: () async {
+                  final name = nameController.text.trim();
+                  if (name.isNotEmpty) {
+                    await provider.updateUserProfile(name);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  }
+                },
+                child: Text(
+                  S.of(context)!.save,
+                  style: TextStyle(color: themeProvider.themeColor),
+                ),
+              );
             },
-            child: Text(S.of(context)!.save, style: const TextStyle(color: Color(0xFF4D6FFF))),
           ),
         ],
       ),

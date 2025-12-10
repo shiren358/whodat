@@ -9,6 +9,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'providers/home_provider.dart';
+import 'providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
 // import 'utils/dummy_data_generator.dart';
 import 'views/home_view.dart';
@@ -40,38 +41,56 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'Whodat?',
+            debugShowCheckedModeBanner: false,
+            theme: themeProvider.getThemeData(context).copyWith(
+              textTheme: GoogleFonts.notoSansJpTextTheme(
+                themeProvider.getThemeData(context).textTheme,
+              ),
+            ),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
+            navigatorObservers: <NavigatorObserver>[observer],
+            home: Builder(
+              builder: (context) {
+                // テーマカラーを初期化
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  themeProvider.loadThemeColor();
+                });
+                return const HomeView();
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(
     analytics: analytics,
   );
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => HomeProvider())],
-      child: MaterialApp(
-        title: 'Whodat?',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          textTheme: GoogleFonts.notoSansJpTextTheme(
-            Theme.of(context).textTheme,
-          ),
-          scaffoldBackgroundColor: const Color(0xFFF5F5F7),
-        ),
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        navigatorObservers: <NavigatorObserver>[observer],
-        home: const HomeView(),
-      ),
-    );
-  }
 }

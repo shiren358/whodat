@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/meeting_record.dart';
 import '../models/person.dart';
 import '../providers/home_provider.dart';
+import '../providers/theme_provider.dart';
 import '../l10n/l10n.dart';
 import 'add_person_view.dart';
 
@@ -153,8 +154,8 @@ class _CalendarViewState extends State<CalendarView>
   }
 
   Widget _buildCalendar() {
-    return Consumer<HomeProvider>(
-      builder: (context, provider, child) {
+    return Consumer2<HomeProvider, ThemeProvider>(
+      builder: (context, provider, themeProvider, child) {
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 24),
           padding: const EdgeInsets.all(16),
@@ -186,23 +187,23 @@ class _CalendarViewState extends State<CalendarView>
             ),
             calendarStyle: CalendarStyle(
               todayDecoration: BoxDecoration(
-                color: const Color(0xFF4D6FFF).withValues(alpha: 0.2),
+                color: themeProvider.themeColor.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
-              todayTextStyle: const TextStyle(
-                color: Color(0xFF4D6FFF),
+              todayTextStyle: TextStyle(
+                color: themeProvider.themeColor,
                 fontWeight: FontWeight.bold,
               ),
-              selectedDecoration: const BoxDecoration(
-                color: Color(0xFF4D6FFF),
+              selectedDecoration: BoxDecoration(
+                color: themeProvider.themeColor,
                 shape: BoxShape.circle,
               ),
               selectedTextStyle: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
-              markerDecoration: const BoxDecoration(
-                color: Color(0xFF4D6FFF),
+              markerDecoration: BoxDecoration(
+                color: themeProvider.themeColor,
                 shape: BoxShape.circle,
               ),
               markersMaxCount: 1,

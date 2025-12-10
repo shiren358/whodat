@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/home_provider.dart';
+import '../providers/theme_provider.dart';
 import '../widgets/meeting_record_card.dart';
 import '../models/person.dart';
 import '../l10n/l10n.dart';
@@ -18,19 +19,26 @@ class AllRecordsView extends StatelessWidget {
           backgroundColor: const Color(0xFFF5F5F7),
           body: Column(
             children: [
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(32),
-                    bottomRight: Radius.circular(32),
-                  ),
-                ),
-                child: SafeArea(child: _buildHeader(context)),
+              Consumer<ThemeProvider>(
+                builder: (context, themeProvider, child) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          themeProvider.themeColor,
+                          themeProvider.getGradientEndColor(),
+                        ],
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(32),
+                        bottomRight: Radius.circular(32),
+                      ),
+                    ),
+                    child: SafeArea(child: _buildHeader(context)),
+                  );
+                },
               ),
               Expanded(
                 child: provider.allLatestMeetingRecordsByPerson.isEmpty

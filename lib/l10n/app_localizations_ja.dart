@@ -679,4 +679,13 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get thisMonth => '今月';
+
+  @override
+  String get themeSettings => 'テーマ設定';
+
+  @override
+  String get selectThemeColor => 'お好きなテーマカラーを選んでください';
+
+  @override
+  String get themePreview => 'プレビュー';
 }

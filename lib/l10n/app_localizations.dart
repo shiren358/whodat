@@ -1369,6 +1369,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This month'**
   String get thisMonth;
+
+  /// No description provided for @themeSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Settings'**
+  String get themeSettings;
+
+  /// No description provided for @selectThemeColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your favorite theme color'**
+  String get selectThemeColor;
+
+  /// No description provided for @themePreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get themePreview;
 }
 
 class _AppLocalizationsDelegate

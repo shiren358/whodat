@@ -5,6 +5,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../providers/home_provider.dart';
 import '../providers/add_person_provider.dart';
+import '../providers/theme_provider.dart';
 import '../widgets/custom_search_bar.dart';
 import '../widgets/tag_chip.dart';
 import '../widgets/person_card.dart';
@@ -116,52 +117,59 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
           child: _getSelectedContent(),
         ),
       ),
-      bottomNavigationBar: DefaultTextStyle(
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-        child: ConvexAppBar(
-          key: _tabKey,
-          items: [
-            TabItem(icon: Icons.home_outlined, title: S.of(context)!.home),
-            TabItem(
-              icon: Icons.calendar_today_outlined,
-              title: S.of(context)!.calendar,
-            ),
-            TabItem(icon: Icons.add, title: S.of(context)!.addPerson),
-            TabItem(icon: Icons.map_outlined, title: S.of(context)!.map),
-            TabItem(icon: Icons.person_outline, title: S.of(context)!.myPage),
-          ],
-          initialActiveIndex: _selectedIndex,
-          backgroundColor: Colors.white,
-          color: const Color(0xFFB0B0B0),
-          activeColor: const Color(0xFF4D6FFF),
-          style: TabStyle.reactCircle,
-          height: 60,
-          top: -25,
-          curveSize: 90,
-          onTap: (int i) {
-            if (_selectedIndex == i) return;
-            _animationController.reverse().then((_) {
-              if (!mounted) return;
-              setState(() {
-                if (i == 2) {
-                  // Addタブの場合、編集対象をクリア
-                  _personToEdit = null;
-                }
-                _selectedIndex = i;
+      bottomNavigationBar: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return DefaultTextStyle(
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            child: ConvexAppBar(
+              key: _tabKey,
+              items: [
+                TabItem(icon: Icons.home_outlined, title: S.of(context)!.home),
+                TabItem(
+                  icon: Icons.calendar_today_outlined,
+                  title: S.of(context)!.calendar,
+                ),
+                TabItem(icon: Icons.add, title: S.of(context)!.addPerson),
+                TabItem(icon: Icons.map_outlined, title: S.of(context)!.map),
+                TabItem(
+                  icon: Icons.person_outline,
+                  title: S.of(context)!.myPage,
+                ),
+              ],
+              initialActiveIndex: _selectedIndex,
+              backgroundColor: Colors.white,
+              color: const Color(0xFFB0B0B0),
+              activeColor: themeProvider.themeColor,
+              style: TabStyle.reactCircle,
+              height: 60,
+              top: -25,
+              curveSize: 90,
+              onTap: (int i) {
+                if (_selectedIndex == i) return;
+                _animationController.reverse().then((_) {
+                  if (!mounted) return;
+                  setState(() {
+                    if (i == 2) {
+                      // Addタブの場合、編集対象をクリア
+                      _personToEdit = null;
+                    }
+                    _selectedIndex = i;
 
-                // Homeタブに切り替わった時だけデータを再読み込みしてタグを更新
-                if (i == 0) {
-                  final provider = Provider.of<HomeProvider>(
-                    context,
-                    listen: false,
-                  );
-                  provider.loadData();
-                }
-              });
-              _animationController.forward();
-            });
-          },
-        ),
+                    // Homeタブに切り替わった時だけデータを再読み込みしてタグを更新
+                    if (i == 0) {
+                      final provider = Provider.of<HomeProvider>(
+                        context,
+                        listen: false,
+                      );
+                      provider.loadData();
+                    }
+                  });
+                  _animationController.forward();
+                });
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -184,30 +192,37 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   }
 
   Widget _buildHomeContent() {
-    return Column(
-      key: const ValueKey('home'),
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF4D6FFF), Color(0xFF9B72FF)],
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Column(
+          key: const ValueKey('home'),
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    themeProvider.themeColor,
+                    themeProvider.getGradientEndColor(),
+                  ],
+                ),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
+                ),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Column(
+                  children: [_buildTopBar(context), _buildHeroSection(context)],
+                ),
+              ),
             ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(32),
-              bottomRight: Radius.circular(32),
-            ),
-          ),
-          child: SafeArea(
-            bottom: false,
-            child: Column(
-              children: [_buildTopBar(context), _buildHeroSection(context)],
-            ),
-          ),
-        ),
-        Expanded(child: _buildRecentSection(context)),
-      ],
+            Expanded(child: _buildRecentSection(context)),
+          ],
+        );
+      },
     );
   }
 
@@ -382,143 +397,150 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   }
 
   Widget _buildRecentSection(BuildContext context) {
-    return Consumer<HomeProvider>(
-      builder: (context, provider, child) {
-        // 検索クエリがある場合は検索結果を表示
-        if (provider.hasSearchQuery) {
-          return SearchResultsView(
-            onPersonTap: (person) {
-              if (person == null) return;
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return Consumer<HomeProvider>(
+          builder: (context, provider, child) {
+            // 検索クエリがある場合は検索結果を表示
+            if (provider.hasSearchQuery) {
+              return SearchResultsView(
+                onPersonTap: (person) {
+                  if (person == null) return;
 
-              // HomeViewのカードタップと同じ処理を実行
-              _animationController.reverse().then((_) {
-                if (!mounted) return;
-                setState(() {
-                  _personToEdit = person;
-                  _selectedIndex = 2; // Add画面に移動
+                  // HomeViewのカードタップと同じ処理を実行
+                  _animationController.reverse().then((_) {
+                    if (!mounted) return;
+                    setState(() {
+                      _personToEdit = person;
+                      _selectedIndex = 2; // Add画面に移動
 
-                  // デバッグログ
-                  if (kDebugMode) {
-                    print(
-                      'SearchResultsView: カードタップ - person=${person.name}, personId=${person.id}',
-                    );
-                  }
-                });
-                _animationController.forward();
-              });
-            },
-          );
-        }
+                      // デバッグログ
+                      if (kDebugMode) {
+                        print(
+                          'SearchResultsView: カードタップ - person=${person.name}, personId=${person.id}',
+                        );
+                      }
+                    });
+                    _animationController.forward();
+                  });
+                },
+              );
+            }
 
-        // 通常の「最近登録した人」を表示
-        return Container(
-          decoration: const BoxDecoration(color: Color(0xFFF5F5F7)),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      S.of(context)!.recentlyRegistered,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _animationController.reverse().then((_) {
-                          if (!mounted) return;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AllRecordsView(
-                                onPersonTap: (person) {
-                                  if (person == null) return;
-
-                                  // 編集完了後にAllRecordsViewに戻るためのフラグ付きでAddPersonViewに遷移
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChangeNotifierProvider(
-                                            create: (_) => AddPersonProvider(
-                                              person: person,
-                                            ),
-                                            child: AddPersonView(
-                                              person: person,
-                                              onSave: () {
-                                                // データを再読み込み
-                                                final provider =
-                                                    Provider.of<HomeProvider>(
-                                                      context,
-                                                      listen: false,
-                                                    );
-                                                provider.loadData();
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ).then((_) {
-                            if (!mounted) return;
-                            _animationController.forward();
-                          });
-                        });
-                      },
-                      child: Text(
-                        S.of(context)!.viewAll,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF4D6FFF),
-                          fontWeight: FontWeight.w600,
+            // 通常の「最近登録した人」を表示
+            return Container(
+              decoration: const BoxDecoration(color: Color(0xFFF5F5F7)),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          S.of(context)!.recentlyRegistered,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: provider.latestRegisteredPersons.isEmpty
-                    ? _buildEmptyState(context)
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        itemCount: provider.latestRegisteredPersons.length,
-                        itemBuilder: (context, index) {
-                          final person =
-                              provider.latestRegisteredPersons[index];
-                          return PersonCard(
-                            person: person,
-                            onTap: () {
-                              _animationController.reverse().then((_) {
-                                if (!mounted) return;
-                                setState(() {
-                                  _personToEdit = person;
-                                  _selectedIndex = 2; // Add画面に移動
+                        GestureDetector(
+                          onTap: () {
+                            _animationController.reverse().then((_) {
+                              if (!mounted) return;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AllRecordsView(
+                                    onPersonTap: (person) {
+                                      if (person == null) return;
 
-                                  // デバッグログ
-                                  if (kDebugMode) {
-                                    print(
-                                      'HomeView: カードタップ - person=${person.name}, personId=${person.id}',
-                                    );
-                                  }
-                                });
+                                      // 編集完了後にAllRecordsViewに戻るためのフラグ付きでAddPersonViewに遷移
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ChangeNotifierProvider(
+                                                create: (_) =>
+                                                    AddPersonProvider(
+                                                      person: person,
+                                                    ),
+                                                child: AddPersonView(
+                                                  person: person,
+                                                  onSave: () {
+                                                    // データを再読み込み
+                                                    final provider =
+                                                        Provider.of<
+                                                          HomeProvider
+                                                        >(
+                                                          context,
+                                                          listen: false,
+                                                        );
+                                                    provider.loadData();
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ).then((_) {
+                                if (!mounted) return;
                                 _animationController.forward();
                               });
+                            });
+                          },
+                          child: Text(
+                            S.of(context)!.viewAll,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: themeProvider.themeColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: provider.latestRegisteredPersons.isEmpty
+                        ? _buildEmptyState(context)
+                        : ListView.builder(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            itemCount: provider.latestRegisteredPersons.length,
+                            itemBuilder: (context, index) {
+                              final person =
+                                  provider.latestRegisteredPersons[index];
+                              return PersonCard(
+                                person: person,
+                                onTap: () {
+                                  _animationController.reverse().then((_) {
+                                    if (!mounted) return;
+                                    setState(() {
+                                      _personToEdit = person;
+                                      _selectedIndex = 2; // Add画面に移動
+
+                                      // デバッグログ
+                                      if (kDebugMode) {
+                                        print(
+                                          'HomeView: カードタップ - person=${person.name}, personId=${person.id}',
+                                        );
+                                      }
+                                    });
+                                    _animationController.forward();
+                                  });
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
+                          ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
