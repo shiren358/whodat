@@ -38,32 +38,32 @@ class ThemeProvider extends ChangeNotifier {
   // グラデーション用の2色目を生成
   Color getGradientEndColor() {
     // テーマカラーに応じて相性の良い2色目を返す
-    if (_themeColor.value == 0xFFFF6B9D) {
+    if (_themeColor.toARGB32() == 0xFFFF6B9D) {
       // コーラルピンク
       return const Color(0xFFE91E63); // ピンク
-    } else if (_themeColor.value == 0xFF4D6FFF ||
-        _themeColor.value == 0xFF2196F3) {
+    } else if (_themeColor.toARGB32() == 0xFF4D6FFF ||
+        _themeColor.toARGB32() == 0xFF2196F3) {
       // ブルー系
       return const Color(0xFF9B72FF); // パープル
-    } else if (_themeColor.value == 0xFF3F51B5) {
+    } else if (_themeColor.toARGB32() == 0xFF3F51B5) {
       // インディゴ
       return const Color(0xFF5C6BC0); // ライトインディゴ
-    } else if (_themeColor.value == 0xFFFF7043 ||
-        _themeColor.value == 0xFFFFA726) {
+    } else if (_themeColor.toARGB32() == 0xFFFF7043 ||
+        _themeColor.toARGB32() == 0xFFFFA726) {
       // オレンジ系
       return const Color(0xFF9B72FF); // パープル
-    } else if (_themeColor.value == 0xFF66BB6A ||
-        _themeColor.value == 0xFF26A69A) {
+    } else if (_themeColor.toARGB32() == 0xFF66BB6A ||
+        _themeColor.toARGB32() == 0xFF26A69A) {
       // グリーン系
       return const Color(0xFF42A5F5); // ライトブルー
-    } else if (_themeColor.value == 0xFF9CCC65) {
+    } else if (_themeColor.toARGB32() == 0xFF9CCC65) {
       // ライトグリーン
       return const Color(0xFF42A5F5); // ライトブルー
-    } else if (_themeColor.value == 0xFF42A5F5) {
+    } else if (_themeColor.toARGB32() == 0xFF42A5F5) {
       // ライトブルー
       return const Color(0xFF9B72FF); // パープル
-    } else if (_themeColor.value == 0xFFAB47BC ||
-        _themeColor.value == 0xFFEC407A) {
+    } else if (_themeColor.toARGB32() == 0xFFAB47BC ||
+        _themeColor.toARGB32() == 0xFFEC407A) {
       // パープル系
       return const Color(0xFF4D6FFF); // クリアブルー
     } else {
@@ -90,7 +90,7 @@ class ThemeProvider extends ChangeNotifier {
     try {
       await _storage.write(
         key: _themeColorKey,
-        value: color.value.toRadixString(16),
+        value: color.toARGB32().toRadixString(16),
       );
     } catch (e) {
       // 保存エラーの場合も通知は行う
@@ -109,19 +109,5 @@ class ThemeProvider extends ChangeNotifier {
       primaryColor: _themeColor,
       useMaterial3: true,
     );
-  }
-
-  Color _lightenColor(Color color, double amount) {
-    final hsl = HSLColor.fromColor(color);
-    return hsl
-        .withLightness((hsl.lightness + amount).clamp(0.0, 1.0))
-        .toColor();
-  }
-
-  Color _darkenColor(Color color, double amount) {
-    final hsl = HSLColor.fromColor(color);
-    return hsl
-        .withLightness((hsl.lightness - amount).clamp(0.0, 1.0))
-        .toColor();
   }
 }

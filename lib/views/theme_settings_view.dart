@@ -48,20 +48,13 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    ));
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.1),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
+          CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+        );
     _animationController.forward();
   }
 
@@ -82,61 +75,61 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: SafeArea(
-        child: FadeTransition(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _animationController.reverse().then((_) {
+            widget.onClose();
+          });
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF8F9FA),
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text(
+            S.of(context)!.themeSettings,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.black87,
+                size: 18,
+              ),
+            ),
+            onPressed: () {
+              _animationController.reverse().then((_) {
+                widget.onClose();
+              });
+            },
+          ),
+        ),
+        body: FadeTransition(
           opacity: _fadeAnimation,
           child: SlideTransition(
             position: _slideAnimation,
             child: Column(
               children: [
-                // カスタムヘッダー
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.arrow_back_ios_new,
-                            color: Colors.black87,
-                            size: 18,
-                          ),
-                        ),
-                        onPressed: () {
-                          _animationController.reverse().then((_) {
-                            widget.onClose();
-                          });
-                        },
-                      ),
-                      const Spacer(),
-                      Text(
-                        S.of(context)!.themeSettings,
-                        style: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const Spacer(),
-                      const SizedBox(width: 48),
-                    ],
-                  ),
-                ),
                 const SizedBox(height: 24),
                 // プレビューカード
                 Padding(
@@ -352,17 +345,11 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      color,
-                      _getGradientEndColor(color),
-                    ],
+                    colors: [color, _getGradientEndColor(color)],
                   ),
                   borderRadius: BorderRadius.circular(16),
                   border: isSelected
-                      ? Border.all(
-                          color: Colors.white,
-                          width: 3,
-                        )
+                      ? Border.all(color: Colors.white, width: 3)
                       : null,
                 ),
                 child: Stack(

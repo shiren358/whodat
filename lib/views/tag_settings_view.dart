@@ -17,125 +17,140 @@ class _TagSettingsViewState extends State<TagSettingsView> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => TagSettingsProvider()..loadData(),
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          color: Color(0xFFF5F5F7),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // ヘッダー部分（タイトル + 閉じるボタン）
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                child: Column(
-                  children: [
-                    // タイトル行
-                    Row(
-                      children: [
-                        // 左：閉じるボタン
-                        IconButton(
-                          onPressed: () {
-                            if (widget.onClose != null) {
-                              widget.onClose!();
-                            } else {
-                              Navigator.pop(context);
-                            }
-                          },
-                          icon: const Icon(Icons.close),
-                        ),
-                        const Spacer(),
-                        // 真ん中：タイトル
-                        Text(
-                          S.of(context)!.tagSettings,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const Spacer(),
-                        // 右：追加ボタン
-                        Consumer<TagSettingsProvider>(
-                          builder: (context, provider, child) {
-                            return IconButton(
-                              icon: const Icon(Icons.add, size: 28),
-                              onPressed: () =>
-                                  _showAddTagDialog(context, provider),
-                              tooltip: S.of(context)!.addTag,
-                            );
-                          },
-                        ),
-                      ],
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (!didPop) {
+            widget.onClose?.call();
+          }
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF5F5F7),
+          appBar: AppBar(
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            title: Text(
+              S.of(context)!.tagSettings,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            leading: IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-              ),
-              // 本文部分
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Consumer<TagSettingsProvider>(
-                    builder: (context, provider, child) {
-                      return Column(
-                        children: [
-                          // タグ説明
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            margin: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.blue[200]!),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.info_outline,
-                                      color: Colors.blue[700],
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      S.of(context)!.tagAbout,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue[700],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  S.of(context)!.tagManagementDescription,
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // タグ一覧
-                          Expanded(
-                            child: provider.tags.isEmpty
-                                ? _buildEmptyState(context)
-                                : _buildTagList(context, provider),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+                child: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.black87,
+                  size: 18,
                 ),
               ),
+              onPressed: () {
+                widget.onClose?.call();
+              },
+            ),
+            actions: [
+              Consumer<TagSettingsProvider>(
+                builder: (context, provider, child) {
+                  return IconButton(
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.black87,
+                        size: 18,
+                      ),
+                    ),
+                    onPressed: () {
+                      _showAddTagDialog(context, provider);
+                    },
+                  );
+                },
+              ),
             ],
+          ),
+          body: Container(
+            color: const Color(0xFFF5F5F7),
+            child: Consumer<TagSettingsProvider>(
+              builder: (context, provider, child) {
+                return Column(
+                  children: [
+                    // タグ説明
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue[50],
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.blue[200]!),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                color: Colors.blue[700],
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                S.of(context)!.tagAbout,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue[700],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            S.of(context)!.tagManagementDescription,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // タグ一覧
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: provider.tags.isEmpty
+                            ? _buildEmptyState(context)
+                            : _buildTagList(context, provider),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -243,7 +258,10 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                 }
               }
             },
-            child: Text(S.of(context)!.add, style: const TextStyle(color: Color(0xFF4D6FFF))),
+            child: Text(
+              S.of(context)!.add,
+              style: const TextStyle(color: Color(0xFF4D6FFF)),
+            ),
           ),
         ],
       ),
@@ -272,7 +290,10 @@ class _TagSettingsViewState extends State<TagSettingsView> {
                 Navigator.pop(context);
               }
             },
-            child: Text(S.of(context)!.delete, style: const TextStyle(color: Colors.red)),
+            child: Text(
+              S.of(context)!.delete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),

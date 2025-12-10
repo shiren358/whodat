@@ -39,8 +39,28 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             ),
           ),
           leading: IconButton(
-            icon: const Icon(Icons.close, color: Colors.black54),
-            onPressed: () => widget.onClose?.call(),
+            icon: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.black87,
+                size: 18,
+              ),
+            ),
+            onPressed: () {
+              widget.onClose?.call();
+            },
           ),
         ),
         body: Container(
