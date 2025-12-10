@@ -218,5 +218,11 @@
   "thisMonth": "今月",
   "themeSettings": "テーマ設定",
   "selectThemeColor": "お好きなテーマカラーを選んでください",
-  "themePreview": "プレビュー"
+  "themePreview": "プレビュー",
+  "onboardingTitle": "「あの人、誰だっけ？」\nをなくそう",
+  "onboardingSubtitle": "出会った人を記録して、次に会った時に自信を持って挨拶しよう。",
+  "onboardingFeature1": "写真で名前と顔を記録",
+  "onboardingFeature2": "いつ、どこで会ったかを覚えておく",
+  "onboardingFeature3": "覚えた人にチェックマーク",
+  "onboardingButton": "はじめる"
 }

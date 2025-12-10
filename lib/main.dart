@@ -13,6 +13,7 @@ import 'providers/theme_provider.dart';
 import 'l10n/app_localizations.dart';
 // import 'utils/dummy_data_generator.dart';
 import 'views/home_view.dart';
+import 'views/onboarding_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,7 +81,7 @@ class _MyAppState extends State<MyApp> {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   themeProvider.loadThemeColor();
                 });
-                return const HomeView();
+                return const AppEntryPoint();
               },
             ),
           );
@@ -93,4 +94,73 @@ class _MyAppState extends State<MyApp> {
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(
     analytics: analytics,
   );
+}
+
+class AppEntryPoint extends StatefulWidget {
+  const AppEntryPoint({super.key});
+
+  @override
+  State<AppEntryPoint> createState() => _AppEntryPointState();
+}
+
+class _AppEntryPointState extends State<AppEntryPoint> {
+  bool? _showOnboarding;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkOnboarding();
+  }
+
+  Future<void> _checkOnboarding() async {
+    final shouldShow = await OnboardingView.shouldShowOnboarding();
+    if (mounted) {
+      setState(() {
+        _showOnboarding = shouldShow;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // まだチェック中の場合はスプラッシュ風の画面を表示
+    if (_showOnboarding == null) {
+      return Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return Scaffold(
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    themeProvider.themeColor,
+                    themeProvider.getGradientEndColor(),
+                  ],
+                ),
+              ),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    // オンボーディングを表示するかどうか
+    if (_showOnboarding!) {
+      return OnboardingView(
+        onComplete: () {
+          setState(() {
+            _showOnboarding = false;
+          });
+        },
+      );
+    }
+
+    return const HomeView();
+  }
 }

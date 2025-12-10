@@ -703,4 +703,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themePreview => 'Preview';
+
+  @override
+  String get onboardingTitle => 'Never Forget a Face Again';
+
+  @override
+  String get onboardingSubtitle =>
+      'Record the people you meet, and confidently greet them next time.';
+
+  @override
+  String get onboardingFeature1 => 'Save names and faces with photos';
+
+  @override
+  String get onboardingFeature2 => 'Remember when and where you met';
+
+  @override
+  String get onboardingFeature3 => 'Check off people you\'ve memorized';
+
+  @override
+  String get onboardingButton => 'Get Started';
 }

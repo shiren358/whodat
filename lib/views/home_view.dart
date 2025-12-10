@@ -197,26 +197,66 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         return Column(
           key: const ValueKey('home'),
           children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    themeProvider.themeColor,
-                    themeProvider.getGradientEndColor(),
-                  ],
-                ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
-                ),
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(32),
+                bottomRight: Radius.circular(32),
               ),
-              child: SafeArea(
-                bottom: false,
-                child: Column(
-                  children: [_buildTopBar(context), _buildHeroSection(context)],
-                ),
+              child: Stack(
+                children: [
+                  // グラデーション背景
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          themeProvider.themeColor,
+                          themeProvider.getGradientEndColor(),
+                        ],
+                      ),
+                    ),
+                    child: SafeArea(
+                      bottom: false,
+                      child: Column(
+                        children: [
+                          _buildTopBar(context),
+                          _buildHeroSection(context),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // 装飾パターン - 右上の円
+                  Positioned(
+                    right: -30,
+                    top: -30,
+                    child: IgnorePointer(
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withValues(alpha: 0.1),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // 装飾パターン - 右下の円
+                  Positioned(
+                    right: 40,
+                    bottom: -50,
+                    child: IgnorePointer(
+                      child: Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withValues(alpha: 0.08),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(child: _buildRecentSection(context)),

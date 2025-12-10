@@ -807,5 +807,11 @@
   "thisMonth": "This month",
   "themeSettings": "Theme Settings",
   "selectThemeColor": "Choose your favorite theme color",
-  "themePreview": "Preview"
+  "themePreview": "Preview",
+  "onboardingTitle": "Never Forget a Face Again",
+  "onboardingSubtitle": "Record the people you meet, and confidently greet them next time.",
+  "onboardingFeature1": "Save names and faces with photos",
+  "onboardingFeature2": "Remember when and where you met",
+  "onboardingFeature3": "Check off people you've memorized",
+  "onboardingButton": "Get Started"
 }

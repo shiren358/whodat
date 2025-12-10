@@ -1387,6 +1387,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preview'**
   String get themePreview;
+
+  /// No description provided for @onboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Never Forget a Face Again'**
+  String get onboardingTitle;
+
+  /// No description provided for @onboardingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Record the people you meet, and confidently greet them next time.'**
+  String get onboardingSubtitle;
+
+  /// No description provided for @onboardingFeature1.
+  ///
+  /// In en, this message translates to:
+  /// **'Save names and faces with photos'**
+  String get onboardingFeature1;
+
+  /// No description provided for @onboardingFeature2.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember when and where you met'**
+  String get onboardingFeature2;
+
+  /// No description provided for @onboardingFeature3.
+  ///
+  /// In en, this message translates to:
+  /// **'Check off people you\'ve memorized'**
+  String get onboardingFeature3;
+
+  /// No description provided for @onboardingButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get onboardingButton;
 }
 
 class _AppLocalizationsDelegate

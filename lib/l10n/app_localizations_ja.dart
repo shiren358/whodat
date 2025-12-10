@@ -688,4 +688,22 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get themePreview => 'プレビュー';
+
+  @override
+  String get onboardingTitle => '「あの人、誰だっけ？」\nをなくそう';
+
+  @override
+  String get onboardingSubtitle => '出会った人を記録して、次に会った時に自信を持って挨拶しよう。';
+
+  @override
+  String get onboardingFeature1 => '写真で名前と顔を記録';
+
+  @override
+  String get onboardingFeature2 => 'いつ、どこで会ったかを覚えておく';
+
+  @override
+  String get onboardingFeature3 => '覚えた人にチェックマーク';
+
+  @override
+  String get onboardingButton => 'はじめる';
 }
