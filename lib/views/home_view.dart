@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import '../providers/home_provider.dart';
 import '../providers/add_person_provider.dart';
 import '../providers/theme_provider.dart';
@@ -76,6 +78,23 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
         AppUpdateService().checkForUpdates(context);
       }
     });
+
+    // ATTダイアログを表示（iOS 14.5以降）
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestTrackingAuthorization();
+    });
+  }
+
+  Future<void> _requestTrackingAuthorization() async {
+    if (!Platform.isIOS) return;
+
+    // ATTのステータスを確認
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (status == TrackingStatus.notDetermined) {
+      // 少し遅延させてから表示（UX向上のため）
+      await Future.delayed(const Duration(milliseconds: 500));
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
   }
 
   Future<void> _loadHeroTextIndex() async {

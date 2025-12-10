@@ -55,5 +55,7 @@
 	<string>NSSpeechRecognitionUsageDescription</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>NSMicrophoneUsageDescription</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>このアプリでは、より良い広告体験を提供するためにトラッキングを使用します。</string>
 </dict>
 </plist>
