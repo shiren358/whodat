@@ -4,7 +4,7 @@ import '../providers/theme_provider.dart';
 import '../l10n/l10n.dart';
 
 class ThemeSettingsView extends StatefulWidget {
-  final VoidCallback onClose;
+  final VoidCallback? onClose;
 
   const ThemeSettingsView({super.key, required this.onClose});
 
@@ -14,10 +14,6 @@ class ThemeSettingsView extends StatefulWidget {
 
 class _ThemeSettingsViewState extends State<ThemeSettingsView>
     with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
   // 色の名前マッピング
   String _getColorName(Color color) {
     final colorMap = {
@@ -44,24 +40,6 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-    );
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
-          CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
-        );
-    _animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   Color _getGradientEndColor(Color color) {
@@ -79,9 +57,7 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          _animationController.reverse().then((_) {
-            widget.onClose();
-          });
+          widget.onClose?.call();
         }
       },
       child: Scaffold(
@@ -118,67 +94,59 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>
               ),
             ),
             onPressed: () {
-              _animationController.reverse().then((_) {
-                widget.onClose();
-              });
+              widget.onClose?.call();
             },
           ),
         ),
-        body: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: Column(
-              children: [
-                const SizedBox(height: 24),
-                // プレビューカード
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Consumer<ThemeProvider>(
-                    builder: (context, themeProvider, child) {
-                      return _buildPreviewCard(themeProvider);
-                    },
-                  ),
-                ),
-                const SizedBox(height: 32),
-                // セクションタイトル
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 4,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        S.of(context)!.selectThemeColor,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          letterSpacing: -0.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                // カラーグリッド
-                Expanded(
-                  child: Consumer<ThemeProvider>(
-                    builder: (context, themeProvider, child) {
-                      return _buildColorGrid(themeProvider);
-                    },
-                  ),
-                ),
-              ],
+        body: Column(
+          children: [
+            const SizedBox(height: 24),
+            // プレビューカード
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Consumer<ThemeProvider>(
+                builder: (context, themeProvider, child) {
+                  return _buildPreviewCard(themeProvider);
+                },
+              ),
             ),
-          ),
+            const SizedBox(height: 32),
+            // セクションタイトル
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                children: [
+                  Container(
+                    width: 4,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    S.of(context)!.selectThemeColor,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            // カラーグリッド
+            Expanded(
+              child: Consumer<ThemeProvider>(
+                builder: (context, themeProvider, child) {
+                  return _buildColorGrid(themeProvider);
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
