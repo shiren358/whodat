@@ -57,6 +57,7 @@ dependencies:
   new_version_plus: ^0.1.1
   http: ^1.6.0
   app_tracking_transparency: ^2.0.6
+  google_mobile_ads: ^6.0.0
 
 dev_dependencies:
   flutter_test:
