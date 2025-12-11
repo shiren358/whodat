@@ -6,7 +6,7 @@
 
 /* 音声認識とマイク */
 "NSSpeechRecognitionUsageDescription" = "音声検索機能のために音声認識を使用します";
-"NSMicrophoneUsageDescription" = "音声入力でメモを記録するためにマイクを使用します";
+"NSMicrophoneUsageDescription" = "音声検索機能のためにマイクを使用します";
 
 /* トラッキング */
 "NSUserTrackingUsageDescription" = "より良い広告体験を提供するためにトラッキングを使用します";

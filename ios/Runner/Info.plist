@@ -46,15 +46,15 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>NSLocationWhenInUseUsageDescription</string>
+	<string>Uses location to record where you met people</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>NSPhotoLibraryUsageDescription</string>
+	<string>Uses photo library to select profile pictures</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>NSSpeechRecognitionUsageDescription</string>
+	<string>Uses speech recognition for voice search functionality</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>NSUserTrackingUsageDescription</string>
+	<string>To provide a better ad experience, we track app usage patterns. We respect your privacy and do not collect personal information.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>NSMicrophoneUsageDescription</string>
+	<string>Uses microphone for voice search functionality</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-6883936360376801~8018494696</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
