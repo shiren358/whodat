@@ -3,10 +3,16 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- AdMob permissions -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <application
         android:label="whodat"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- AdMob Configuration -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-6883936360376801~8018494696"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

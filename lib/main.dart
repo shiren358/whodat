@@ -16,6 +16,9 @@ import 'l10n/app_localizations.dart';
 import 'views/home_view.dart';
 import 'views/onboarding_view.dart';
 
+// AdMob configuration
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -27,6 +30,9 @@ void main() async {
 
   // 日本語ロケールの初期化
   await initializeDateFormatting('ja_JP', null);
+
+  // Initialize AdMob
+  await MobileAds.instance.initialize();
 
   // オンボーディング表示チェック（起動前に完了）
   final showOnboarding = await OnboardingView.shouldShowOnboarding();

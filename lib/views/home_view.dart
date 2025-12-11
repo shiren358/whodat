@@ -11,6 +11,7 @@ import '../providers/theme_provider.dart';
 import '../widgets/custom_search_bar.dart';
 import '../widgets/tag_chip.dart';
 import '../widgets/person_card.dart';
+// import '../widgets/banner_ad_widget.dart';
 import '../models/person.dart';
 import '../services/app_update_service.dart';
 import '../l10n/l10n.dart';
@@ -573,33 +574,53 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                   Expanded(
                     child: provider.latestRegisteredPersons.isEmpty
                         ? _buildEmptyState(context)
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            itemCount: provider.latestRegisteredPersons.length,
-                            itemBuilder: (context, index) {
-                              final person =
-                                  provider.latestRegisteredPersons[index];
-                              return PersonCard(
-                                person: person,
-                                onTap: () {
-                                  _animationController.reverse().then((_) {
-                                    if (!mounted) return;
-                                    setState(() {
-                                      _personToEdit = person;
-                                      _selectedIndex = 2; // Add画面に移動
+                        : Column(
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                  ),
+                                  itemCount:
+                                      provider.latestRegisteredPersons.length,
+                                  itemBuilder: (context, index) {
+                                    final person =
+                                        provider.latestRegisteredPersons[index];
+                                    return PersonCard(
+                                      person: person,
+                                      onTap: () {
+                                        _animationController.reverse().then((
+                                          _,
+                                        ) {
+                                          if (!mounted) return;
+                                          setState(() {
+                                            _personToEdit = person;
+                                            _selectedIndex = 2; // Add画面に移動
 
-                                      // デバッグログ
-                                      if (kDebugMode) {
-                                        print(
-                                          'HomeView: カードタップ - person=${person.name}, personId=${person.id}',
-                                        );
-                                      }
-                                    });
-                                    _animationController.forward();
-                                  });
-                                },
-                              );
-                            },
+                                            // デバッグログ
+                                            if (kDebugMode) {
+                                              print(
+                                                'HomeView: カードタップ - person=${person.name}, personId=${person.id}',
+                                              );
+                                            }
+                                          });
+                                          _animationController.forward();
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                              // 広告表示
+                              // if (provider.latestRegisteredPersons.isNotEmpty)
+                              //   Padding(
+                              //     padding: const EdgeInsets.symmetric(
+                              //       horizontal: 24,
+                              //       vertical: 16,
+                              //     ),
+                              //     child: const BannerAdWidget(),
+                              //   ),
+                            ],
                           ),
                   ),
                 ],
