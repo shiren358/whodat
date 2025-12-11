@@ -1,11 +1,11 @@
-/* App Display Name */
-CFBundleDisplayName = "Whodat";
+/* 位置情報の使用許諾 */
+"NSLocationWhenInUseUsageDescription" = "会った場所を記録するために位置情報を使用します";
+"NSLocationAlwaysUsageDescription" = "常に位置情報にアクセスして会った場所を記録します";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "アプリの使用中とバックグラウンドで位置情報を使用して会った場所を記録します";
 
-/* Location Permissions */
-NSLocationWhenInUseUsageDescription = "このアプリは地図上に登録された人の位置を表示するために位置情報を使用します";
-NSLocationAlwaysUsageDescription = "このアプリは地図上に登録された人の位置を表示するために位置情報を使用します";
-NSLocationAlwaysAndWhenInUseUsageDescription = "このアプリは地図上に登録された人の位置を表示するために位置情報を使用します";
+/* 機能の説明 */
+"NSCameraUsageDescription" = "人物の顔写真を撮影するためにカメラを使用します";
+"NSPhotoLibraryUsageDescription" = "人物の顔写真を選択するために写真ライブラリを使用します";
 
-/* Microphone and Speech Recognition Permissions */
-NSSpeechRecognitionUsageDescription = "音声認識を使用して検索キーワードを入力するために使用します";
-NSMicrophoneUsageDescription = "音声検索のためにマイクへのアクセスを許可してください";
+/* 音声認識 */
+"NSSpeechRecognitionUsageDescription" = "音声入力でメモを記録するために音声認識を使用します";
