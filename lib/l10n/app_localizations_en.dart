@@ -677,16 +677,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String dateWithWeekday(
-    Object day,
-    Object month,
-    Object weekday,
-    Object year,
-  ) {
-    return '$weekday, $month/$day/$year';
-  }
-
-  @override
   String get metLastWeek => 'Met last week';
 
   @override

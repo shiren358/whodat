@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../models/meeting_record.dart';
 import '../models/person.dart';
 import '../providers/home_provider.dart';
@@ -235,16 +236,11 @@ class _CalendarViewState extends State<CalendarView>
           return const SizedBox();
         }
 
-        final weekdayNames = [
-          S.of(context)!.monday,
-          S.of(context)!.tuesday,
-          S.of(context)!.wednesday,
-          S.of(context)!.thursday,
-          S.of(context)!.friday,
-          S.of(context)!.saturday,
-          S.of(context)!.sunday,
-        ];
-        final weekday = weekdayNames[_selectedDay!.weekday - 1];
+        // ローカライズされた日付フォーマット
+        final localeString = Localizations.localeOf(context).toString();
+        final formattedDate = DateFormat.yMMMEd(
+          localeString,
+        ).format(_selectedDay!);
 
         return Container(
           margin: const EdgeInsets.all(24),
@@ -252,14 +248,7 @@ class _CalendarViewState extends State<CalendarView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                S
-                    .of(context)!
-                    .dateWithWeekday(
-                      _selectedDay!.year,
-                      _selectedDay!.month,
-                      _selectedDay!.day,
-                      weekday,
-                    ),
+                formattedDate,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

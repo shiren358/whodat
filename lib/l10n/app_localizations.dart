@@ -1346,12 +1346,6 @@ abstract class AppLocalizations {
   /// **'Used in {count} records'**
   String recordsUsingTag(Object count);
 
-  /// No description provided for @dateWithWeekday.
-  ///
-  /// In en, this message translates to:
-  /// **'{weekday}, {month}/{day}/{year}'**
-  String dateWithWeekday(Object day, Object month, Object weekday, Object year);
-
   /// No description provided for @metLastWeek.
   ///
   /// In en, this message translates to:

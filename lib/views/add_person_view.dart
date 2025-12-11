@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../models/person.dart';
 import '../models/meeting_record.dart';
 import '../providers/add_person_provider.dart';
@@ -655,7 +656,7 @@ class _AddPersonViewState extends State<AddPersonView> {
     return Consumer<AddPersonProvider>(
       builder: (context, provider, child) {
         final currentRecord = provider.meetingRecords[index];
-        final String dateText;
+        String dateText;
         final Color dateColor;
 
         if (currentRecord.date == null) {
@@ -667,8 +668,15 @@ class _AddPersonViewState extends State<AddPersonView> {
               currentRecord.date!.year == now.year &&
               currentRecord.date!.month == now.month &&
               currentRecord.date!.day == now.day;
-          dateText =
-              '${currentRecord.date!.year}.${currentRecord.date!.month.toString().padLeft(2, '0')}.${currentRecord.date!.day.toString().padLeft(2, '0')}${isToday ? ' (${S.of(context)!.today})' : ''}';
+
+          // ローカライズされた日付フォーマット
+          final localeString = Localizations.localeOf(context).toString();
+          dateText = DateFormat.yMMMEd(
+            localeString,
+          ).format(currentRecord.date!);
+          if (isToday) {
+            dateText += ' (${S.of(context)!.today})';
+          }
           dateColor = Colors.black87;
         }
 
