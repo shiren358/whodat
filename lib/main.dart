@@ -27,6 +27,9 @@ void main() async {
   // 日本語ロケールの初期化
   await initializeDateFormatting('ja_JP', null);
 
+  // オンボーディング表示チェック（起動前に完了）
+  final showOnboarding = await OnboardingView.shouldShowOnboarding();
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -39,11 +42,13 @@ void main() async {
   // // Generate new dummy data
   // await DummyDataGenerator.generateDummyData();
 
-  runApp(const MyApp());
+  runApp(MyApp(showOnboarding: showOnboarding));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final bool showOnboarding;
+
+  const MyApp({super.key, required this.showOnboarding});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -81,7 +86,7 @@ class _MyAppState extends State<MyApp> {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   themeProvider.loadThemeColor();
                 });
-                return const AppEntryPoint();
+                return AppEntryPoint(showOnboarding: widget.showOnboarding);
               },
             ),
           );
@@ -97,61 +102,26 @@ class _MyAppState extends State<MyApp> {
 }
 
 class AppEntryPoint extends StatefulWidget {
-  const AppEntryPoint({super.key});
+  final bool showOnboarding;
+
+  const AppEntryPoint({super.key, required this.showOnboarding});
 
   @override
   State<AppEntryPoint> createState() => _AppEntryPointState();
 }
 
 class _AppEntryPointState extends State<AppEntryPoint> {
-  bool? _showOnboarding;
+  late bool _showOnboarding;
 
   @override
   void initState() {
     super.initState();
-    _checkOnboarding();
-  }
-
-  Future<void> _checkOnboarding() async {
-    final shouldShow = await OnboardingView.shouldShowOnboarding();
-    if (mounted) {
-      setState(() {
-        _showOnboarding = shouldShow;
-      });
-    }
+    _showOnboarding = widget.showOnboarding;
   }
 
   @override
   Widget build(BuildContext context) {
-    // まだチェック中の場合はスプラッシュ風の画面を表示
-    if (_showOnboarding == null) {
-      return Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
-          return Scaffold(
-            body: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    themeProvider.themeColor,
-                    themeProvider.getGradientEndColor(),
-                  ],
-                ),
-              ),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-
-    // オンボーディングを表示するかどうか
-    if (_showOnboarding!) {
+    if (_showOnboarding) {
       return OnboardingView(
         onComplete: () {
           setState(() {
