@@ -9,3 +9,9 @@
 
 /* Speech recognition */
 "NSSpeechRecognitionUsageDescription" = "Uses speech recognition to record memos with voice input";
+
+/* App tracking description */
+"NSUserTrackingUsageDescription" = "To provide a better ad experience, we track app usage patterns. We respect your privacy and do not collect personal information.";
+
+/* Microphone usage description */
+"NSMicrophoneUsageDescription" = "Uses microphone to record memos with voice input.";
