@@ -6,7 +6,7 @@
 
 /* Speech recognition and microphone */
 "NSSpeechRecognitionUsageDescription" = "Uses speech recognition for voice search functionality";
-"NSMicrophoneUsageDescription" = "Uses microphone to record memos with voice input";
+"NSMicrophoneUsageDescription" = "Uses microphone for voice search functionality";
 
 /* Tracking */
 "NSUserTrackingUsageDescription" = "To provide a better ad experience, we track app usage patterns. We respect your privacy and do not collect personal information.";
