@@ -1196,7 +1196,8 @@ class DummyDataGenerator {
       final tagCount = 1 + random.nextInt(3);
       final tags = <String>[];
       for (int k = 0; k < tagCount; k++) {
-        final availableTags = List<String>.from(_englishTags)..removeWhere((tag) => tags.contains(tag));
+        final availableTags = List<String>.from(_englishTags)
+          ..removeWhere((tag) => tags.contains(tag));
         if (availableTags.isNotEmpty) {
           tags.add(availableTags[random.nextInt(availableTags.length)]);
         }

@@ -1,17 +1,12 @@
-/* Location permissions */
+/* Location permission */
 "NSLocationWhenInUseUsageDescription" = "Uses location to record where you met people";
-"NSLocationAlwaysUsageDescription" = "Always access location to record meeting places";
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "Uses location in foreground and background to record where you met people";
 
 /* Feature descriptions */
-"NSCameraUsageDescription" = "Uses camera to take photos of people you met";
 "NSPhotoLibraryUsageDescription" = "Uses photo library to select profile pictures";
 
-/* Speech recognition */
-"NSSpeechRecognitionUsageDescription" = "Uses speech recognition to record memos with voice input";
+/* Speech recognition and microphone */
+"NSSpeechRecognitionUsageDescription" = "Uses speech recognition for voice search functionality";
+"NSMicrophoneUsageDescription" = "Uses microphone to record memos with voice input";
 
-/* App tracking description */
+/* Tracking */
 "NSUserTrackingUsageDescription" = "To provide a better ad experience, we track app usage patterns. We respect your privacy and do not collect personal information.";
-
-/* Microphone usage description */
-"NSMicrophoneUsageDescription" = "Uses microphone to record memos with voice input.";

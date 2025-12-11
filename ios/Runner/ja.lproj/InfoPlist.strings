@@ -1,17 +1,12 @@
 /* 位置情報の使用許諾 */
 "NSLocationWhenInUseUsageDescription" = "会った場所を記録するために位置情報を使用します";
-"NSLocationAlwaysUsageDescription" = "常に位置情報にアクセスして会った場所を記録します";
-"NSLocationAlwaysAndWhenInUseUsageDescription" = "アプリの使用中とバックグラウンドで位置情報を使用して会った場所を記録します";
 
 /* 機能の説明 */
-"NSCameraUsageDescription" = "人物の顔写真を撮影するためにカメラを使用します";
 "NSPhotoLibraryUsageDescription" = "人物の顔写真を選択するために写真ライブラリを使用します";
 
-/* 音声認識 */
-"NSSpeechRecognitionUsageDescription" = "音声入力でメモを記録するために音声認識を使用します";
+/* 音声認識とマイク */
+"NSSpeechRecognitionUsageDescription" = "音声検索機能のために音声認識を使用します";
+"NSMicrophoneUsageDescription" = "音声入力でメモを記録するためにマイクを使用します";
 
-/* アプリ追跡の説明 */
-"NSUserTrackingUsageDescription" = "より良い広告体験を提供するために、アプリの利用状況をトラッキングします。プライバシーを尊重し、個人情報は収集しません。";
-
-/* マイク使用説明 */
-"NSMicrophoneUsageDescription" = "音声入力でメモを記録するためにマイクを使用します。";
+/* トラッキング */
+"NSUserTrackingUsageDescription" = "より良い広告体験を提供するためにトラッキングを使用します";

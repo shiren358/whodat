@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
 import '../l10n/l10n.dart';
 
 class SpeechRecognitionView extends StatefulWidget {
@@ -14,46 +15,97 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
   final SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
   String _lastWords = '';
-  late String _status;
+  String? _status;
   bool _isNavigating = false; // 追加: ナビゲーション中フラグ
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _status = S.of(context)!.tapMicToStart;
-    _initSpeech();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      _isInitialized = true;
+      _initSpeech();
+    }
   }
 
   void _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize(
-      onStatus: (status) {
-        if (mounted) {
-          setState(() => _status = status);
-        }
-      },
-      onError: (error) {
-        if (mounted) {
-          setState(() => _status = S.of(context)!.speechError(error.errorMsg));
-        }
-      },
-    );
-    // Automatically start listening once initialized
-    if (_speechEnabled && mounted) {
-      _startListening();
+    try {
+      _speechEnabled = await _speechToText.initialize(
+        onError: errorListener,
+        onStatus: statusListener,
+        debugLogging: false,
+      );
+
+      if (mounted) {
+        setState(() {
+          _status = _speechEnabled ? S.of(context)!.tapMicToStart : S.of(context)!.microphonePermissionDenied;
+        });
+      }
+
+      // Automatically start listening once initialized
+      if (_speechEnabled && mounted) {
+        _startListening();
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _status = 'Speech recognition failed: ${e.toString()}';
+        });
+      }
     }
+  }
+
+  void errorListener(SpeechRecognitionError error) {
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _status = 'Error: ${error.errorMsg}';
+      });
+    }
+  }
+
+  void statusListener(String status) {
+    if (mounted) {
+      setState(() {
+        _status = status;
+      });
     }
   }
 
   void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult);
-    setState(() {});
+    try {
+      await _speechToText.listen(
+        onResult: _onSpeechResult,
+        listenFor: const Duration(seconds: 30),
+        pauseFor: const Duration(seconds: 3),
+        partialResults: true,
+      );
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _status = 'Error: ${e.toString()}';
+        });
+      }
+    }
   }
 
   void _stopListening() async {
-    await _speechToText.stop();
-    setState(() {});
+    try {
+      await _speechToText.stop();
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      // Handle stop error silently
+      debugPrint('Error stopping speech recognition: $e');
+    }
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) {
@@ -105,7 +157,7 @@ class _SpeechRecognitionViewState extends State<SpeechRecognitionView> {
                       ? _lastWords.isEmpty
                             ? S.of(context)!.pleaseSpeak
                             : _lastWords
-                      : _status,
+                      : _status ?? S.of(context)!.tapMicToStart,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
