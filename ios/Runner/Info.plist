@@ -47,6 +47,8 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Uses location to record where you met people</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app only uses location while active. Background location is not used.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Uses photo library to select profile pictures</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

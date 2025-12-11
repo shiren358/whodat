@@ -1,5 +1,6 @@
 /* Location permission */
 "NSLocationWhenInUseUsageDescription" = "Uses location to record where you met people";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "This app only uses location while active. Background location is not used.";
 
 /* Feature descriptions */
 "NSPhotoLibraryUsageDescription" = "Uses photo library to select profile pictures";

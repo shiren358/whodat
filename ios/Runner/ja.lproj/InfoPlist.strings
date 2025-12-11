@@ -1,5 +1,6 @@
 /* 位置情報の使用許諾 */
 "NSLocationWhenInUseUsageDescription" = "会った場所を記録するために位置情報を使用します";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "このアプリはアクティブ時のみ位置情報を使用します。バックグラウンドでの位置情報は使用しません。";
 
 /* 機能の説明 */
 "NSPhotoLibraryUsageDescription" = "人物の顔写真を選択するために写真ライブラリを使用します";
