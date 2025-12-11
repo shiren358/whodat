@@ -4,7 +4,6 @@ CFBundleDisplayName = "Whodat";
 /* Location Permissions */
 NSLocationWhenInUseUsageDescription = "This app uses location information to display registered people's locations on the map";
 NSLocationAlwaysUsageDescription = "This app uses location information to display registered people's locations on the map";
-NSLocationAlwaysAndWhenInUseUsageDescription = "This app uses location information to display registered people's locations on the map";
 
 /* Microphone and Speech Recognition Permissions */
 NSSpeechRecognitionUsageDescription = "Used for inputting search keywords using speech recognition";
