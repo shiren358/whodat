@@ -1,3 +1,4 @@
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -36,11 +37,13 @@ void main() async {
       statusBarIconBrightness: Brightness.light,
     ),
   );
-  // // Clear existing data first
-  // await DummyDataGenerator.clearAllData();
 
-  // // Generate new dummy data
-  // await DummyDataGenerator.generateDummyData();
+  // if (kDebugMode) {
+  //   // Clear existing data first
+  //   await DummyDataGenerator.clearAllData();
+  //   // Generate new dummy data
+  //   await DummyDataGenerator.generateDummyData();
+  // }
 
   runApp(MyApp(showOnboarding: showOnboarding));
 }

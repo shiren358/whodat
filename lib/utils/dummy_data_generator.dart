@@ -16,6 +16,231 @@ class DummyDataGenerator {
     '#607D8B',
   ];
 
+  // English names for screenshots
+  static const List<String> _englishSurnames = [
+    'Smith',
+    'Johnson',
+    'Williams',
+    'Brown',
+    'Jones',
+    'Garcia',
+    'Miller',
+    'Davis',
+    'Rodriguez',
+    'Martinez',
+    'Anderson',
+    'Taylor',
+    'Thomas',
+    'Moore',
+    'Jackson',
+    'Martin',
+    'Lee',
+    'Thompson',
+    'White',
+    'Harris',
+    'Clark',
+    'Lewis',
+    'Robinson',
+    'Walker',
+    'Young',
+    'Allen',
+    'King',
+    'Wright',
+    'Scott',
+    'Green',
+  ];
+
+  static const List<String> _englishGivenNames = [
+    'James',
+    'John',
+    'Robert',
+    'Michael',
+    'William',
+    'David',
+    'Richard',
+    'Joseph',
+    'Thomas',
+    'Charles',
+    'Christopher',
+    'Daniel',
+    'Matthew',
+    'Anthony',
+    'Mark',
+    'Donald',
+    'Steven',
+    'Paul',
+    'Andrew',
+    'Joshua',
+    'Mary',
+    'Patricia',
+    'Jennifer',
+    'Linda',
+    'Elizabeth',
+    'Barbara',
+    'Susan',
+    'Jessica',
+    'Sarah',
+    'Karen',
+    'Lisa',
+  ];
+
+  // English companies
+  static const List<String> _englishCompanies = [
+    'Google',
+    'Microsoft',
+    'Apple',
+    'Amazon',
+    'Meta',
+    'Tesla',
+    'Netflix',
+    'Adobe',
+    'Salesforce',
+    'Oracle',
+    'IBM',
+    'Intel',
+    'Cisco',
+    'HP',
+    'Dell',
+    'Qualcomm',
+    'NVIDIA',
+    'VMware',
+    'Zoom',
+    'Slack',
+    'Twitter',
+    'LinkedIn',
+    'Stripe',
+    'PayPal',
+    'Square',
+    'Shopify',
+    'Spotify',
+    'Uber',
+    'Lyft',
+    'Airbnb',
+    'Dropbox',
+    'GitHub',
+  ];
+
+  // English positions
+  static const List<String> _englishPositions = [
+    'CEO',
+    'CTO',
+    'CFO',
+    'COO',
+    'CMO',
+    'CPO',
+    'President',
+    'Vice President',
+    'Director',
+    'Senior Manager',
+    'Manager',
+    'Team Lead',
+    'Senior Engineer',
+    'Lead Engineer',
+    'Software Engineer',
+    'Senior Developer',
+    'Product Manager',
+    'Project Manager',
+    'Program Manager',
+    'Scrum Master',
+    'Designer',
+    'UX Designer',
+    'UI Designer',
+    'Product Designer',
+    'Data Scientist',
+    'Business Analyst',
+    'Consultant',
+    'Senior Consultant',
+    'Architect',
+    'Solutions Architect',
+    'DevOps Engineer',
+    'QA Engineer',
+    'Test Engineer',
+  ];
+
+  // English tags
+  static const List<String> _englishTags = [
+    'Tech',
+    'AI/ML',
+    'Startups',
+    'VC',
+    'SaaS',
+    'Cloud',
+    'Mobile',
+    'Web',
+    'DevOps',
+    'Blockchain',
+    'IoT',
+    'Security',
+    'Data Science',
+    'Product',
+    'Design',
+    'Marketing',
+    'Sales',
+    'Finance',
+    'Healthcare',
+    'Education',
+    'E-commerce',
+    'Gaming',
+    'Social Media',
+    'Analytics',
+    'Automation',
+    'Consulting',
+    'Enterprise',
+    'B2B',
+    'B2C',
+    'Fintech',
+    'Biotech',
+  ];
+
+  // English locations (San Francisco Bay Area)
+  static const List<Map<String, dynamic>> _englishLocations = [
+    {
+      'name': 'San Francisco, CA',
+      'lat': 37.7749,
+      'lng': -122.4194,
+      'type': 'gps',
+    },
+    {'name': 'Palo Alto, CA', 'lat': 37.4419, 'lng': -122.1430, 'type': 'gps'},
+    {
+      'name': 'Mountain View, CA',
+      'lat': 37.3861,
+      'lng': -122.0839,
+      'type': 'gps',
+    },
+    {'name': 'Menlo Park, CA', 'lat': 37.4529, 'lng': -122.1817, 'type': 'gps'},
+    {'name': 'Cupertino, CA', 'lat': 37.3318, 'lng': -122.0312, 'type': 'gps'},
+    {'name': 'Sunnyvale, CA', 'lat': 37.3688, 'lng': -122.0363, 'type': 'gps'},
+    {'name': 'San Jose, CA', 'lat': 37.3382, 'lng': -121.8863, 'type': 'gps'},
+    {
+      'name': 'Redwood City, CA',
+      'lat': 37.4852,
+      'lng': -122.2364,
+      'type': 'gps',
+    },
+    {'name': 'Fremont, CA', 'lat': 37.5485, 'lng': -121.9886, 'type': 'gps'},
+    {'name': 'Oakland, CA', 'lat': 37.8044, 'lng': -122.2712, 'type': 'gps'},
+    {'name': 'Berkeley, CA', 'lat': 37.8715, 'lng': -122.2730, 'type': 'gps'},
+    {'name': 'Stanford, CA', 'lat': 37.4241, 'lng': -122.1679, 'type': 'gps'},
+    {
+      'name': 'Googleplex, Mountain View',
+      'lat': 37.4220,
+      'lng': -122.0841,
+      'type': 'gps',
+    },
+    {
+      'name': 'Apple Park, Cupertino',
+      'lat': 37.3349,
+      'lng': -122.0090,
+      'type': 'gps',
+    },
+    {
+      'name': 'Facebook Campus, Menlo Park',
+      'lat': 37.4848,
+      'lng': -122.1482,
+      'type': 'gps',
+    },
+  ];
+
   // Realistic Japanese names
   static const List<String> _surnames = [
     '佐藤',
@@ -943,5 +1168,115 @@ class DummyDataGenerator {
     debugPrint(
       'Cleared ${persons.length} persons and ${meetingRecords.length} meeting records',
     );
+  }
+
+  // English version for screenshots
+  static Future<void> generateEnglishDummyData() async {
+    debugPrint('Generating English dummy data for screenshots...');
+
+    // Clear existing data first
+    await clearAllData();
+
+    final random = Random();
+    final persons = <Person>[];
+    final meetingRecords = <MeetingRecord>[];
+
+    // Generate 30 people
+    for (int i = 0; i < 30; i++) {
+      final surname = _englishSurnames[random.nextInt(_englishSurnames.length)];
+      final givenName =
+          _englishGivenNames[random.nextInt(_englishGivenNames.length)];
+      final company =
+          _englishCompanies[random.nextInt(_englishCompanies.length)];
+      final position =
+          _englishPositions[random.nextInt(_englishPositions.length)];
+      final avatarColor = _avatarColors[random.nextInt(_avatarColors.length)];
+
+      // Generate 1-3 random tags
+      final tagCount = 1 + random.nextInt(3);
+      final tags = <String>[];
+      for (int k = 0; k < tagCount; k++) {
+        final availableTags = List<String>.from(_englishTags)..removeWhere((tag) => tags.contains(tag));
+        if (availableTags.isNotEmpty) {
+          tags.add(availableTags[random.nextInt(availableTags.length)]);
+        }
+      }
+
+      final person = Person(
+        id: (DateTime.now().millisecondsSinceEpoch + i).toString(),
+        name: '$givenName $surname',
+        company: company,
+        position: position,
+        avatarColor: avatarColor,
+        tags: tags,
+      );
+      persons.add(person);
+      await PersonStorage.savePerson(person);
+    }
+
+    // Generate 3-5 meeting records per person
+    for (int i = 0; i < persons.length; i++) {
+      final person = persons[i];
+      final numMeetings = 3 + random.nextInt(3); // 3-5 meetings
+
+      for (int j = 0; j < numMeetings; j++) {
+        final daysAgo = random.nextInt(180); // Last 6 months
+        final meetingDate = DateTime.now().subtract(Duration(days: daysAgo));
+
+        final locationData =
+            _englishLocations[random.nextInt(_englishLocations.length)];
+        final location = locationData['name'] as String;
+
+        final note = _generateRandomEnglishNote();
+
+        final meetingRecord = MeetingRecord(
+          id: (DateTime.now().millisecondsSinceEpoch + i * 1000 + j).toString(),
+          personId: person.id.toString(),
+          meetingDate: meetingDate,
+          location: location,
+          notes: note,
+          latitude: locationData['lat'] as double,
+          longitude: locationData['lng'] as double,
+        );
+        meetingRecords.add(meetingRecord);
+        await MeetingRecordStorage.saveMeetingRecord(meetingRecord);
+      }
+    }
+
+    if (kDebugMode) {
+      debugPrint('\n✅ Successfully generated and saved:');
+      debugPrint('  • ${persons.length} persons');
+      debugPrint('  • ${meetingRecords.length} meeting records');
+      debugPrint('\nEnglish dummy data generation completed!');
+    }
+  }
+
+  // Generate random English notes
+  static String _generateRandomEnglishNote() {
+    final random = Random();
+    final notes = [
+      'Had a great discussion about the new project',
+      'Met at the tech conference',
+      'Collaboration on the Q4 goals',
+      'Discussed partnership opportunities',
+      'Coffee meeting to discuss strategy',
+      'Lunch meeting with the team',
+      'Brainstorming session for new features',
+      'Quarterly review meeting',
+      'Networked at the industry event',
+      'Follow-up meeting after initial contact',
+      'Discussion about market trends',
+      'Explored potential synergies',
+      'Technical deep-dive session',
+      'Product roadmap review',
+      'Customer feedback discussion',
+      'Strategy alignment meeting',
+      'Team building activity',
+      'Mentorship session',
+      'Cross-functional collaboration',
+      'Innovation workshop',
+      'Best practices sharing',
+    ];
+    return notes[random.nextInt(notes.length)];
   }
 }
