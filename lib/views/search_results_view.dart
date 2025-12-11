@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/home_provider.dart';
+import '../providers/theme_provider.dart';
 import '../widgets/person_card.dart'; // Import PersonCard
 import '../models/person.dart';
 import '../l10n/l10n.dart';
@@ -63,7 +64,7 @@ class SearchResultsView extends StatelessWidget {
               Provider.of<HomeProvider>(context, listen: false).clearSearch();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4D6FFF),
+              backgroundColor: Provider.of<ThemeProvider>(context).themeColor,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(

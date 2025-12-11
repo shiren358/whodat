@@ -7,6 +7,10 @@ class ThemeProvider extends ChangeNotifier {
 
   // 全人口向けのカラーパレット
   final List<Color> _presetColors = [
+    // 可愛いピンク系（デフォルト）
+    Color(0xFFFF6B9D), // コーラルピンク
+    // デフォルト（アイコンに合わせた紫色）
+    Color(0xFF8B5CF6), // バイオレット（新しいデフォルト）
     // プロフェッショナル系
     Color(0xFF4D6FFF), // クリアブルー
     Color(0xFF2196F3), // ブルー
@@ -22,53 +26,54 @@ class ThemeProvider extends ChangeNotifier {
     Color(0xFF42A5F5), // ライトブルー
     Color(0xFFAB47BC), // パープル
     Color(0xFFEC407A), // ライトピンク
-    // 可愛いピンク系（デフォルト）
-    Color(0xFFFF6B9D), // コーラルピンク
     // モダンな色
     Color(0xFF8D6E63), // ブラウン
     Color(0xFF607D8B), // ブルーグレー
     Color(0xFF78909C), // ブルーグレーライト
   ];
 
-  Color _themeColor = Color(0xFFFF6B9D); // デフォルトは可愛いコーラルピンク
+  Color _themeColor = Color(0xFF8B5CF6); // デフォルトはバイオレット（アイコンに合わせた）
 
   Color get themeColor => _themeColor;
   List<Color> get presetColors => _presetColors;
 
   // グラデーション用の2色目を生成
   Color getGradientEndColor() {
-    // テーマカラーに応じて相性の良い2色目を返す
-    if (_themeColor.toARGB32() == 0xFFFF6B9D) {
-      // コーラルピンク
-      return const Color(0xFFE91E63); // ピンク
+    // テーマカラーに応じて相性の良い2色目を返す（調整済みのグラデーション）
+    if (_themeColor.toARGB32() == 0xFF8B5CF6) {
+      // バイオレット（デフォルト）-> 薄いバイオレット
+      return const Color(0xFFE1C4FF); // 薄い紫
+    } else if (_themeColor.toARGB32() == 0xFFFF6B9D) {
+      // コーラルピンク -> 薄いピンク
+      return const Color(0xFFFFCDD8); // 薄いピンク
     } else if (_themeColor.toARGB32() == 0xFF4D6FFF ||
         _themeColor.toARGB32() == 0xFF2196F3) {
-      // ブルー系
-      return const Color(0xFF9B72FF); // パープル
+      // ブルー系 -> 薄いブルー
+      return const Color(0xFFD4E4FF); // 薄い青
     } else if (_themeColor.toARGB32() == 0xFF3F51B5) {
-      // インディゴ
-      return const Color(0xFF5C6BC0); // ライトインディゴ
+      // インディゴ -> 薄いインディゴ
+      return const Color(0xFFDDE1F0); // 薄いインディゴ
     } else if (_themeColor.toARGB32() == 0xFFFF7043 ||
         _themeColor.toARGB32() == 0xFFFFA726) {
-      // オレンジ系
-      return const Color(0xFF9B72FF); // パープル
+      // オレンジ系 -> 薄いオレンジ
+      return const Color(0xFFFFE0DB); // 薄いオレンジ
     } else if (_themeColor.toARGB32() == 0xFF66BB6A ||
         _themeColor.toARGB32() == 0xFF26A69A) {
-      // グリーン系
-      return const Color(0xFF42A5F5); // ライトブルー
+      // グリーン系 -> 薄いグリーン
+      return const Color(0xFFD4F1D4); // 薄い緑
     } else if (_themeColor.toARGB32() == 0xFF9CCC65) {
-      // ライトグリーン
-      return const Color(0xFF42A5F5); // ライトブルー
+      // ライトグリーン -> 薄いライムグリーン
+      return const Color(0xFFE8F5D9); // 薄い黄緑
     } else if (_themeColor.toARGB32() == 0xFF42A5F5) {
-      // ライトブルー
-      return const Color(0xFF9B72FF); // パープル
+      // ライトブルー -> 薄いライトブルー
+      return const Color(0xFFD2EDFF); // 薄い水色
     } else if (_themeColor.toARGB32() == 0xFFAB47BC ||
         _themeColor.toARGB32() == 0xFFEC407A) {
-      // パープル系
-      return const Color(0xFF4D6FFF); // クリアブルー
+      // パープル系 -> 薄いパープル
+      return const Color(0xFFF8D4E2); // 薄い紫ピンク
     } else {
-      // その他
-      return const Color(0xFF9B72FF); // パープル
+      // その他 -> 薄いグレー
+      return const Color(0xFFEFEFEF); // 薄いグレー
     }
   }
 

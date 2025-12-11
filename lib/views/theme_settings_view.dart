@@ -17,6 +17,8 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>
   // 色の名前マッピング
   String _getColorName(Color color) {
     final colorMap = {
+      0xFFFF6B9D: 'Pink',
+      0xFF8B5CF6: 'Violet',
       0xFF4D6FFF: 'Clear Blue',
       0xFF2196F3: 'Ocean',
       0xFF3F51B5: 'Indigo',
@@ -29,7 +31,6 @@ class _ThemeSettingsViewState extends State<ThemeSettingsView>
       0xFF42A5F5: 'Sky',
       0xFFAB47BC: 'Purple',
       0xFFEC407A: 'Rose',
-      0xFFFF6B9D: 'Pink',
       0xFF8D6E63: 'Mocha',
       0xFF607D8B: 'Slate',
       0xFF78909C: 'Steel',
