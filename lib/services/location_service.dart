@@ -2,75 +2,89 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
-  // 位置情報パーミッションの確認と要求
-  static Future<bool> checkAndRequestLocationPermission() async {
-    // 位置情報サービスが有効かチェック
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      if (kDebugMode) {
-        print('位置情報サービスが無効です');
-      }
-      return false;
-    }
+  static bool _isFirstLaunch = true;
 
-    // パーミッションの確認
-    LocationPermission permission = await Geolocator.checkPermission();
+  // デフォルトの位置（東京）
+  static Position get _defaultLocation => Position(
+    longitude: 139.6503,
+    latitude: 35.6762,
+    timestamp: DateTime.now(),
+    accuracy: 0,
+    altitude: 0,
+    heading: 0,
+    speed: 0,
+    speedAccuracy: 0,
+    altitudeAccuracy: 0,
+    headingAccuracy: 0,
+  );
 
-    // パーミッションが拒否されている場合は要求
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        if (kDebugMode) {
-          print('位置情報パーミッションが拒否されました');
-        }
-        return false;
-      }
-    }
-
-    // 永続的に拒否されている場合
-    if (permission == LocationPermission.deniedForever) {
-      if (kDebugMode) {
-        print('位置情報パーミッションが永久に拒否されています');
-      }
-      return false;
-    }
-
-    // パーミッションが許可されている
-    return permission == LocationPermission.whileInUse ||
-        permission == LocationPermission.always;
-  }
-
-  // 現在位置の取得
-  static Future<Position?> getCurrentLocation() async {
+  // 現在位置を取得（初回はパーミッション要求、2回目以降は状態チェックのみ）
+  static Future<Position> _getCurrentPositionInternal() async {
     try {
-      // パーミッションを確認
-      bool hasPermission = await checkAndRequestLocationPermission();
-      if (!hasPermission) {
-        return null;
+      // 位置情報サービスが有効かチェック
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (kDebugMode) {
+          print('位置情報サービスが無効です');
+        }
+        return _defaultLocation;
+      }
+
+      LocationPermission permission;
+
+      if (_isFirstLaunch) {
+        // 初回：パーミッションを要求
+        permission = await Geolocator.requestPermission();
+        _isFirstLaunch = false;
+
+        if (permission == LocationPermission.denied ||
+            permission == LocationPermission.deniedForever) {
+          if (kDebugMode) {
+            print('位置情報パーミッションが拒否されました');
+          }
+          return _defaultLocation;
+        }
+      } else {
+        // 2回目以降：パーミッション状態のみチェック
+        permission = await Geolocator.checkPermission();
+
+        if (permission != LocationPermission.whileInUse &&
+            permission != LocationPermission.always) {
+          if (kDebugMode) {
+            print('位置情報パーミッションがありません');
+          }
+          return _defaultLocation;
+        }
       }
 
       // 現在位置を取得
       Position position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 10),
         ),
       );
 
-      // デバッグログ
       if (kDebugMode) {
-        print('位置情報取得成功: ${position.latitude}, ${position.longitude}');
-        print('精度: ${position.accuracy}m');
-        print('取得時刻: ${position.timestamp}');
+        print('現在地を取得: ${position.latitude}, ${position.longitude}');
       }
 
       return position;
     } catch (e) {
       if (kDebugMode) {
-        print('位置情報の取得に失敗しました: $e');
+        print('位置情報取得エラー: $e');
       }
-      return null;
+      return _defaultLocation;
     }
   }
+
+  // 初回起動フラグをリセット（テスト用）
+  static void resetFirstLaunchFlag() {
+    _isFirstLaunch = true;
+  }
+
+  // メインの位置取得メソッド
+  static Future<Position> getCurrentPosition() => _getCurrentPositionInternal();
 
   // 位置情報が有効かチェック
   Future<bool> isLocationEnabled() async {

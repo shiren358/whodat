@@ -34,8 +34,8 @@ class _MapViewState extends State<MapView> {
 
   // 現在地にカメラを移動する
   Future<void> _moveToCurrentUserLocation() async {
-    final position = await LocationService.getCurrentLocation();
-    if (position != null && _mapController != null) {
+    final position = await LocationService.getCurrentPosition();
+    if (_mapController != null) {
       _mapController!.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -72,7 +72,11 @@ class _MapViewState extends State<MapView> {
     return markers;
   }
 
-  Marker _createMarker(MeetingRecord record, Person person, BuildContext context) {
+  Marker _createMarker(
+    MeetingRecord record,
+    Person person,
+    BuildContext context,
+  ) {
     return Marker(
       markerId: MarkerId(record.id),
       position: LatLng(record.latitude!, record.longitude!),
@@ -141,7 +145,7 @@ class _MapViewState extends State<MapView> {
               ],
             ),
           );
-        }
+        },
       ),
     );
   }

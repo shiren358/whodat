@@ -24,34 +24,6 @@ class MapLocationProvider with ChangeNotifier {
 
   // ===== ロケーション関連メソッド =====
 
-  /// デフォルトの位置（端末の言語に応じた首都）
-  LatLng _getDefaultLocation() {
-    final languageCode = Platform.localeName.split('_')[0];
-
-    // 日本の場合は東京
-    if (languageCode == 'ja') {
-      return const LatLng(35.6762, 139.6503); // 東京
-    }
-
-    // 英語の場合はニューヨーク
-    if (languageCode == 'en') {
-      return const LatLng(40.7128, -74.0060); // ニューヨーク
-    }
-
-    // 中国語の場合は北京
-    if (languageCode == 'zh') {
-      return const LatLng(39.9042, 116.4074); // 北京
-    }
-
-    // 韓国語の場合はソウル
-    if (languageCode == 'ko') {
-      return const LatLng(37.5665, 126.9780); // ソウル
-    }
-
-    // その他の言語の場合はパリ
-    return const LatLng(48.8566, 2.3522); // パリ
-  }
-
   /// 言語に応じた場所名を取得（デフォルト値）
   String _getDefaultLocationName(LatLng location) {
     // 現在地の場合は言語に応じた場所名を返す
@@ -132,25 +104,11 @@ class MapLocationProvider with ChangeNotifier {
         _selectedLocation = LatLng(initialLatitude, initialLongitude);
       } else {
         // 現在位置を取得
-        if (kDebugMode) {
-          print('現在地を取得します...');
-        }
-        final currentLocation = await getCurrentLocation();
-        if (currentLocation != null) {
-          _selectedLocation = currentLocation;
-          if (kDebugMode) {
-            print(
-              '現在地を設定: ${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
-            );
-          }
-        } else {
-          _selectedLocation = _getDefaultLocation();
-          if (kDebugMode) {
-            print(
-              'デフォルト位置を設定: ${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
-            );
-          }
-        }
+        final currentPosition = await LocationService.getCurrentPosition();
+        _selectedLocation = LatLng(
+          currentPosition.latitude,
+          currentPosition.longitude,
+        );
       }
 
       if (_selectedLocation != null) {
@@ -175,11 +133,40 @@ class MapLocationProvider with ChangeNotifier {
     }
 
     notifyListeners();
+
+    // 初期化完了後に地図があれば移動
+    if (_mapController != null && _selectedLocation != null) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _mapController?.animateCamera(
+          CameraUpdate.newLatLngZoom(_selectedLocation!, 15),
+        );
+      });
+    }
   }
 
   /// 地図コントローラーを設定
   void setMapController(GoogleMapController controller) {
     _mapController = controller;
+
+    if (kDebugMode) {
+      print('setMapController called - _selectedLocation: $_selectedLocation');
+    }
+
+    // 地図コントローラー設定後に初期位置に移動
+    if (_selectedLocation != null) {
+      if (kDebugMode) {
+        print(
+          '地図を移動: ${_selectedLocation!.latitude}, ${_selectedLocation!.longitude}',
+        );
+      }
+      _mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(_selectedLocation!, 15),
+      );
+    } else {
+      if (kDebugMode) {
+        print('_selectedLocationがnullのため移動しない');
+      }
+    }
   }
 
   /// 地図がタップされたとき
@@ -221,25 +208,33 @@ class MapLocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// 現在地を取得
-  Future<LatLng?> getCurrentLocation() async {
-    final currentPosition = await LocationService.getCurrentLocation();
-    if (currentPosition != null) {
-      return LatLng(
-        currentPosition.latitude,
-        currentPosition.longitude,
-      );
-    }
-    return null;
-  }
+  /// 現在地に移動
+  Future<void> moveToCurrentLocation() async {
+    final currentPosition = await LocationService.getCurrentPosition();
+    final location = LatLng(
+      currentPosition.latitude,
+      currentPosition.longitude,
+    );
 
-  /// 地図を移動
-  void moveToLocation(LatLng location) {
+    // マーカーと住所を更新
+    _selectedLocation = location;
+    _markers.clear();
+    _markers.add(
+      Marker(
+        markerId: const MarkerId('selected_location'),
+        position: location,
+        infoWindow: const InfoWindow(title: '住所取得中...'),
+      ),
+    );
+    notifyListeners();
+
+    // カメラを移動
     if (_mapController != null) {
-      _mapController!.animateCamera(
-        CameraUpdate.newLatLngZoom(location, 15),
-      );
+      _mapController!.animateCamera(CameraUpdate.newLatLngZoom(location, 15));
     }
+
+    // 住所を取得して更新
+    await _getAddressForLocation(location);
   }
 
   /// 場所名を手動で更新

@@ -67,11 +67,13 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: 'Whodat?',
             debugShowCheckedModeBanner: false,
-            theme: themeProvider.getThemeData(context).copyWith(
-              textTheme: GoogleFonts.notoSansJpTextTheme(
-                themeProvider.getThemeData(context).textTheme,
-              ),
-            ),
+            theme: themeProvider
+                .getThemeData(context)
+                .copyWith(
+                  textTheme: GoogleFonts.notoSansJpTextTheme(
+                    themeProvider.getThemeData(context).textTheme,
+                  ),
+                ),
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,

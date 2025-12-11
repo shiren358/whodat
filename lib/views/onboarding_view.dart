@@ -21,6 +21,11 @@ class OnboardingView extends StatefulWidget {
     await _storage.write(key: _onboardingCompletedKey, value: 'true');
   }
 
+  // デバッグ用：オンボーディングをリセット
+  static Future<void> resetOnboarding() async {
+    await _storage.delete(key: _onboardingCompletedKey);
+  }
+
   @override
   State<OnboardingView> createState() => _OnboardingViewState();
 }

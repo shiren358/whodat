@@ -54,6 +54,12 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
     _animationController.forward();
     _loadHeroTextIndex();
 
+    // デバッグ：オンボーディングをリセット
+    // if (kDebugMode) {
+    // print('デバッグ: オンボーディングをリセットします');
+    // OnboardingView.resetOnboarding();
+    // }
+
     // Update hero texts with localization after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
