@@ -214,6 +214,8 @@
   "recordsUsingTag": "{count}件の記録で使用",
     "metLastWeek": "先週会った",
   "today": "今日",
+  "photoAccessDenied": "写真ライブラリへのアクセスが許可されていません",
+  "settings": "設定",
   "thisMonth": "今月",
   "themeSettings": "テーマ設定",
   "selectThemeColor": "お好きなテーマカラーを選んでください",

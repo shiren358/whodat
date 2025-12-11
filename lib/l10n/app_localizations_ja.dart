@@ -668,6 +668,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get today => '今日';
 
   @override
+  String get photoAccessDenied => '写真ライブラリへのアクセスが許可されていません';
+
+  @override
   String get thisMonth => '今月';
 
   @override

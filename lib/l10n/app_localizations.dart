@@ -1358,6 +1358,12 @@ abstract class AppLocalizations {
   /// **'Today'**
   String get today;
 
+  /// No description provided for @photoAccessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo library access is not permitted'**
+  String get photoAccessDenied;
+
   /// No description provided for @thisMonth.
   ///
   /// In en, this message translates to:

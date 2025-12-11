@@ -683,6 +683,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get today => 'Today';
 
   @override
+  String get photoAccessDenied => 'Photo library access is not permitted';
+
+  @override
   String get thisMonth => 'This month';
 
   @override

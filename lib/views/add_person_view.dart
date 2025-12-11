@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../models/person.dart';
 import '../models/meeting_record.dart';
 import '../providers/add_person_provider.dart';
@@ -943,9 +944,25 @@ class _AddPersonViewState extends State<AddPersonView> {
   }
 
   void _handleAddPhoto() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      _provider.setSelectedImage(File(image.path));
+    try {
+      // ユーザーに選択肢を提供
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        _provider.setSelectedImage(File(image.path));
+      }
+    } catch (e) {
+      if (mounted) {
+        // 権限が拒否された場合のメッセージ
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.of(context)!.photoAccessDenied),
+            action: SnackBarAction(
+              label: S.of(context)!.settings,
+              onPressed: openAppSettings,
+            ),
+          ),
+        );
+      }
     }
   }
 

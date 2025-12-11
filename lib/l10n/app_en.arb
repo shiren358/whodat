@@ -803,6 +803,8 @@
   "recordsUsingTag": "Used in {count} records",
     "metLastWeek": "Met last week",
   "today": "Today",
+  "photoAccessDenied": "Photo library access is not permitted",
+  "settings": "Settings",
   "thisMonth": "This month",
   "themeSettings": "Theme Settings",
   "selectThemeColor": "Choose your favorite theme color",
